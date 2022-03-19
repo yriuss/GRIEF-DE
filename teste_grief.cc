@@ -17,6 +17,15 @@
 
 #define CROSSCHECK true 
 
+
+
+
+#include <variant>
+std::variant<int, std::string> fun(int a) {
+  if (a) return a; return "empty";
+}
+
+
 float distance_factor = 1.0;
 
 //feature matching - this can combine 'ratio' and 'cross-check' 
@@ -110,16 +119,25 @@ int main( int argc, char* argv[] )
     img[0] = imread("0.bmp", cv::IMREAD_GRAYSCALE);
     img[1] = imread("1.bmp", cv::IMREAD_GRAYSCALE);
 
+
+	auto start = std::chrono::high_resolution_clock::now();
     detector->detect(img[0], keypoints[0]);
     descriptor->compute(img[0], keypoints[0], descriptors[0]);
 
     detector->detect(img[1], keypoints[1]);
     descriptor->compute(img[1], keypoints[1], descriptors[1]);
 
+	
+
 
     std::vector<cv::DMatch> matches, inliers_matches,working_matches;
     if (descriptors[0].rows*descriptors[1].rows > 0) distinctiveMatch(descriptors[0], descriptors[1], matches, CROSSCHECK);
 
+	while(1){}
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "Elapsed Time: " << elapsed.count() << " milliseconds" << std::endl;
+	
 
     cv::Mat imA,imB,img_matches,img_matches_transposed;
 
@@ -131,6 +149,10 @@ int main( int argc, char* argv[] )
 	
 	cv::drawMatches(img[0], keypoints[0], img[1], keypoints[1], matches, img_matches, cv::Scalar(0, 0, 255), cv::Scalar(0, 0, 255), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	
+
+
+
+
 	cv::transpose(img_matches,img_matches_transposed);
 	cv::imshow("matches", img_matches);
 	cv::waitKey(0);
@@ -141,6 +163,7 @@ int main( int argc, char* argv[] )
     //std::vector<int> individuo(2);
     //load(individuo, filename);
 
+	
 
     return 0;
 }

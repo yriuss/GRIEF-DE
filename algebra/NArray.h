@@ -87,6 +87,8 @@ private:
     bool once = 0;
 };
 
+
+
 class NArray{
 public:
     NArray(std::vector<int> N);
@@ -97,9 +99,10 @@ public:
             if(!wait_operation){
                 times_accessed++;
                 //std::cout << access << std::endl;
-                if(shape.length() > 1)
-                    access += index * pow(shape[shape.length() - 1],(shape[shape.length() - 1] - 1 - times_accessed));
-                else
+                if(shape.length() > 1){
+                    access += index * pow(shape[shape.length() - 1],(shape.length() - times_accessed));
+                    //std::cout << access << std::endl;
+                }else
                     access += index;
                 //std::cout << shape[shape.length() - 1] << " " << index << " " << access << " " << (int)(index * pow(shape[shape.length() - 1],(times_accessed - 1))) << std::endl;
                 if(times_accessed == shape.length()){
@@ -116,7 +119,25 @@ public:
         }
     }
 
-    NArray operator*(int number){
+    operator double() {
+        double a = data[access];
+        operation_done();
+        return a;
+    }
+
+    operator float() {
+        float a = data[access];
+        operation_done();
+        return a;
+    }
+
+    operator int() {
+        int a = data[access];
+        operation_done();
+        return a;
+    }
+
+    NArray operator*(float number){
         std::vector<int> N;
         for(int i = 0; i < shape.length(); i++)
             N.push_back(shape[i]);
@@ -199,6 +220,7 @@ public:
     void operator=(int element){
         //std::cout << element << "for access" << access << std::endl;
         if(n_access_waiting_mode == shape.length() || n_access_waiting_mode == 0){
+            //std::cout << access << std::endl;
             data[access] = element;
         }else{
             std::cout << "Invalid Operation " << n_access_waiting_mode << std::endl;
@@ -217,7 +239,7 @@ public:
         n_access_waiting_mode = 0;
     }
 private:
-    int* data = nullptr;
+    float* data = nullptr;
     int prev_index = -1;
     size_t size = 1;
     size_t access = 0;
@@ -225,5 +247,9 @@ private:
     size_t n_access_waiting_mode = 0;
     bool wait_operation = false;
 };
+
+
+
+
 
 #endif

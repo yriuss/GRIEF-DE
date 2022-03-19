@@ -10,13 +10,15 @@
 #include <opencv2/flann/miniflann.hpp>
 #include "opencv2/xfeatures2d.hpp"
 
-#include "DE.h"
 
 namespace cv{
 
 namespace xfeatures2d
 {
 
+typedef std::vector<int> Vector;
+typedef std::vector<Vector> IndMat;
+typedef std::vector<IndMat> PopMat;
 
 class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
 {
@@ -28,7 +30,7 @@ public:
 /*
  * Grief Descriptor
  */
-class GriefDescriptorExtractorImpl : public GriefDescriptorExtractor, DE
+class GriefDescriptorExtractorImpl : public GriefDescriptorExtractor
 {
 public:
     enum { PATCH_SIZE = 48, KERNEL_SIZE = 9 };

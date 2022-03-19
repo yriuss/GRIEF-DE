@@ -20,7 +20,10 @@ all: teste_grief.cpp grief.cpp
 	$(CC) teste_grief.cpp $(CFLAGS) $(LDFLAGS) -o $@
 
 
-evolve_grief: teste_grief.cc grief.cc 
+grief: teste_grief.cc grief.cc 
+	$(CC) teste_grief.cc $(CFLAGS) $(LDFLAGS) -o $@
+
+grief_de: teste_grief.cc grief.cc 
 	$(CC) teste_grief.cc DE.cc $(CFLAGS) $(LDFLAGS) -o $@
 
 clean:
