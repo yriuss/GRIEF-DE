@@ -1,5 +1,5 @@
 #include "matplotlibcpp.h"
-#include "DE/DE.h"
+#include "../DE/DE.h"
 #include <stdio.h>
 #include<cmath>
 #include<Eigen/Dense>
@@ -18,7 +18,7 @@ float evaluation(Eigen::MatrixXd individual){
     
     for(int i = 0; i < individual.rows() ; i++){
         for(int j = 0; j < individual.cols(); j++){
-            sum += pow(individual(i,j), 1);
+            sum += pow(individual(i,j), 2);
         }
     }
     return sum;
