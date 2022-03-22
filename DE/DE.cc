@@ -1,27 +1,29 @@
-#include "matplotlibcpp.h"
 #include "DE.h"
-
+#include <stdio.h>
 #include<cmath>
-
+#include<Eigen/Dense>
 #include <vector>
-
-
-namespace plt = matplotlibcpp;
-
-
-
-DE::DE(int N_pop, std::vector<int> ind_shape, float cr, EvalFunction evaluation, float F): mutated_ind(ind_shape[0], ind_shape[1]){
+#include<iostream>
+namespace DE{
+DE::DE(int N_pop, std::vector<int> ind_shape, float cr, EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds): mutated_ind(ind_shape[0], ind_shape[1]){
     //Initialize population
-    population.reserve(N_pop);
-    fitness.reserve(N_pop);
+    if(N_pop > 0){
+        population.reserve(N_pop);
+        fitness.reserve(N_pop);
 
-    eval = evaluation;
-    for(int i = 0; i < N_pop; i++){
-        population.emplace_back(generate_individual(ind_shape));
-        fitness[i] = eval(population[i]);
+        eval = evaluation;
+        for(int i = 0; i < N_pop; i++){
+            population.emplace_back(generate_individual(ind_shape));
+            fitness.emplace_back(eval(population[i]));
+        }
+        this->cr = cr;
+        this->F = F;
+        this->problem_type = problem_type;
+        U = bounds[1];
+        L = bounds[0];
+    }else{
+
     }
-    this->cr = cr;
-    this->F = F;
 }
 
 void DE::evaluate(int ind_idx){
@@ -29,7 +31,8 @@ void DE::evaluate(int ind_idx){
 }
 
 Eigen::MatrixXd DE::generate_individual(std::vector<int> ind_shape){
-    
+    std::random_device rseed;
+    std::mt19937 rng(rseed());
     std::uniform_int_distribution<int> dist(-24,24);
     std::uniform_real_distribution<float> distr(0,1);
     Eigen::MatrixXd individual(ind_shape[0], ind_shape[1]);
@@ -47,101 +50,124 @@ Eigen::MatrixXd DE::generate_individual(std::vector<int> ind_shape){
 }
 
 void DE::mutate(int ind_idx){
+    std::random_device rseed;
+    std::mt19937 rng(rseed());
     std::uniform_int_distribution<int> dist(0,population.size() - 1);
-    mutated_ind = population[ind_idx] + F*(population[dist(rng)] - population[ind_idx]);
+    mutated_ind = population[dist(rng)] + F*(population[dist(rng)] - population[dist(rng)]);
+}
+
+bool DE::is_infeasible(int element){
+    if(element > U)
+        return true;
+    else
+        if(element < L)
+            return true;
+    return false;
 }
 
 void DE::crossover(int ind_idx){
+    std::random_device rseed;
+    std::mt19937 rng(rseed());
     std::uniform_real_distribution<float> r_dist(0,1);
-    for(int i =0; i < 2; i++){
-        for(int j = 0; j < 4; j++){
-            if(r_dist(rng) < cr)
+    for(int i =0; i < population[ind_idx].rows(); i++){
+        for(int j = 0; j < population[ind_idx].cols(); j++){
+            if(r_dist(rng) < cr){
                 mutated_ind(i,j) = (int)mutated_ind(i,j);
-            else
+                if(!infeasible)
+                    infeasible = is_infeasible(mutated_ind(i,j));
+            }else
                 mutated_ind(i,j) = population[ind_idx](i,j);
         }
     }
 }
 
 void DE::repair(int ind_idx){
+    
+    weibull_repair(ind_idx);
+    infeasible = false;
+}
 
+void DE::weibull_repair(int ind_idx){
+    std::random_device rseed;
+    std::mt19937 rng(rseed());
+    std::weibull_distribution<double> dist(2.0,23.0);
+    for(int i =0; i < mutated_ind.rows(); i++){
+        for(int j = 0; j < mutated_ind.cols(); j++){
+            if(mutated_ind(i,j) > 0){
+                while(mutated_ind(i,j) > U){
+                    mutated_ind(i,j) = (int)dist(rng);
+                }
+            }else{
+                while(mutated_ind(i,j) < L){
+                    mutated_ind(i,j) = -(int)dist(rng);
+                }
+            }
+        }
+    }
 }
 
 void DE::selection(int ind_idx){
     float mutated_fit = eval(mutated_ind);
     
-    if(mutated_fit < fitness[ind_idx]){
-        population[ind_idx] = mutated_ind;
-        fitness[ind_idx] = mutated_fit;
-        
+    if(!problem_type){
+        if(mutated_fit < fitness[ind_idx]){
+            population[ind_idx] = mutated_ind;
+            fitness[ind_idx] = mutated_fit;
+        }
+    }else{
+        if(mutated_fit > fitness[ind_idx]){
+            population[ind_idx] = mutated_ind;
+            fitness[ind_idx] = mutated_fit;
+        }
     }
 
 }
+
 
 
 void DE::evolve(uint ng){
     for(int g = 0; g < ng; g++){
         for(int i = 0; i < population.size(); i++){
             mutate(i);
-            repair(i);
             crossover(i);
+            if(infeasible)
+                repair(i);
             selection(i);
         }
     }
 }
+bool DE::is_infeasible(){
+    return infeasible;
+}
 
 float DE::get_best_fit(){
-    auto result = std::min_element(fitness.begin(), fitness.end());
-    return *result;
+    if(!problem_type)
+        return *std::min_element(this->fitness.begin(), this->fitness.end());
+    else
+        return *std::max_element(this->fitness.begin(), this->fitness.end());
 }
 
-void plot_convergence(std::vector<int> x,std::vector<int> y){
-    plt::plot(x,y);
-    plt::show();
+Eigen::MatrixXd DE::get_best_ind(){
+    if(!problem_type)
+        return population[std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
+    else
+        return population[std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
+}
+
+int DE::get_best_idx(){
+    if(!problem_type)
+        return std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin();
+    else
+        return std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin();
 }
 
 
-
-float evaluation(Eigen::MatrixXd individual){
-    float sum = 0;
-    
-    for(int i = 0; i < 2 ; i++){
-        for(int j = 0; j < 4; j++){
-            sum += pow(individual(i,j), 2);
-        }
-    }
-    return sum;
+void DE::get_fitness(){
+    for(int i =0; i < 30; i++)
+        std::cout << fitness[i] << std::endl;
 }
 
-int main(){
-    std::vector<int> ind_shape = {2,4};
-
-    float cr=0.5,F=0.5;
-
-    DE de(300, ind_shape, cr, evaluation, F);
-
-    de.evolve(100);
-    
-    std::cout << de.get_best_fit() << std::endl;
-
-    //std::random_device rseed;
-    //std::mt19937 rng(rseed());
-    //std::uniform_int_distribution<int> dist(-24,24);
-    //
-    //Eigen::MatrixXd individual(ind_shape);
-    //
-//
-    //for(int i = 0; i < ind_shape[0]; i++){
-    //    for(int j = 0; j < ind_shape[1]; j++){
-    //        //std::cout << i << " " << j << std::endl;
-    //        individual(i,j) = dist(rng);
-    //    }
-    //}
-    
-    //std::cout << evaluation(individual);
-
-
-    //plot_convergence({1,2,3,4},{3,2,4,3});
-
-    return 0;
+int DE::get_max_elem(){
+    return population[0].maxCoeff();
+}
 }

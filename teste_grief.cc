@@ -20,12 +20,6 @@
 
 
 
-#include <variant>
-std::variant<int, std::string> fun(int a) {
-  if (a) return a; return "empty";
-}
-
-
 float distance_factor = 1.0;
 
 //feature matching - this can combine 'ratio' and 'cross-check' 
@@ -110,7 +104,7 @@ int main( int argc, char* argv[] )
 	std::vector<cv::KeyPoint> keypoints[2];
     std::string filename = "test_pairs.brief";
 
-
+	
     cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
     cv::Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
     
@@ -121,6 +115,7 @@ int main( int argc, char* argv[] )
 
 
 	auto start = std::chrono::high_resolution_clock::now();
+	
     detector->detect(img[0], keypoints[0]);
     descriptor->compute(img[0], keypoints[0], descriptors[0]);
 
@@ -133,7 +128,6 @@ int main( int argc, char* argv[] )
     std::vector<cv::DMatch> matches, inliers_matches,working_matches;
     if (descriptors[0].rows*descriptors[1].rows > 0) distinctiveMatch(descriptors[0], descriptors[1], matches, CROSSCHECK);
 
-	while(1){}
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "Elapsed Time: " << elapsed.count() << " milliseconds" << std::endl;

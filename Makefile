@@ -9,15 +9,15 @@ EXECUTABLE=$(TARGET)
 #CFLAGS := -Wall -g -O3 -Wfatal-errors -mssse3 -msse2 -march=native
 CFLAGS := -ggdb 
 #LDFLAGS :=  grief/grief.cpp -I   -Llib -Wl,rpath='$$ORIGIN/lib' -g `pkg-config opencv --libs`  É O CERTO
-LDFLAGS :=  grief.cc -I   -Llib -Wl,-g `pkg-config opencv --libs`
+LDFLAGS :=  DE/DE.cc grief.cc -I/usr/include/python3.8 -I/home/adriel/.local/lib/python3.8/site-packages/numpy/core/include -Llib -Wl,-g `pkg-config opencv --libs` -lpython3.8
 
 
 
 # OpenCV
 CFLAGS += `pkg-config opencv --cflags`
 
-all: teste_grief.cpp grief.cpp 
-	$(CC) teste_grief.cpp $(CFLAGS) $(LDFLAGS) -o $@
+all: main.cc grief.cc 
+	$(CC) main.cc $(CFLAGS) $(LDFLAGS) -o $@
 
 
 grief: teste_grief.cc grief.cc 

@@ -53,13 +53,17 @@ namespace xfeatures2d
 {
 
 
-
-Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create( int bytes, bool use_orientation )
-{
-    return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation );
+float evaluation(Eigen::MatrixXd individual){
+    return -1;
 }
 
-int GriefDescriptorExtractorImpl::load(IndMat& mat, std::string fileName) {
+
+Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F)
+{
+    return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F );
+}
+
+int GriefDescriptorExtractorImpl::load(int mat[512][4], std::string fileName) {
     
     using namespace std;
     ifstream file(fileName);
@@ -70,7 +74,7 @@ int GriefDescriptorExtractorImpl::load(IndMat& mat, std::string fileName) {
     std::string cell;
     while (std::getline(file, line)) {
         //std::cout << line;
-        Vector v;
+        std::vector<int> v;
         istringstream is(line);
         while (std::getline(is, cell, ' ')) {
             mat[i][j] = std::stoi(cell);
@@ -85,6 +89,13 @@ int GriefDescriptorExtractorImpl::load(IndMat& mat, std::string fileName) {
     return successful;
 }
 
+float GriefDescriptorExtractorImpl::get_b_fit(){
+    return get_best_fit();
+}
+
+float GriefDescriptorExtractor::get_b_fit(){
+    return 1;
+}
 
 inline int smoothedSum(const Mat& sum, const KeyPoint& pt, int y, int x)
 {
@@ -98,7 +109,7 @@ inline int smoothedSum(const Mat& sum, const KeyPoint& pt, int y, int x)
            + sum.at<int>(img_y - HALF_KERNEL, img_x - HALF_KERNEL);
 }
 
-static void pixelTests16(InputArray _sum, const std::vector<KeyPoint>& keypoints, OutputArray _descriptors, bool use_orientation, IndMat& individual)
+static void pixelTests16(InputArray _sum, const std::vector<KeyPoint>& keypoints, OutputArray _descriptors, bool use_orientation, int individual[512][4])
 {
     Matx21f R;
     Mat sum = _sum.getMat(), descriptors = _descriptors.getMat();
@@ -118,7 +129,7 @@ static void pixelTests16(InputArray _sum, const std::vector<KeyPoint>& keypoints
     }
 }
 
-static void pixelTests32(InputArray _sum, const std::vector<KeyPoint>& keypoints, OutputArray _descriptors, bool use_orientation, IndMat& individual)
+static void pixelTests32(InputArray _sum, const std::vector<KeyPoint>& keypoints, OutputArray _descriptors, bool use_orientation, int individual[512][4])
 {
     Matx21f R;
     Mat sum = _sum.getMat(), descriptors = _descriptors.getMat();
@@ -138,7 +149,7 @@ static void pixelTests32(InputArray _sum, const std::vector<KeyPoint>& keypoints
     }
 }
 
-static void pixelTests64(InputArray _sum, const std::vector<KeyPoint>& keypoints, OutputArray _descriptors, bool use_orientation, IndMat& individual)
+static void pixelTests64(InputArray _sum, const std::vector<KeyPoint>& keypoints, OutputArray _descriptors, bool use_orientation, int individual[512][4])
 {
     Matx21f R;
     Mat sum = _sum.getMat(), descriptors = _descriptors.getMat();
@@ -158,13 +169,34 @@ static void pixelTests64(InputArray _sum, const std::vector<KeyPoint>& keypoints
     }
 }
 
-GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation) :
-    bytes_(bytes), test_fn_(NULL), individual(bytes*8, Vector(4))
-{
 
+void GriefDescriptorExtractorImpl::evolve(uint ng){
+    for(int g = 0; g < ng; g++){
+        auto start = std::chrono::high_resolution_clock::now();
+        for(int i = 0; i < N_pop; i++){
+            mutate(i);
+            crossover(i);
+            if(is_infeasible())
+                repair(i);
+            selection(i);
+        }
+        auto finish = std::chrono::high_resolution_clock::now();
+	    std::chrono::duration<double, std::milli> elapsed = finish - start;
+	    std::cout << "Gen " << g << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
+        
+    }
+}
+
+void GriefDescriptorExtractor::evolve(uint ng){
+    
+}
+
+GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F) :
+    bytes_(bytes), test_fn_(NULL), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24})
+{
+    this->N_pop = N_pop;
     load(individual, "test_pairs.brief");
     use_orientation_ = use_orientation;
-
     switch (bytes)
     {
         case 16:
@@ -222,9 +254,8 @@ void GriefDescriptorExtractorImpl::write( FileStorage& fs) const
 }
 
 void GriefDescriptorExtractorImpl::getInd(){
-    std:: cout << individual.size() << " " << individual[0].size();
-    for(int i = 0; i < individual.size(); i++){
-        for(int j=0; j < individual[i].size(); j++)
+    for(int i = 0; i < 512; i++){
+        for(int j=0; j < 4; j++)
             std::cout << individual[i][j] << " ";
         std::cout << std::endl;
     }
@@ -259,6 +290,19 @@ void GriefDescriptorExtractorImpl::compute(InputArray image,
     descriptors.setTo(Scalar::all(0));
     test_fn_(sum, keypoints, descriptors, use_orientation_, individual);
 }
+
+void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
+    for(int i = 0; i < bytes_*8; i++){
+        for(int j=0; j<4; j++){
+            individual[i][j] = new_individual(i,j);
+        }
+    }
+}
+
+void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){
+}
+
+
 
 }
 } // namespace cv
