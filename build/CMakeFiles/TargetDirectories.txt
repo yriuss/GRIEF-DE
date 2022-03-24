@@ -1,0 +1,4 @@
+/home/adriel/teste/GRIEF-DE/build/CMakeFiles/GRIEF_proj.dir
+/home/adriel/teste/GRIEF-DE/build/CMakeFiles/teste.dir
+/home/adriel/teste/GRIEF-DE/build/CMakeFiles/edit_cache.dir
+/home/adriel/teste/GRIEF-DE/build/CMakeFiles/rebuild_cache.dir
