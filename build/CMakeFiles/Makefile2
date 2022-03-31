@@ -45,10 +45,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/cmake/1035/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /snap/cmake/1035/bin/cmake -E rm -f
+RM = /usr/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -83,12 +83,12 @@ clean: CMakeFiles/teste.dir/clean
 CMakeFiles/GRIEF_proj.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=1,2,3 "Built target GRIEF_proj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=1,2,3,4 "Built target GRIEF_proj"
 .PHONY : CMakeFiles/GRIEF_proj.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/GRIEF_proj.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/adriel/teste/GRIEF-DE/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/adriel/teste/GRIEF-DE/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/GRIEF_proj.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/adriel/teste/GRIEF-DE/build/CMakeFiles 0
 .PHONY : CMakeFiles/GRIEF_proj.dir/rule
@@ -109,12 +109,12 @@ CMakeFiles/GRIEF_proj.dir/clean:
 CMakeFiles/teste.dir/all: CMakeFiles/GRIEF_proj.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=4,5 "Built target teste"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=5,6,7 "Built target teste"
 .PHONY : CMakeFiles/teste.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/teste.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/adriel/teste/GRIEF-DE/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/adriel/teste/GRIEF-DE/build/CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/teste.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/adriel/teste/GRIEF-DE/build/CMakeFiles 0
 .PHONY : CMakeFiles/teste.dir/rule

@@ -14,9 +14,11 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+#include <opencv2/cudafeatures2d.hpp>
 
-#include "GRIEF/grief.h"
+#include "GRIEF_CUDA/grief.h"
 
+namespace plt = matplotlibcpp;
 
 
 #define CROSSCHECK true 
@@ -94,14 +96,16 @@ std::string CURRENT_DIR = get_current_dir_name();
 
 
 
-void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
+void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
 {
-	Ptr<DescriptorMatcher> descriptorMatcher;
+	//Ptr<DescriptorMatcher> descriptorMatcher;
 	vector<vector<DMatch> > allMatches1to2, allMatches2to1;
 
-	descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
-	descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
+	Ptr<cuda::DescriptorMatcher> descriptorMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
 
+	//descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
+	
+	descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
 	if (!crossCheck)
 	{
 		for(unsigned int i=0; i < allMatches1to2.size(); i++)
@@ -169,9 +173,8 @@ void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<D
 }
 
 
-Mat dataset_imgs[100][100];
-
-namespace plt = matplotlibcpp;
+Mat dataset_imgs[600][600];
+cuda::GpuMat gpu_dataset_imgs[600][600];
 
 void plot_convergence(std::vector<int> x,std::vector<int> y){
     plt::plot(x,y);
@@ -180,7 +183,9 @@ void plot_convergence(std::vector<int> x,std::vector<int> y){
 
 
 float eval(Eigen::MatrixXd individual){
-	Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	auto start = std::chrono::high_resolution_clock::now();
+	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	Ptr<cv::ORB> detector = cv::ORB::create();
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
 	descriptor->setInd(individual);
 	
@@ -189,9 +194,6 @@ float eval(Eigen::MatrixXd individual){
 
 	int matchingTests = 0;
 	int matchingFailures = 0;
-
-
-	
 	
 	int i1,i2;
 	
@@ -202,28 +204,37 @@ float eval(Eigen::MatrixXd individual){
 	for (int location = 0;location<numLocations;location++){
 			
 		// detecting keypoints and generating descriptors
-		Mat descriptors[numSeasons];
+		Mat cpu_descriptors[numSeasons];
+		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
-		Mat dp;
-		
+		//std::cout << numSeasons <<std::endl;
 		
 		for (int i = 0;i<numSeasons;i++){
-			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","GRIEF-datasets/michigan",i,location);
+			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
+			
 			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
+			//Mat a;
+			//descriptors[i].download(a);
+			//std::cout << a << std::endl;
+			//exit(-1);
+			//descriptors[i].upload(cpu_descriptors[i]);
+			
 		}
 		
 		
 		
-
+		
 		// matching the extracted features
 		for (int ik = 0;ik<numSeasons;ik++){
 			for (int jk = ik+1;jk<numSeasons;jk++){
 				matches.clear();
 				/*if not empty*/
+				
 				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
-
+				
 				/*are there any tentative correspondences ?*/
 				int sumDev = 0;
 				int numPoints = 0;
@@ -239,7 +250,9 @@ float eval(Eigen::MatrixXd individual){
 				int histogram[numBins];
 				int bestHistogram[numBins];
 				vector<unsigned char> mask;
+				
 				if (matches.size() > 0){
+					//exit(-1);
 					//histogram assembly
 					int histogram[numBins];
 					int bestHistogram[numBins];
@@ -300,13 +313,20 @@ float eval(Eigen::MatrixXd individual){
 					matchFail = true;
 				}
 				
+				
 				//end drawing
 			}
+			
 		}
+		//exit(-1);
+		
 	}
 	
 	
 	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "elapsed time: " << elapsed.count() << std::endl;
     return matchingFailures/matchingTests;
 }
 
@@ -326,11 +346,11 @@ int main(int argc, char ** argv){
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
 	do{
-		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), argv[1],numSeasons,numLocations);
+		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), "../GRIEF-datasets/michigan",numSeasons,numLocations);
 		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
 		if (tmpIm.data != NULL)
 		{
-			sprintf(filename,"%s/season_%02i/displacements.txt",argv[1],numSeasons);
+			sprintf(filename,"%s/season_%02i/displacements.txt","../GRIEF-datasets/michigan",numSeasons);
 			if (fopen(filename,"r") != NULL) numDisplacements++;
 			x = tmpIm.cols;
 			y = tmpIm.rows;
@@ -352,7 +372,7 @@ int main(int argc, char ** argv){
 	
 	/*check the number of locations*/
 	do{
-		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), argv[1],0,numLocations++);
+		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), "../GRIEF-datasets/michigan",0,numLocations++);
 		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
 	}while (numLocations < MAX_LOCATIONS && tmpIm.data != NULL);
 
@@ -376,7 +396,7 @@ int main(int argc, char ** argv){
 	{
 		for (int j=0;j<numLocations;j++)
 		{
-			sprintf(filename,(CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), argv[1],i,j);
+			sprintf(filename,(CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), "../GRIEF-datasets/michigan",i,j);
 			dataset_imgs[i][j] =  imread(filename, cv::IMREAD_GRAYSCALE);
 			
 			if (dataset_imgs[i][j].empty()) {
@@ -389,7 +409,7 @@ int main(int argc, char ** argv){
 			}
 		}
 		if (supervised){
-			sprintf(filename,"%s/season_%02i/displacements.txt",argv[1],i);
+			sprintf(filename,"%s/season_%02i/displacements.txt","../GRIEF-datasets/michigan",i);
 			displacements = fopen(filename,"r");
 			int aX,aY,aR;
 			for (int j = 0;j<numLocations;j++){
@@ -422,6 +442,9 @@ int main(int argc, char ** argv){
 	//	}
 	//}
 
+	for(int i = 0; i < 600; i++)
+		for(int j = 0; j < 600; j++)
+			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
     cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
 	

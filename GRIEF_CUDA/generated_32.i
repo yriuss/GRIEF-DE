@@ -1,5 +1,5 @@
 // Code generated with '$ grief/generate_code.py grief/test_pairs.txt 32'
-#define SMOOTHED(y,x) smoothedSum(sum, pt, y, x)
+#define SMOOTHED(y,x) smoothedSum(sum, pt, y, x, result)
     desc[0] =
 ((SMOOTHED(6, -15) < SMOOTHED(4, -17)) << 7)
 +

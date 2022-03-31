@@ -295,13 +295,15 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/eigen3/Eigen/Core \
  /usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
  /usr/local/include/eigen3/Eigen/src/Core/util/Macros.h \
- /usr/include/c++/9/complex /usr/include/c++/9/sstream \
- /usr/include/c++/9/bits/sstream.tcc \
- /usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
+ /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+ /usr/local/include/eigen3/Eigen/src/Core/util/ConfigureVectorization.h \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/emmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/9/include/mm_malloc.h \
+ /usr/include/c++/9/complex /usr/include/c++/9/sstream \
+ /usr/include/c++/9/bits/sstream.tcc \
+ /usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
  /usr/include/c++/9/cstddef /usr/include/c++/9/cassert \
  /usr/include/c++/9/cstring /usr/include/c++/9/climits \
  /usr/local/include/eigen3/Eigen/src/Core/util/Constants.h \
@@ -310,31 +312,47 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/eigen3/Eigen/src/Core/util/StaticAssert.h \
  /usr/local/include/eigen3/Eigen/src/Core/util/XprHelper.h \
  /usr/local/include/eigen3/Eigen/src/Core/util/Memory.h \
+ /usr/local/include/eigen3/Eigen/src/Core/util/IntegralConstant.h \
+ /usr/local/include/eigen3/Eigen/src/Core/util/Serializer.h \
+ /usr/local/include/eigen3/Eigen/src/Core/util/SymbolicIndex.h \
  /usr/local/include/eigen3/Eigen/src/Core/NumTraits.h \
+ /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/Core/MathFunctions.h \
  /usr/local/include/eigen3/Eigen/src/Core/GenericPacketMath.h \
  /usr/local/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/Default/ConjHelper.h \
+ /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Half.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/Default/BFloat16.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/Default/TypeCasting.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h \
  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h \
+ /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h \
  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h \
  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h \
- /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h \
- /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Half.h \
- /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/PacketMathHalf.h \
- /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/TypeCasting.h \
  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Settings.h \
+ /usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h \
  /usr/local/include/eigen3/Eigen/src/Core/functors/TernaryFunctors.h \
+ /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/Core/functors/BinaryFunctors.h \
  /usr/local/include/eigen3/Eigen/src/Core/functors/UnaryFunctors.h \
  /usr/local/include/eigen3/Eigen/src/Core/functors/NullaryFunctors.h \
  /usr/local/include/eigen3/Eigen/src/Core/functors/StlFunctors.h \
  /usr/local/include/eigen3/Eigen/src/Core/functors/AssignmentFunctors.h \
- /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Complex.h \
+ /usr/local/include/eigen3/Eigen/src/Core/util/IndexedViewHelper.h \
+ /usr/local/include/eigen3/Eigen/src/Core/util/ReshapedHelper.h \
+ /usr/local/include/eigen3/Eigen/src/Core/ArithmeticSequence.h \
  /usr/local/include/eigen3/Eigen/src/Core/IO.h \
  /usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h \
  /usr/local/include/eigen3/Eigen/src/Core/DenseBase.h \
- /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
- /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
  /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h \
+ /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
+ /usr/local/include/eigen3/Eigen/src/plugins/IndexedViewMethods.h \
+ /usr/local/include/eigen3/Eigen/src/plugins/IndexedViewMethods.h \
+ /usr/local/include/eigen3/Eigen/src/plugins/ReshapedMethods.h \
+ /usr/local/include/eigen3/Eigen/src/plugins/ReshapedMethods.h \
+ /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
  /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.h \
  /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
  /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
@@ -368,6 +386,8 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/eigen3/Eigen/src/Core/Ref.h \
  /usr/local/include/eigen3/Eigen/src/Core/Block.h \
  /usr/local/include/eigen3/Eigen/src/Core/VectorBlock.h \
+ /usr/local/include/eigen3/Eigen/src/Core/IndexedView.h \
+ /usr/local/include/eigen3/Eigen/src/Core/Reshaped.h \
  /usr/local/include/eigen3/Eigen/src/Core/Transpose.h \
  /usr/local/include/eigen3/Eigen/src/Core/DiagonalMatrix.h \
  /usr/local/include/eigen3/Eigen/src/Core/Diagonal.h \
@@ -386,6 +406,7 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/eigen3/Eigen/src/Core/TriangularMatrix.h \
  /usr/local/include/eigen3/Eigen/src/Core/SelfAdjointView.h \
  /usr/local/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
+ /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/Core/products/Parallelizer.h \
  /usr/local/include/eigen3/Eigen/src/Core/ProductEvaluators.h \
  /usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector.h \
@@ -406,42 +427,53 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h \
  /usr/local/include/eigen3/Eigen/src/Core/Select.h \
  /usr/local/include/eigen3/Eigen/src/Core/VectorwiseOp.h \
+ /usr/local/include/eigen3/Eigen/src/Core/PartialReduxEvaluator.h \
  /usr/local/include/eigen3/Eigen/src/Core/Random.h \
  /usr/local/include/eigen3/Eigen/src/Core/Replicate.h \
  /usr/local/include/eigen3/Eigen/src/Core/Reverse.h \
  /usr/local/include/eigen3/Eigen/src/Core/ArrayWrapper.h \
+ /usr/local/include/eigen3/Eigen/src/Core/StlIterators.h \
  /usr/local/include/eigen3/Eigen/src/Core/GlobalFunctions.h \
  /usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
  /usr/local/include/eigen3/Eigen/LU \
  /usr/local/include/eigen3/Eigen/src/misc/Kernel.h \
+ /usr/local/include/eigen3/Eigen/src/misc/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/misc/Image.h \
  /usr/local/include/eigen3/Eigen/src/LU/FullPivLU.h \
+ /usr/local/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/LU/PartialPivLU.h \
  /usr/local/include/eigen3/Eigen/src/LU/Determinant.h \
  /usr/local/include/eigen3/Eigen/src/LU/InverseImpl.h \
- /usr/local/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h \
+ /usr/local/include/eigen3/Eigen/src/LU/arch/InverseSize4.h \
+ /usr/local/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/Cholesky \
- /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
- /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
- /usr/local/include/eigen3/Eigen/QR \
  /usr/local/include/eigen3/Eigen/Jacobi \
  /usr/local/include/eigen3/Eigen/src/Jacobi/Jacobi.h \
+ /usr/local/include/eigen3/Eigen/src/Jacobi/InternalHeaderCheck.h \
+ /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
+ /usr/local/include/eigen3/Eigen/src/Cholesky/InternalHeaderCheck.h \
+ /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
+ /usr/local/include/eigen3/Eigen/QR \
  /usr/local/include/eigen3/Eigen/Householder \
  /usr/local/include/eigen3/Eigen/src/Householder/Householder.h \
+ /usr/local/include/eigen3/Eigen/src/Householder/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/Householder/HouseholderSequence.h \
  /usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h \
  /usr/local/include/eigen3/Eigen/src/QR/HouseholderQR.h \
+ /usr/local/include/eigen3/Eigen/src/QR/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h \
  /usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h \
  /usr/local/include/eigen3/Eigen/src/QR/CompleteOrthogonalDecomposition.h \
  /usr/local/include/eigen3/Eigen/SVD \
  /usr/local/include/eigen3/Eigen/src/misc/RealSvd2x2.h \
  /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h \
+ /usr/local/include/eigen3/Eigen/src/SVD/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/SVD/SVDBase.h \
  /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD.h \
  /usr/local/include/eigen3/Eigen/src/SVD/BDCSVD.h \
  /usr/local/include/eigen3/Eigen/Geometry \
  /usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
+ /usr/local/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/Geometry/EulerAngles.h \
  /usr/local/include/eigen3/Eigen/src/Geometry/Homogeneous.h \
  /usr/local/include/eigen3/Eigen/src/Geometry/RotationBase.h \
@@ -455,9 +487,11 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h \
  /usr/local/include/eigen3/Eigen/src/Geometry/AlignedBox.h \
  /usr/local/include/eigen3/Eigen/src/Geometry/Umeyama.h \
- /usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h \
+ /usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SIMD.h \
+ /usr/local/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/Eigenvalues \
  /usr/local/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
+ /usr/local/include/eigen3/Eigen/src/Eigenvalues/InternalHeaderCheck.h \
  /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
  /usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
  /usr/local/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h \
@@ -616,6 +650,8 @@ CMakeFiles/teste.dir/main.cc.o: /home/adriel/teste/GRIEF-DE/main.cc \
  /usr/local/include/opencv4/opencv2/video/background_segm.hpp \
  /usr/local/include/opencv4/opencv2/core/core.hpp \
  /usr/local/include/opencv4/opencv2/highgui/highgui.hpp \
+ /usr/local/include/opencv4/opencv2/cudafeatures2d.hpp \
+ /usr/local/include/opencv4/opencv2/cudafilters.hpp \
  /home/adriel/teste/GRIEF-DE/GRIEF/grief.h /usr/include/c++/9/fstream \
  /usr/include/x86_64-linux-gnu/c++/9/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++io.h \

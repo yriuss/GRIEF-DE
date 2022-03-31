@@ -48,10 +48,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/cmake/1035/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /snap/cmake/1035/bin/cmake -E rm -f
+RM = /usr/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -67,8 +67,8 @@ CMAKE_BINARY_DIR = /home/adriel/teste/GRIEF-DE/build
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/snap/cmake/1035/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/snap/cmake/1035/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -166,53 +166,53 @@ DE_CUDA/DE.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.s
 .PHONY : DE_CUDA/DE.cc.s
 
-GRIEF_CUDA/grief.o: GRIEF_CUDA/grief.cc.o
+GRIEF_CUDA/grief.o: GRIEF_CUDA/grief.cu.o
 .PHONY : GRIEF_CUDA/grief.o
 
 # target to build an object file
-GRIEF_CUDA/grief.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o
-.PHONY : GRIEF_CUDA/grief.cc.o
+GRIEF_CUDA/grief.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o
+.PHONY : GRIEF_CUDA/grief.cu.o
 
-GRIEF_CUDA/grief.i: GRIEF_CUDA/grief.cc.i
+GRIEF_CUDA/grief.i: GRIEF_CUDA/grief.cu.i
 .PHONY : GRIEF_CUDA/grief.i
 
 # target to preprocess a source file
-GRIEF_CUDA/grief.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.i
-.PHONY : GRIEF_CUDA/grief.cc.i
+GRIEF_CUDA/grief.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.i
+.PHONY : GRIEF_CUDA/grief.cu.i
 
-GRIEF_CUDA/grief.s: GRIEF_CUDA/grief.cc.s
+GRIEF_CUDA/grief.s: GRIEF_CUDA/grief.cu.s
 .PHONY : GRIEF_CUDA/grief.s
 
 # target to generate assembly for a file
-GRIEF_CUDA/grief.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.s
-.PHONY : GRIEF_CUDA/grief.cc.s
+GRIEF_CUDA/grief.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GRIEF_proj.dir/build.make CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.s
+.PHONY : GRIEF_CUDA/grief.cu.s
 
-main.o: main.cc.o
+main.o: main.cu.o
 .PHONY : main.o
 
 # target to build an object file
-main.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/main.cc.o
-.PHONY : main.cc.o
+main.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/main.cu.o
+.PHONY : main.cu.o
 
-main.i: main.cc.i
+main.i: main.cu.i
 .PHONY : main.i
 
 # target to preprocess a source file
-main.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/main.cc.i
-.PHONY : main.cc.i
+main.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/main.cu.i
+.PHONY : main.cu.i
 
-main.s: main.cc.s
+main.s: main.cu.s
 .PHONY : main.s
 
 # target to generate assembly for a file
-main.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/main.cc.s
-.PHONY : main.cc.s
+main.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/teste.dir/build.make CMakeFiles/teste.dir/main.cu.s
+.PHONY : main.cu.s
 
 # Help Target
 help:

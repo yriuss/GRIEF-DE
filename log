@@ -1,1 +1,0 @@
-g++ main.cc -ggdb  `pkg-config opencv --cflags` DE/DE.cc grief.cc -I/usr/include/python3.8 -I/home/adriel/.local/lib/python3.8/site-packages/numpy/core/include -Llib -Wl,-g `pkg-config opencv --libs` -lpython3.8 -o all

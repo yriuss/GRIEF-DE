@@ -202,15 +202,17 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/Core \
   /usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/Macros.h \
-  /usr/include/c++/9/complex \
-  /usr/include/c++/9/sstream \
-  /usr/include/c++/9/bits/sstream.tcc \
-  /usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/ConfigureVectorization.h \
   /usr/lib/gcc/x86_64-linux-gnu/9/include/mmintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/9/include/emmintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/9/include/xmmintrin.h \
   /usr/lib/gcc/x86_64-linux-gnu/9/include/mm_malloc.h \
   /usr/include/c++/9/stdlib.h \
+  /usr/include/c++/9/complex \
+  /usr/include/c++/9/sstream \
+  /usr/include/c++/9/bits/sstream.tcc \
+  /usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
   /usr/include/c++/9/cstddef \
   /usr/include/c++/9/cassert \
   /usr/include/assert.h \
@@ -247,31 +249,47 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/src/Core/util/StaticAssert.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/XprHelper.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/Memory.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/IntegralConstant.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/Serializer.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/SymbolicIndex.h \
   /usr/local/include/eigen3/Eigen/src/Core/NumTraits.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Core/MathFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/GenericPacketMath.h \
   /usr/local/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/ConjHelper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Half.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/BFloat16.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/TypeCasting.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h \
   /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h \
   /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Half.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/PacketMathHalf.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/TypeCasting.h \
   /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Settings.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/TernaryFunctors.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/BinaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/UnaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/NullaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/StlFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/AssignmentFunctors.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Complex.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/IndexedViewHelper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/ReshapedHelper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/ArithmeticSequence.h \
   /usr/local/include/eigen3/Eigen/src/Core/IO.h \
   /usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h \
   /usr/local/include/eigen3/Eigen/src/Core/DenseBase.h \
-  /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
-  /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
   /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/IndexedViewMethods.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/IndexedViewMethods.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/ReshapedMethods.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/ReshapedMethods.h \
+  /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
   /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.h \
   /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
   /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
@@ -305,6 +323,8 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/src/Core/Ref.h \
   /usr/local/include/eigen3/Eigen/src/Core/Block.h \
   /usr/local/include/eigen3/Eigen/src/Core/VectorBlock.h \
+  /usr/local/include/eigen3/Eigen/src/Core/IndexedView.h \
+  /usr/local/include/eigen3/Eigen/src/Core/Reshaped.h \
   /usr/local/include/eigen3/Eigen/src/Core/Transpose.h \
   /usr/local/include/eigen3/Eigen/src/Core/DiagonalMatrix.h \
   /usr/local/include/eigen3/Eigen/src/Core/Diagonal.h \
@@ -323,6 +343,7 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/src/Core/TriangularMatrix.h \
   /usr/local/include/eigen3/Eigen/src/Core/SelfAdjointView.h \
   /usr/local/include/eigen3/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Core/products/Parallelizer.h \
   /usr/local/include/eigen3/Eigen/src/Core/ProductEvaluators.h \
   /usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixVector.h \
@@ -343,42 +364,53 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h \
   /usr/local/include/eigen3/Eigen/src/Core/Select.h \
   /usr/local/include/eigen3/Eigen/src/Core/VectorwiseOp.h \
+  /usr/local/include/eigen3/Eigen/src/Core/PartialReduxEvaluator.h \
   /usr/local/include/eigen3/Eigen/src/Core/Random.h \
   /usr/local/include/eigen3/Eigen/src/Core/Replicate.h \
   /usr/local/include/eigen3/Eigen/src/Core/Reverse.h \
   /usr/local/include/eigen3/Eigen/src/Core/ArrayWrapper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/StlIterators.h \
   /usr/local/include/eigen3/Eigen/src/Core/GlobalFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
   /usr/local/include/eigen3/Eigen/LU \
   /usr/local/include/eigen3/Eigen/src/misc/Kernel.h \
+  /usr/local/include/eigen3/Eigen/src/misc/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/misc/Image.h \
   /usr/local/include/eigen3/Eigen/src/LU/FullPivLU.h \
+  /usr/local/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/LU/PartialPivLU.h \
   /usr/local/include/eigen3/Eigen/src/LU/Determinant.h \
   /usr/local/include/eigen3/Eigen/src/LU/InverseImpl.h \
-  /usr/local/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h \
+  /usr/local/include/eigen3/Eigen/src/LU/arch/InverseSize4.h \
+  /usr/local/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/Cholesky \
-  /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
-  /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
-  /usr/local/include/eigen3/Eigen/QR \
   /usr/local/include/eigen3/Eigen/Jacobi \
   /usr/local/include/eigen3/Eigen/src/Jacobi/Jacobi.h \
+  /usr/local/include/eigen3/Eigen/src/Jacobi/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
+  /usr/local/include/eigen3/Eigen/src/Cholesky/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
+  /usr/local/include/eigen3/Eigen/QR \
   /usr/local/include/eigen3/Eigen/Householder \
   /usr/local/include/eigen3/Eigen/src/Householder/Householder.h \
+  /usr/local/include/eigen3/Eigen/src/Householder/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Householder/HouseholderSequence.h \
   /usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h \
   /usr/local/include/eigen3/Eigen/src/QR/HouseholderQR.h \
+  /usr/local/include/eigen3/Eigen/src/QR/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h \
   /usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h \
   /usr/local/include/eigen3/Eigen/src/QR/CompleteOrthogonalDecomposition.h \
   /usr/local/include/eigen3/Eigen/SVD \
   /usr/local/include/eigen3/Eigen/src/misc/RealSvd2x2.h \
   /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h \
+  /usr/local/include/eigen3/Eigen/src/SVD/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/SVD/SVDBase.h \
   /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD.h \
   /usr/local/include/eigen3/Eigen/src/SVD/BDCSVD.h \
   /usr/local/include/eigen3/Eigen/Geometry \
   /usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
+  /usr/local/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/EulerAngles.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/Homogeneous.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/RotationBase.h \
@@ -392,9 +424,11 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/AlignedBox.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/Umeyama.h \
-  /usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h \
+  /usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SIMD.h \
+  /usr/local/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/Eigenvalues \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
+  /usr/local/include/eigen3/Eigen/src/Eigenvalues/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h \
@@ -411,51 +445,105 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
 
-CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
+CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o: ../GRIEF_CUDA/grief.cu \
   /usr/include/stdc-predef.h \
-  ../GRIEF_CUDA/grief.h \
-  /usr/include/x86_64-linux-gnu/sys/time.h \
+  /usr/local/cuda-11.2/include/cuda_runtime.h \
+  /usr/local/cuda-11.2/include/crt/host_config.h \
   /usr/include/features.h \
   /usr/include/x86_64-linux-gnu/sys/cdefs.h \
   /usr/include/x86_64-linux-gnu/bits/wordsize.h \
   /usr/include/x86_64-linux-gnu/bits/long-double.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs.h \
   /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+  /usr/local/cuda-11.2/include/builtin_types.h \
+  /usr/local/cuda-11.2/include/device_types.h \
+  /usr/local/cuda-11.2/include/crt/host_defines.h \
+  /usr/local/cuda-11.2/include/driver_types.h \
+  /usr/local/cuda-11.2/include/vector_types.h \
+  /usr/lib/gcc/x86_64-linux-gnu/9/include/limits.h \
+  /usr/lib/gcc/x86_64-linux-gnu/9/include/syslimits.h \
+  /usr/include/limits.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+  /usr/include/linux/limits.h \
+  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
+  /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h \
+  /usr/local/cuda-11.2/include/surface_types.h \
+  /usr/local/cuda-11.2/include/texture_types.h \
+  /usr/local/cuda-11.2/include/library_types.h \
+  /usr/local/cuda-11.2/include/channel_descriptor.h \
+  /usr/local/cuda-11.2/include/cuda_runtime_api.h \
+  /usr/local/cuda-11.2/include/cuda_device_runtime_api.h \
+  /usr/local/cuda-11.2/include/driver_functions.h \
+  /usr/local/cuda-11.2/include/vector_functions.h \
+  /usr/local/cuda-11.2/include/vector_functions.hpp \
+  /usr/local/cuda-11.2/include/crt/common_functions.h \
+  /usr/include/string.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/strings.h \
+  /usr/include/time.h \
+  /usr/include/x86_64-linux-gnu/bits/time.h \
   /usr/include/x86_64-linux-gnu/bits/types.h \
   /usr/include/x86_64-linux-gnu/bits/timesize.h \
   /usr/include/x86_64-linux-gnu/bits/typesizes.h \
   /usr/include/x86_64-linux-gnu/bits/time64.h \
-  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+  /usr/include/x86_64-linux-gnu/bits/timex.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
-  /usr/include/x86_64-linux-gnu/sys/select.h \
-  /usr/include/x86_64-linux-gnu/bits/select.h \
-  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
   /usr/include/x86_64-linux-gnu/bits/endian.h \
   /usr/include/x86_64-linux-gnu/bits/endianness.h \
-  /usr/include/c++/9/stdlib.h \
-  /usr/include/c++/9/cstdlib \
+  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+  /usr/include/c++/9/new \
   /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
   /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h \
   /usr/include/x86_64-linux-gnu/c++/9/bits/cpu_defines.h \
+  /usr/include/c++/9/exception \
+  /usr/include/c++/9/bits/exception.h \
+  /usr/include/c++/9/bits/exception_ptr.h \
+  /usr/include/c++/9/bits/exception_defines.h \
+  /usr/include/c++/9/bits/cxxabi_init_exception.h \
+  /usr/include/c++/9/typeinfo \
+  /usr/include/c++/9/bits/hash_bytes.h \
+  /usr/include/c++/9/bits/nested_exception.h \
+  /usr/include/c++/9/bits/move.h \
+  /usr/include/c++/9/bits/concept_check.h \
+  /usr/include/c++/9/type_traits \
+  /usr/include/stdio.h \
+  /usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
+  /usr/include/c++/9/stdlib.h \
+  /usr/include/c++/9/cstdlib \
   /usr/include/stdlib.h \
-  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/stddef.h \
   /usr/include/x86_64-linux-gnu/bits/waitflags.h \
   /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
   /usr/include/x86_64-linux-gnu/bits/floatn.h \
   /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
-  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
-  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/endian.h \
   /usr/include/x86_64-linux-gnu/bits/byteswap.h \
   /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+  /usr/include/x86_64-linux-gnu/sys/select.h \
+  /usr/include/x86_64-linux-gnu/bits/select.h \
+  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
   /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
   /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
@@ -464,6 +552,58 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/alloca.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
   /usr/include/c++/9/bits/std_abs.h \
+  /usr/include/assert.h \
+  /usr/local/cuda-11.2/include/crt/math_functions.h \
+  /usr/include/c++/9/math.h \
+  /usr/include/c++/9/cmath \
+  /usr/include/c++/9/bits/cpp_type_traits.h \
+  /usr/include/c++/9/ext/type_traits.h \
+  /usr/include/math.h \
+  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+  /usr/local/cuda-11.2/include/crt/math_functions.hpp \
+  /usr/local/cuda-11.2/include/cuda_surface_types.h \
+  /usr/local/cuda-11.2/include/cuda_texture_types.h \
+  /usr/local/cuda-11.2/include/crt/device_functions.h \
+  /usr/local/cuda-11.2/include/crt/device_functions.hpp \
+  /usr/local/cuda-11.2/include/device_atomic_functions.h \
+  /usr/local/cuda-11.2/include/device_atomic_functions.hpp \
+  /usr/local/cuda-11.2/include/crt/device_double_functions.h \
+  /usr/local/cuda-11.2/include/crt/device_double_functions.hpp \
+  /usr/local/cuda-11.2/include/sm_20_atomic_functions.h \
+  /usr/local/cuda-11.2/include/sm_20_atomic_functions.hpp \
+  /usr/local/cuda-11.2/include/sm_32_atomic_functions.h \
+  /usr/local/cuda-11.2/include/sm_32_atomic_functions.hpp \
+  /usr/local/cuda-11.2/include/sm_35_atomic_functions.h \
+  /usr/local/cuda-11.2/include/sm_60_atomic_functions.h \
+  /usr/local/cuda-11.2/include/sm_60_atomic_functions.hpp \
+  /usr/local/cuda-11.2/include/sm_20_intrinsics.h \
+  /usr/local/cuda-11.2/include/sm_20_intrinsics.hpp \
+  /usr/local/cuda-11.2/include/sm_30_intrinsics.h \
+  /usr/local/cuda-11.2/include/sm_30_intrinsics.hpp \
+  /usr/local/cuda-11.2/include/sm_32_intrinsics.h \
+  /usr/local/cuda-11.2/include/sm_32_intrinsics.hpp \
+  /usr/local/cuda-11.2/include/sm_35_intrinsics.h \
+  /usr/local/cuda-11.2/include/sm_61_intrinsics.h \
+  /usr/local/cuda-11.2/include/sm_61_intrinsics.hpp \
+  /usr/local/cuda-11.2/include/crt/sm_70_rt.h \
+  /usr/local/cuda-11.2/include/crt/sm_70_rt.hpp \
+  /usr/local/cuda-11.2/include/crt/sm_80_rt.h \
+  /usr/local/cuda-11.2/include/crt/sm_80_rt.hpp \
+  /usr/local/cuda-11.2/include/surface_functions.h \
+  /usr/local/cuda-11.2/include/texture_fetch_functions.h \
+  /usr/local/cuda-11.2/include/texture_indirect_functions.h \
+  /usr/local/cuda-11.2/include/surface_indirect_functions.h \
+  /usr/local/cuda-11.2/include/device_launch_parameters.h \
+  ../GRIEF_CUDA/grief.h \
+  /usr/include/x86_64-linux-gnu/sys/time.h \
   /usr/local/include/opencv4/opencv2/opencv.hpp \
   /usr/local/include/opencv4/opencv2/opencv_modules.hpp \
   /usr/local/include/opencv4/opencv2/core.hpp \
@@ -478,36 +618,18 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/x86_64-linux-gnu/bits/wchar.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
   /usr/local/include/opencv4/opencv2/core/cv_cpu_dispatch.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/emmintrin.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/xmmintrin.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/mmintrin.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/mm_malloc.h \
   /usr/include/c++/9/array \
   /usr/include/c++/9/utility \
   /usr/include/c++/9/bits/stl_relops.h \
   /usr/include/c++/9/bits/stl_pair.h \
-  /usr/include/c++/9/bits/move.h \
-  /usr/include/c++/9/bits/concept_check.h \
-  /usr/include/c++/9/type_traits \
   /usr/include/c++/9/initializer_list \
   /usr/include/c++/9/stdexcept \
-  /usr/include/c++/9/exception \
-  /usr/include/c++/9/bits/exception.h \
-  /usr/include/c++/9/bits/exception_ptr.h \
-  /usr/include/c++/9/bits/exception_defines.h \
-  /usr/include/c++/9/bits/cxxabi_init_exception.h \
-  /usr/include/c++/9/typeinfo \
-  /usr/include/c++/9/bits/hash_bytes.h \
-  /usr/include/c++/9/new \
-  /usr/include/c++/9/bits/nested_exception.h \
   /usr/include/c++/9/string \
   /usr/include/c++/9/bits/stringfwd.h \
   /usr/include/c++/9/bits/memoryfwd.h \
   /usr/include/c++/9/bits/char_traits.h \
   /usr/include/c++/9/bits/stl_algobase.h \
   /usr/include/c++/9/bits/functexcept.h \
-  /usr/include/c++/9/bits/cpp_type_traits.h \
-  /usr/include/c++/9/ext/type_traits.h \
   /usr/include/c++/9/ext/numeric_traits.h \
   /usr/include/c++/9/bits/stl_iterator_base_types.h \
   /usr/include/c++/9/bits/stl_iterator_base_funcs.h \
@@ -519,12 +641,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/c++/9/bits/postypes.h \
   /usr/include/c++/9/cwchar \
   /usr/include/wchar.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h \
   /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
   /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
   /usr/include/c++/9/bits/allocator.h \
   /usr/include/x86_64-linux-gnu/c++/9/bits/c++allocator.h \
   /usr/include/c++/9/ext/new_allocator.h \
@@ -550,24 +668,12 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/x86_64-linux-gnu/bits/sched.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
   /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
-  /usr/include/time.h \
-  /usr/include/x86_64-linux-gnu/bits/time.h \
-  /usr/include/x86_64-linux-gnu/bits/timex.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
   /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/c++/9/bits/atomic_word.h \
   /usr/include/c++/9/ext/alloc_traits.h \
   /usr/include/c++/9/bits/alloc_traits.h \
   /usr/include/c++/9/ext/string_conversions.h \
   /usr/include/c++/9/cstdio \
-  /usr/include/stdio.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
-  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
-  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
   /usr/include/c++/9/cerrno \
   /usr/include/errno.h \
   /usr/include/x86_64-linux-gnu/bits/errno.h \
@@ -580,15 +686,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/c++/9/bits/basic_string.tcc \
   /usr/local/include/opencv4/opencv2/core/base.hpp \
   /usr/include/c++/9/climits \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/limits.h \
-  /usr/lib/gcc/x86_64-linux-gnu/9/include/syslimits.h \
-  /usr/include/limits.h \
-  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
-  /usr/include/linux/limits.h \
-  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
-  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
   /usr/include/c++/9/algorithm \
   /usr/include/c++/9/bits/stl_algo.h \
   /usr/include/c++/9/bits/algorithmfwd.h \
@@ -598,19 +695,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/c++/9/bits/uniform_int_dist.h \
   /usr/local/include/opencv4/opencv2/core/cvstd.hpp \
   /usr/include/c++/9/cstring \
-  /usr/include/string.h \
-  /usr/include/strings.h \
-  /usr/include/c++/9/cmath \
-  /usr/include/math.h \
-  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
-  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
-  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
-  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
-  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
-  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
-  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
-  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
-  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
   /usr/local/include/opencv4/opencv2/core/cvstd_wrapper.hpp \
   /usr/include/c++/9/memory \
   /usr/include/c++/9/bits/stl_uninitialized.h \
@@ -631,7 +715,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/c++/9/backward/auto_ptr.h \
   /usr/local/include/opencv4/opencv2/core/neon_utils.hpp \
   /usr/local/include/opencv4/opencv2/core/vsx_utils.hpp \
-  /usr/include/assert.h \
   /usr/local/include/opencv4/opencv2/core/check.hpp \
   /usr/local/include/opencv4/opencv2/core/traits.hpp \
   /usr/local/include/opencv4/opencv2/core/matx.hpp \
@@ -687,7 +770,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/c++/9/bits/unique_lock.h \
   /usr/local/include/opencv4/opencv2/core/optim.hpp \
   /usr/local/include/opencv4/opencv2/core/ovx.hpp \
-  /usr/local/include/opencv4/opencv2/core/cvdef.h \
   /usr/local/include/opencv4/opencv2/calib3d.hpp \
   /usr/local/include/opencv4/opencv2/features2d.hpp \
   /usr/local/include/opencv4/opencv2/flann/miniflann.hpp \
@@ -707,14 +789,12 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/opencv4/opencv2/dnn/layer.hpp \
   /usr/local/include/opencv4/opencv2/dnn/dnn.inl.hpp \
   /usr/local/include/opencv4/opencv2/dnn/utils/inference_engine.hpp \
-  /usr/local/include/opencv4/opencv2/dnn/dnn.hpp \
   /usr/local/include/opencv4/opencv2/flann.hpp \
   /usr/local/include/opencv4/opencv2/flann/flann_base.hpp \
   /usr/local/include/opencv4/opencv2/flann/general.h \
   /usr/local/include/opencv4/opencv2/flann/matrix.h \
   /usr/local/include/opencv4/opencv2/flann/params.h \
   /usr/local/include/opencv4/opencv2/flann/any.h \
-  /usr/local/include/opencv4/opencv2/flann/defines.h \
   /usr/include/c++/9/iostream \
   /usr/local/include/opencv4/opencv2/flann/saving.h \
   /usr/local/include/opencv4/opencv2/flann/nn_index.h \
@@ -751,7 +831,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/include/c++/9/bits/hashtable.h \
   /usr/include/c++/9/bits/hashtable_policy.h \
   /usr/include/c++/9/bits/unordered_map.h \
-  /usr/include/c++/9/math.h \
   /usr/local/include/opencv4/opencv2/flann/autotuned_index.h \
   /usr/local/include/opencv4/opencv2/flann/ground_truth.h \
   /usr/local/include/opencv4/opencv2/flann/index_testing.h \
@@ -774,10 +853,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/opencv4/opencv2/core/cuda_types.hpp \
   /usr/local/include/opencv4/opencv2/core/cuda.inl.hpp \
   /usr/local/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp \
-  /usr/local/include/opencv4/opencv2/stitching/detail/warpers.hpp \
   /usr/local/include/opencv4/opencv2/stitching/detail/matchers.hpp \
   /usr/local/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp \
-  /usr/local/include/opencv4/opencv2/stitching/detail/matchers.hpp \
   /usr/local/include/opencv4/opencv2/stitching/detail/util.hpp \
   /usr/include/c++/9/list \
   /usr/include/c++/9/bits/stl_list.h \
@@ -792,7 +869,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/opencv4/opencv2/stitching/detail/exposure_compensate.hpp \
   /usr/local/include/opencv4/opencv2/stitching/detail/seam_finders.hpp \
   /usr/local/include/opencv4/opencv2/stitching/detail/blenders.hpp \
-  /usr/local/include/opencv4/opencv2/stitching/detail/camera.hpp \
   /usr/local/include/opencv4/opencv2/video.hpp \
   /usr/local/include/opencv4/opencv2/video/tracking.hpp \
   /usr/local/include/opencv4/opencv2/video/background_segm.hpp \
@@ -808,39 +884,55 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/eigen3/Eigen/Core \
   /usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/Macros.h \
+  /usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h \
+  /usr/local/cuda-11.2/include/cuda.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/ConfigureVectorization.h \
+  /usr/local/cuda-11.2/include/cuda_fp16.h \
+  /usr/local/cuda-11.2/include/cuda_fp16.hpp \
   /usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h \
   /usr/include/c++/9/cassert \
   /usr/local/include/eigen3/Eigen/src/Core/util/Constants.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/Meta.h \
+  /usr/local/cuda-11.2/include/math_constants.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/StaticAssert.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/XprHelper.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/Memory.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/IntegralConstant.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/Serializer.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/SymbolicIndex.h \
   /usr/local/include/eigen3/Eigen/src/Core/NumTraits.h \
   /usr/local/include/eigen3/Eigen/src/Core/MathFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/GenericPacketMath.h \
   /usr/local/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Half.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/PacketMathHalf.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/TypeCasting.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/ConjHelper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Half.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/BFloat16.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/TypeCasting.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/GPU/PacketMath.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/GPU/MathFunctions.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/GPU/TypeCasting.h \
   /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Settings.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/TernaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/BinaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/UnaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/NullaryFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/StlFunctors.h \
   /usr/local/include/eigen3/Eigen/src/Core/functors/AssignmentFunctors.h \
-  /usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Complex.h \
+  /usr/local/include/eigen3/Eigen/src/Core/arch/GPU/Complex.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/IndexedViewHelper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/util/ReshapedHelper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/ArithmeticSequence.h \
   /usr/local/include/eigen3/Eigen/src/Core/IO.h \
   /usr/local/include/eigen3/Eigen/src/Core/DenseCoeffsBase.h \
   /usr/local/include/eigen3/Eigen/src/Core/DenseBase.h \
-  /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
-  /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
   /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/IndexedViewMethods.h \
+  /usr/local/include/eigen3/Eigen/src/plugins/ReshapedMethods.h \
+  /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h \
   /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.h \
   /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
   /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
@@ -874,6 +966,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/eigen3/Eigen/src/Core/Ref.h \
   /usr/local/include/eigen3/Eigen/src/Core/Block.h \
   /usr/local/include/eigen3/Eigen/src/Core/VectorBlock.h \
+  /usr/local/include/eigen3/Eigen/src/Core/IndexedView.h \
+  /usr/local/include/eigen3/Eigen/src/Core/Reshaped.h \
   /usr/local/include/eigen3/Eigen/src/Core/Transpose.h \
   /usr/local/include/eigen3/Eigen/src/Core/DiagonalMatrix.h \
   /usr/local/include/eigen3/Eigen/src/Core/Diagonal.h \
@@ -912,42 +1006,51 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h \
   /usr/local/include/eigen3/Eigen/src/Core/Select.h \
   /usr/local/include/eigen3/Eigen/src/Core/VectorwiseOp.h \
+  /usr/local/include/eigen3/Eigen/src/Core/PartialReduxEvaluator.h \
   /usr/local/include/eigen3/Eigen/src/Core/Random.h \
   /usr/local/include/eigen3/Eigen/src/Core/Replicate.h \
   /usr/local/include/eigen3/Eigen/src/Core/Reverse.h \
   /usr/local/include/eigen3/Eigen/src/Core/ArrayWrapper.h \
+  /usr/local/include/eigen3/Eigen/src/Core/StlIterators.h \
   /usr/local/include/eigen3/Eigen/src/Core/GlobalFunctions.h \
   /usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
   /usr/local/include/eigen3/Eigen/LU \
   /usr/local/include/eigen3/Eigen/src/misc/Kernel.h \
+  /usr/local/include/eigen3/Eigen/src/misc/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/misc/Image.h \
   /usr/local/include/eigen3/Eigen/src/LU/FullPivLU.h \
+  /usr/local/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/LU/PartialPivLU.h \
   /usr/local/include/eigen3/Eigen/src/LU/Determinant.h \
   /usr/local/include/eigen3/Eigen/src/LU/InverseImpl.h \
-  /usr/local/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h \
   /usr/local/include/eigen3/Eigen/Cholesky \
-  /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
-  /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
-  /usr/local/include/eigen3/Eigen/QR \
   /usr/local/include/eigen3/Eigen/Jacobi \
   /usr/local/include/eigen3/Eigen/src/Jacobi/Jacobi.h \
+  /usr/local/include/eigen3/Eigen/src/Jacobi/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h \
+  /usr/local/include/eigen3/Eigen/src/Cholesky/InternalHeaderCheck.h \
+  /usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h \
+  /usr/local/include/eigen3/Eigen/QR \
   /usr/local/include/eigen3/Eigen/Householder \
   /usr/local/include/eigen3/Eigen/src/Householder/Householder.h \
+  /usr/local/include/eigen3/Eigen/src/Householder/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Householder/HouseholderSequence.h \
   /usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h \
   /usr/local/include/eigen3/Eigen/src/QR/HouseholderQR.h \
+  /usr/local/include/eigen3/Eigen/src/QR/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h \
   /usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h \
   /usr/local/include/eigen3/Eigen/src/QR/CompleteOrthogonalDecomposition.h \
   /usr/local/include/eigen3/Eigen/SVD \
   /usr/local/include/eigen3/Eigen/src/misc/RealSvd2x2.h \
   /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h \
+  /usr/local/include/eigen3/Eigen/src/SVD/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/SVD/SVDBase.h \
   /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD.h \
   /usr/local/include/eigen3/Eigen/src/SVD/BDCSVD.h \
   /usr/local/include/eigen3/Eigen/Geometry \
   /usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
+  /usr/local/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/EulerAngles.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/Homogeneous.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/RotationBase.h \
@@ -961,23 +1064,18 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/AlignedBox.h \
   /usr/local/include/eigen3/Eigen/src/Geometry/Umeyama.h \
-  /usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h \
   /usr/local/include/eigen3/Eigen/Eigenvalues \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
+  /usr/local/include/eigen3/Eigen/src/Eigenvalues/InternalHeaderCheck.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h \
-  /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h \
-  /usr/local/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h \
-  /usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h \
-  /usr/local/include/eigen3/Eigen/src/Eigenvalues/ComplexSchur.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
-  /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
   ../DE/DE.h \
   /usr/include/c++/9/random \
@@ -992,13 +1090,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
   /usr/local/include/opencv4/opencv2/imgproc/imgproc_c.h \
   /usr/local/include/opencv4/opencv2/imgproc/types_c.h \
   /usr/local/include/opencv4/opencv2/core/core_c.h \
-  /usr/local/include/opencv4/opencv2/core/types_c.h \
-  ../GRIEF_CUDA/generated_16.i \
-  ../GRIEF_CUDA/generated_32.i \
-  ../GRIEF_CUDA/generated_64.i
+  /usr/local/include/opencv4/opencv2/core/types_c.h
 
-
-../GRIEF_CUDA/generated_32.i:
 
 /usr/local/include/opencv4/opencv2/core/types_c.h:
 
@@ -1007,6 +1100,18 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 /usr/local/include/opencv4/opencv2/imgproc/imgproc.hpp:
 
 ../DE/DE.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/GPU/TypeCasting.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/GPU/MathFunctions.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/GPU/PacketMath.h:
+
+/usr/local/cuda-11.2/include/math_constants.h:
+
+/usr/local/cuda-11.2/include/cuda_fp16.hpp:
+
+/usr/local/cuda-11.2/include/cuda.h:
 
 /usr/local/include/opencv4/opencv2/xfeatures2d/nonfree.hpp:
 
@@ -1036,19 +1141,135 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/stl_list.h:
 
-/usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/PacketMathHalf.h:
+/usr/local/include/opencv4/opencv2/stitching/detail/util.hpp:
 
-/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h:
+/usr/local/include/opencv4/opencv2/stitching/detail/matchers.hpp:
 
-/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h:
+/usr/local/include/opencv4/opencv2/core/cuda.inl.hpp:
+
+/usr/local/include/opencv4/opencv2/core/cuda_types.hpp:
+
+/usr/local/include/opencv4/opencv2/core/cuda.hpp:
+
+/usr/local/include/opencv4/opencv2/stitching/detail/warpers.hpp:
+
+/usr/local/include/opencv4/opencv2/stitching/warpers.hpp:
+
+/usr/local/include/opencv4/opencv2/objdetect.hpp:
+
+/usr/local/include/opencv4/opencv2/ml/ml.inl.hpp:
+
+/usr/local/include/opencv4/opencv2/ml.hpp:
+
+/usr/local/include/opencv4/opencv2/imgproc.hpp:
+
+/usr/local/include/opencv4/opencv2/imgcodecs.hpp:
+
+/usr/local/include/opencv4/opencv2/flann/index_testing.h:
+
+/usr/local/include/opencv4/opencv2/flann/ground_truth.h:
+
+/usr/local/include/opencv4/opencv2/flann/autotuned_index.h:
+
+/usr/include/c++/9/bits/hashtable_policy.h:
+
+/usr/include/c++/9/bits/hashtable.h:
+
+/usr/include/c++/9/unordered_map:
+
+/usr/include/c++/9/bits/locale_conv.h:
+
+/usr/include/c++/9/bits/locale_facets_nonio.tcc:
+
+/usr/include/c++/9/bits/codecvt.h:
+
+/usr/include/x86_64-linux-gnu/c++/9/bits/time_members.h:
+
+/usr/include/c++/9/bits/locale_facets_nonio.h:
+
+/usr/include/c++/9/locale:
+
+/usr/include/c++/9/iomanip:
+
+/usr/local/include/opencv4/opencv2/flann/lsh_table.h:
+
+/usr/local/include/opencv4/opencv2/flann/hierarchical_clustering_index.h:
+
+/usr/local/include/opencv4/opencv2/flann/linear_index.h:
+
+/usr/local/include/opencv4/opencv2/flann/logger.h:
+
+/usr/local/include/opencv4/opencv2/flann/kmeans_index.h:
+
+/usr/local/include/opencv4/opencv2/flann/kdtree_single_index.h:
+
+/usr/local/include/opencv4/opencv2/flann/heap.h:
+
+/usr/local/include/opencv4/opencv2/flann/dynamic_bitset.h:
+
+/usr/local/include/opencv4/opencv2/flann/all_indices.h:
+
+/usr/include/c++/9/bits/stl_multiset.h:
+
+/usr/include/c++/9/bits/stl_set.h:
+
+/usr/include/c++/9/set:
+
+/usr/local/include/opencv4/opencv2/flann/result_set.h:
+
+/usr/local/include/opencv4/opencv2/flann/nn_index.h:
+
+/usr/local/include/opencv4/opencv2/flann/any.h:
+
+/usr/include/c++/9/bits/quoted_string.h:
+
+/usr/local/include/opencv4/opencv2/flann/params.h:
+
+/usr/local/include/opencv4/opencv2/flann/matrix.h:
+
+/usr/local/include/opencv4/opencv2/flann/flann_base.hpp:
+
+/usr/local/include/opencv4/opencv2/flann.hpp:
+
+/usr/local/include/opencv4/opencv2/dnn/utils/inference_engine.hpp:
+
+/usr/local/include/opencv4/opencv2/dnn/dnn.inl.hpp:
+
+/usr/local/include/opencv4/opencv2/dnn/layer.hpp:
+
+/usr/include/c++/9/bits/stl_multimap.h:
+
+/usr/local/include/opencv4/opencv2/dnn/dict.hpp:
+
+/usr/local/include/opencv4/opencv2/core/async.hpp:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/Default/Half.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h:
+
+/usr/include/c++/9/bits/stl_relops.h:
+
+/usr/local/cuda-11.2/include/cuda_texture_types.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/GenericPacketMath.h:
 
 /usr/include/string.h:
 
-/usr/include/c++/9/bits/stl_relops.h:
+/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/MathFunctions.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/StlIterators.h:
+
+/usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SIMD.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/util/Memory.h:
+
+/usr/local/include/opencv4/opencv2/photo.hpp:
+
+/usr/local/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h:
+
+/usr/include/c++/9/bits/stl_map.h:
+
+/usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h:
 
 /usr/include/c++/9/bits/stl_heap.h:
 
@@ -1084,27 +1305,19 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/invoke.h:
 
-/usr/local/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h:
-
-/usr/include/x86_64-linux-gnu/asm/errno.h:
-
-/usr/include/c++/9/bits/istream.tcc:
-
 /usr/include/assert.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/9/include/xmmintrin.h:
-
-/usr/lib/gcc/x86_64-linux-gnu/9/include/mm_malloc.h:
-
-/usr/include/c++/9/bits/refwrap.h:
-
-/usr/include/c++/9/unordered_map:
 
 /usr/local/include/eigen3/Eigen/src/Core/SelfAdjointView.h:
 
 /usr/include/c++/9/sstream:
 
 /usr/include/c++/9/typeinfo:
+
+/usr/lib/gcc/x86_64-linux-gnu/9/include/xmmintrin.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/9/include/mm_malloc.h:
+
+/usr/include/c++/9/bits/refwrap.h:
 
 /usr/local/include/eigen3/Eigen/SVD:
 
@@ -1132,21 +1345,21 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Hyperplane.h:
 
+/usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h:
+
 /usr/lib/gcc/x86_64-linux-gnu/9/include/mmintrin.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
-
-/usr/local/include/eigen3/Eigen/src/Core/util/MKL_support.h:
 
 /usr/include/c++/9/bits/locale_classes.tcc:
 
 /usr/include/c++/9/stdlib.h:
 
-/usr/local/include/opencv4/opencv2/flann/nn_index.h:
-
 /usr/include/x86_64-linux-gnu/c++/9/bits/ctype_inline.h:
 
 /usr/include/c++/9/bits/locale_classes.h:
+
+/usr/local/include/eigen3/Eigen/src/SVD/InternalHeaderCheck.h:
 
 /usr/include/c++/9/bits/ios_base.h:
 
@@ -1156,9 +1369,9 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/ios:
 
-/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
+/usr/local/include/opencv4/opencv2/flann/saving.h:
 
-../GRIEF_CUDA/generated_64.i:
+/usr/include/c++/9/numeric:
 
 /usr/include/c++/9/bits/random.tcc:
 
@@ -1166,13 +1379,17 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/x86_64-linux-gnu/c++/9/bits/opt_random.h:
 
-/usr/local/include/eigen3/Eigen/src/LU/arch/Inverse_SSE.h:
+/usr/local/include/eigen3/Eigen/src/Core/util/ReshapedHelper.h:
 
 /usr/include/c++/9/bits/stl_vector.h:
 
 /usr/include/c++/9/cstdint:
 
 /usr/local/include/eigen3/Eigen/src/Core/ProductEvaluators.h:
+
+/usr/local/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp:
+
+/usr/include/c++/9/vector:
 
 /usr/include/c++/9/bits/basic_string.tcc:
 
@@ -1183,8 +1400,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/linux/errno.h:
-
-/usr/include/c++/9/bits/uses_allocator.h:
 
 /usr/include/wctype.h:
 
@@ -1216,6 +1431,12 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/stl_raw_storage_iter.h:
 
+/usr/local/include/eigen3/Eigen/src/Core/MathFunctionsImpl.h:
+
+/usr/include/x86_64-linux-gnu/asm/errno.h:
+
+/usr/include/c++/9/bits/istream.tcc:
+
 /usr/include/c++/9/ext/alloc_traits.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/DiagonalProduct.h:
@@ -1224,19 +1445,23 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/LU:
 
-/usr/include/c++/9/bits/stl_tempbuf.h:
-
 /usr/include/c++/9/cstdlib:
 
 /usr/local/include/eigen3/Eigen/src/Core/SolverBase.h:
+
+/usr/local/cuda-11.2/include/crt/common_functions.h:
+
+/usr/local/include/opencv4/opencv2/flann/allocator.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h:
 
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
 /usr/include/c++/9/bits/basic_ios.h:
-
-/usr/include/x86_64-linux-gnu/bits/time.h:
 
 /usr/local/include/opencv4/opencv2/core/saturate.hpp:
 
@@ -1246,11 +1471,9 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/time.h:
 
-/usr/include/c++/9/bits/hashtable.h:
+/usr/include/x86_64-linux-gnu/c++/9/bits/messages_members.h:
 
-/usr/include/c++/9/bits/memoryfwd.h:
-
-/usr/local/include/opencv4/opencv2/flann/ground_truth.h:
+/usr/include/pthread.h:
 
 /usr/include/c++/9/complex:
 
@@ -1274,7 +1497,11 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/plugins/BlockMethods.h:
 
+/usr/local/include/eigen3/Eigen/src/Core/InternalHeaderCheck.h:
+
 /usr/include/x86_64-linux-gnu/bits/sys_errlist.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/GPU/Complex.h:
 
 /usr/include/x86_64-linux-gnu/sys/cdefs.h:
 
@@ -1290,21 +1517,25 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Umeyama.h:
 
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/local/cuda-11.2/include/crt/device_double_functions.h:
+
 /usr/local/include/eigen3/Eigen/src/Core/NumTraits.h:
-
-/usr/include/c++/9/numeric:
-
-/usr/local/include/opencv4/opencv2/flann/saving.h:
 
 /usr/include/x86_64-linux-gnu/bits/byteswap.h:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
-/usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/TypeCasting.h:
+/usr/include/c++/9/bits/erase_if.h:
+
+/usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h:
 
 /usr/include/endian.h:
 
-/usr/local/include/opencv4/opencv2/stitching/warpers.hpp:
+/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
 /usr/include/c++/9/bits/stl_iterator_base_funcs.h:
 
@@ -1336,6 +1567,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 
+/usr/local/cuda-11.2/include/crt/sm_80_rt.h:
+
 /usr/local/include/eigen3/Eigen/src/Core/util/Macros.h:
 
 /usr/include/c++/9/bits/localefwd.h:
@@ -1351,10 +1584,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 /usr/local/include/eigen3/Eigen/src/Core/products/GeneralMatrixMatrix.h:
 
 /usr/local/include/opencv4/opencv2/core/fast_math.hpp:
-
-/usr/local/include/opencv4/opencv2/flann/kmeans_index.h:
-
-/usr/include/c++/9/bits/codecvt.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
 
@@ -1380,11 +1609,15 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Geometry/AlignedBox.h:
 
-/usr/local/include/opencv4/opencv2/imgcodecs.hpp:
+/usr/local/include/opencv4/opencv2/flann/dist.h:
+
+/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h:
 
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
 
 /usr/include/c++/9/bits/stl_numeric.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/util/SymbolicIndex.h:
 
 /usr/local/include/opencv4/opencv2/flann/sampling.h:
 
@@ -1404,15 +1637,23 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
+/usr/local/include/opencv4/opencv2/dnn/version.hpp:
+
+/usr/include/c++/9/bits/functional_hash.h:
+
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
-/usr/include/c++/9/iomanip:
+/usr/include/c++/9/bits/unordered_map.h:
+
+/usr/include/c++/9/ext/numeric_traits.h:
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Translation.h:
 
 /usr/include/asm-generic/errno-base.h:
 
 /usr/include/c++/9/ext/type_traits.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/util/IndexedViewHelper.h:
 
 ../DE_CUDA/DE.cc:
 
@@ -1421,8 +1662,6 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 /usr/local/include/opencv4/opencv2/core/traits.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
-
-/usr/local/include/eigen3/Eigen/src/Core/util/BlasUtil.h:
 
 /usr/local/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h:
 
@@ -1434,23 +1673,23 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/stdc-predef.h:
 
+/usr/local/cuda-11.2/include/texture_fetch_functions.h:
+
 /usr/local/include/eigen3/Eigen/src/Core/Select.h:
 
 /usr/include/c++/9/bits/cpp_type_traits.h:
 
 /usr/local/include/eigen3/Eigen/src/LU/PartialPivLU.h:
 
-/usr/local/include/opencv4/opencv2/stitching/detail/util.hpp:
+/usr/local/include/eigen3/Eigen/src/Core/arch/Default/ConjHelper.h:
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
+
+/usr/local/cuda-11.2/include/device_types.h:
 
 /usr/include/c++/9/initializer_list:
 
 /usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h:
-
-/usr/include/c++/9/vector:
-
-/usr/local/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
@@ -1462,6 +1701,12 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
+/usr/local/cuda-11.2/include/surface_functions.h:
+
+/usr/local/include/opencv4/opencv2/highgui.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
 /usr/include/c++/9/bits/unique_lock.h:
 
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
@@ -1470,15 +1715,9 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/move.h:
 
-/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h:
-
-/usr/include/c++/9/bits/allocator.h:
-
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
-
-/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
 /usr/include/c++/9/deque:
 
@@ -1486,17 +1725,15 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/x86_64-linux-gnu/bits/fp-logb.h:
 
-/usr/include/x86_64-linux-gnu/bits/floatn.h:
-
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
 
 /usr/include/c++/9/bits/vector.tcc:
 
 /usr/local/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h:
 
-/usr/local/include/opencv4/opencv2/ml.hpp:
-
 /usr/include/c++/9/cmath:
+
+/usr/local/include/eigen3/Eigen/src/Core/ArithmeticSequence.h:
 
 /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h:
 
@@ -1516,6 +1753,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/stl_uninitialized.h:
 
+/usr/local/cuda-11.2/include/sm_35_intrinsics.h:
+
 /usr/include/x86_64-linux-gnu/c++/9/bits/atomic_word.h:
 
 /usr/include/c++/9/bits/stringfwd.h:
@@ -1528,15 +1767,21 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/concept_check.h:
 
-/usr/local/include/opencv4/opencv2/dnn/layer.hpp:
-
 /usr/include/c++/9/bits/shared_ptr_base.h:
 
 /usr/include/c++/9/bits/stl_algo.h:
 
 /usr/include/c++/9/type_traits:
 
-/usr/local/include/opencv4/opencv2/flann/any.h:
+/usr/local/include/opencv4/opencv2/videoio.hpp:
+
+/usr/local/include/eigen3/Eigen/src/Core/Transpositions.h:
+
+/usr/include/c++/9/bits/uses_allocator.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/util/Serializer.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
 
@@ -1548,29 +1793,17 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/functexcept.h:
 
-/usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h:
-
-/usr/include/c++/9/bits/stl_map.h:
-
 /usr/include/c++/9/debug/debug.h:
 
 /usr/include/c++/9/bits/predefined_ops.h:
 
 /usr/include/c++/9/cctype:
 
-/usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
+/usr/local/include/eigen3/Eigen/src/Jacobi/InternalHeaderCheck.h:
+
+/usr/local/cuda-11.2/include/sm_32_intrinsics.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
-
-/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/time_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
-
-/usr/include/c++/9/bits/functional_hash.h:
-
-/usr/local/include/opencv4/opencv2/dnn/version.hpp:
 
 /usr/include/x86_64-linux-gnu/c++/9/bits/gthr-default.h:
 
@@ -1596,7 +1829,13 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
+/usr/local/cuda-11.2/include/crt/device_functions.h:
+
 /usr/include/c++/9/bits/nested_exception.h:
+
+/usr/include/c++/9/bits/allocator.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/TypeCasting.h:
 
 /usr/include/x86_64-linux-gnu/bits/setjmp.h:
 
@@ -1604,23 +1843,25 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/locale.h:
 
-/usr/include/c++/9/bits/hash_bytes.h:
-
 /usr/include/c++/9/bits/streambuf.tcc:
 
 /usr/include/c++/9/backward/binders.h:
 
 /usr/include/c++/9/bits/shared_ptr.h:
 
-/usr/local/include/opencv4/opencv2/flann/linear_index.h:
+/usr/local/include/opencv4/opencv2/imgproc/segmentation.hpp:
+
+/usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h:
+
+/usr/local/cuda-11.2/include/cuda_runtime.h:
 
 /usr/include/c++/9/new:
-
-/usr/include/c++/9/bits/locale_facets_nonio.h:
 
 /usr/include/c++/9/ext/atomicity.h:
 
 /usr/include/c++/9/cwchar:
+
+/usr/local/include/eigen3/Eigen/src/Core/util/ConfigureVectorization.h:
 
 /usr/local/include/eigen3/Eigen/Geometry:
 
@@ -1634,17 +1875,23 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/opencv4/opencv2/core/types.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
+/usr/local/include/eigen3/Eigen/src/Core/util/IntegralConstant.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+/usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/ArrayWrapper.h:
 
-/usr/include/c++/9/iosfwd:
+/usr/local/cuda-11.2/include/channel_descriptor.h:
 
 /usr/include/c++/9/cwctype:
 
 /usr/include/c++/9/random:
+
+/usr/local/include/opencv4/opencv2/flann/lsh_index.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/Reshaped.h:
+
+/usr/include/c++/9/bits/ostream_insert.h:
 
 /usr/include/errno.h:
 
@@ -1652,23 +1899,35 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/postypes.h:
 
+/usr/include/c++/9/bits/stl_tempbuf.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/Default/BFloat16.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/Default/TypeCasting.h:
+
+/usr/include/c++/9/exception:
+
+/usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/PacketMath.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/arch/SSE/Complex.h:
+
+/usr/local/cuda-11.2/include/sm_20_atomic_functions.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/arch/Default/Settings.h:
 
+/usr/local/include/eigen3/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h:
+
 /usr/local/include/eigen3/Eigen/src/Core/functors/TernaryFunctors.h:
-
-/usr/local/include/eigen3/Eigen/src/Core/Transpositions.h:
-
-/usr/local/include/opencv4/opencv2/videoio.hpp:
 
 /usr/local/include/eigen3/Eigen/src/Core/functors/UnaryFunctors.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/functors/NullaryFunctors.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/functors/AssignmentFunctors.h:
-
-/usr/local/include/opencv4/opencv2/core/async.hpp:
 
 /usr/local/include/eigen3/Eigen/src/Core/DenseBase.h:
 
@@ -1678,17 +1937,19 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Scaling.h:
 
+/usr/local/include/eigen3/Eigen/src/plugins/IndexedViewMethods.h:
+
 /usr/include/c++/9/bits/uniform_int_dist.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/MatrixBase.h:
+
+/usr/local/cuda-11.2/include/surface_types.h:
 
 /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseBinaryOps.h:
 
 /usr/include/stdint.h:
 
 /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h:
-
-/usr/local/include/opencv4/opencv2/flann.hpp:
 
 /usr/local/include/eigen3/Eigen/src/Core/EigenBase.h:
 
@@ -1698,7 +1959,11 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Core/CoreEvaluators.h:
 
+/usr/local/cuda-11.2/include/sm_30_intrinsics.hpp:
+
 /usr/local/include/eigen3/Eigen/src/Core/Assign.h:
+
+/usr/local/cuda-11.2/include/crt/device_functions.hpp:
 
 /usr/local/include/eigen3/Eigen/src/Core/ArrayBase.h:
 
@@ -1712,6 +1977,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Householder/HouseholderSequence.h:
 
+/usr/local/include/eigen3/Eigen/src/misc/InternalHeaderCheck.h:
+
 /usr/local/include/eigen3/Eigen/src/Eigenvalues/HessenbergDecomposition.h:
 
 /usr/local/include/eigen3/Eigen/Householder:
@@ -1724,6 +1991,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/misc/RealSvd2x2.h:
 
+/usr/local/include/eigen3/Eigen/src/plugins/ReshapedMethods.h:
+
 /usr/local/include/eigen3/Eigen/src/Core/PlainObjectBase.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/Matrix.h:
@@ -1732,11 +2001,9 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointProduct.h:
 
-/usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Complex.h:
+/usr/local/cuda-11.2/include/cuda_fp16.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/CwiseBinaryOp.h:
-
-/usr/include/c++/9/bits/locale_conv.h:
 
 /usr/include/c++/9/bits/sstream.tcc:
 
@@ -1762,6 +2029,12 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Core/Block.h:
 
+/usr/local/cuda-11.2/include/library_types.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/IndexedView.h:
+
 /usr/local/include/eigen3/Eigen/src/Core/Transpose.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/DiagonalMatrix.h:
@@ -1771,6 +2044,8 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 /usr/local/include/eigen3/Eigen/src/Core/Diagonal.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/Redux.h:
+
+/usr/local/cuda-11.2/include/crt/math_functions.hpp:
 
 /usr/include/c++/9/backward/auto_ptr.h:
 
@@ -1818,7 +2093,7 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointMatrixMatrix.h:
 
-/usr/local/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp:
+/usr/local/cuda-11.2/include/sm_20_intrinsics.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixVector.h:
 
@@ -1826,21 +2101,29 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix.h:
 
-/usr/include/c++/9/bits/stl_multimap.h:
-
 /usr/local/include/eigen3/Eigen/src/Core/BandMatrix.h:
 
-/usr/include/c++/9/bits/hashtable_policy.h:
+/usr/local/include/opencv4/opencv2/flann/random.h:
 
-/usr/local/include/eigen3/Eigen/src/Core/BooleanRedux.h:
+/usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/CoreIterators.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/VectorwiseOp.h:
 
+/usr/local/cuda-11.2/include/sm_61_intrinsics.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/types.h:
 
 /usr/local/include/eigen3/Eigen/src/Core/Random.h:
+
+/usr/include/c++/9/bits/ostream.tcc:
+
+/usr/local/include/opencv4/opencv2/core/utility.hpp:
+
+/usr/local/include/eigen3/Eigen/src/Core/Replicate.h:
 
 /usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h:
 
@@ -1852,51 +2135,57 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/misc/Image.h:
 
-/usr/local/include/eigen3/Eigen/src/LU/Determinant.h:
+/usr/local/include/eigen3/Eigen/src/LU/InternalHeaderCheck.h:
 
-/usr/local/include/opencv4/opencv2/flann/dynamic_bitset.h:
+/usr/local/include/eigen3/Eigen/src/LU/Determinant.h:
 
 /usr/local/include/opencv4/opencv2/video/tracking.hpp:
 
 /usr/local/include/eigen3/Eigen/src/LU/InverseImpl.h:
 
-/usr/include/c++/9/bits/cxxabi_init_exception.h:
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
-/usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h:
+/usr/local/include/eigen3/Eigen/src/LU/arch/InverseSize4.h:
 
-../GRIEF_CUDA/generated_16.i:
-
-/usr/include/x86_64-linux-gnu/bits/cpu-set.h:
-
-/usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h:
-
-/usr/include/c++/9/map:
-
-/usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h:
-
-/usr/local/include/opencv4/opencv2/stitching.hpp:
-
-/usr/local/include/eigen3/Eigen/QR:
+/usr/local/cuda-11.2/include/crt/host_config.h:
 
 /usr/local/include/eigen3/Eigen/Jacobi:
 
 /usr/local/include/eigen3/Eigen/src/Householder/Householder.h:
 
-/usr/include/c++/9/set:
-
 /usr/local/include/eigen3/Eigen/src/Jacobi/Jacobi.h:
 
-/usr/include/c++/9/exception:
+/usr/include/c++/9/bits/cxxabi_init_exception.h:
 
-/usr/local/include/eigen3/Eigen/src/Householder/BlockHouseholder.h:
+/usr/local/include/eigen3/Eigen/src/Cholesky/LLT.h:
+
+/usr/include/x86_64-linux-gnu/bits/cpu-set.h:
+
+/usr/local/include/eigen3/Eigen/src/Geometry/ParametrizedLine.h:
+
+../GRIEF_CUDA/grief.cu:
+
+/usr/local/include/eigen3/Eigen/src/Cholesky/InternalHeaderCheck.h:
+
+/usr/local/include/opencv4/opencv2/stitching.hpp:
+
+/usr/local/include/eigen3/Eigen/QR:
 
 /usr/local/include/eigen3/Eigen/src/QR/HouseholderQR.h:
+
+/usr/local/cuda-11.2/include/crt/host_defines.h:
+
+/usr/local/cuda-11.2/include/crt/device_double_functions.hpp:
+
+/usr/local/include/eigen3/Eigen/src/QR/InternalHeaderCheck.h:
+
+/usr/local/include/opencv4/opencv2/features2d/features2d.hpp:
+
+/usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h:
 
 /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h:
 
 /usr/include/c++/9/bits/basic_ios.tcc:
-
-../GRIEF_CUDA/grief.cc:
 
 /usr/include/c++/9/bits/cxxabi_forced.h:
 
@@ -1908,23 +2197,19 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/SVD/BDCSVD.h:
 
-/usr/local/include/opencv4/opencv2/features2d/features2d.hpp:
-
-/usr/local/include/eigen3/Eigen/src/Geometry/OrthoMethods.h:
-
-/usr/local/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h:
-
-/usr/local/include/opencv4/opencv2/flann/dist.h:
+/usr/local/include/eigen3/Eigen/src/Geometry/InternalHeaderCheck.h:
 
 /usr/local/include/eigen3/Eigen/src/Geometry/EulerAngles.h:
 
+/usr/local/cuda-11.2/include/vector_functions.h:
+
 /usr/local/include/eigen3/Eigen/src/Geometry/Homogeneous.h:
+
+/usr/local/cuda-11.2/include/surface_indirect_functions.h:
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Rotation2D.h:
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Quaternion.h:
-
-/usr/local/include/opencv4/opencv2/dnn/dict.hpp:
 
 /usr/local/include/eigen3/Eigen/src/Core/AssignEvaluator.h:
 
@@ -1932,11 +2217,13 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/eigen3/Eigen/src/Geometry/Transform.h:
 
-/usr/local/include/opencv4/opencv2/flann/flann_base.hpp:
-
-/usr/local/include/eigen3/Eigen/src/Geometry/arch/Geometry_SSE.h:
-
 /usr/local/include/eigen3/Eigen/Eigenvalues:
+
+/usr/local/include/eigen3/Eigen/src/Cholesky/LDLT.h:
+
+/usr/local/cuda-11.2/include/texture_types.h:
+
+/usr/local/include/eigen3/Eigen/src/Eigenvalues/InternalHeaderCheck.h:
 
 /usr/include/c++/9/bits/exception_ptr.h:
 
@@ -1948,17 +2235,99 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/ext/concurrence.h:
 
+/usr/local/cuda-11.2/include/builtin_types.h:
+
+/usr/include/libintl.h:
+
+/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
+
+/usr/local/cuda-11.2/include/driver_types.h:
+
+/usr/local/cuda-11.2/include/vector_types.h:
+
+/usr/local/cuda-11.2/include/cuda_runtime_api.h:
+
+/usr/local/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp:
+
+/usr/local/cuda-11.2/include/cuda_device_runtime_api.h:
+
+/usr/local/cuda-11.2/include/driver_functions.h:
+
+/usr/local/cuda-11.2/include/vector_functions.hpp:
+
+/usr/local/include/eigen3/Eigen/src/Householder/InternalHeaderCheck.h:
+
+/usr/local/cuda-11.2/include/crt/math_functions.h:
+
+/usr/include/linux/limits.h:
+
+/usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h:
+
+/usr/include/c++/9/math.h:
+
+/usr/local/cuda-11.2/include/cuda_surface_types.h:
+
+/usr/include/c++/9/bits/hash_bytes.h:
+
+/usr/local/cuda-11.2/include/device_atomic_functions.h:
+
+/usr/local/cuda-11.2/include/sm_20_intrinsics.hpp:
+
+/usr/local/cuda-11.2/include/sm_20_atomic_functions.h:
+
+/usr/local/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp:
+
+/usr/local/include/opencv4/opencv2/core/operations.hpp:
+
+/usr/local/include/opencv4/opencv2/flann/kdtree_index.h:
+
+/usr/local/cuda-11.2/include/sm_32_atomic_functions.h:
+
+/usr/include/c++/9/map:
+
+/usr/local/cuda-11.2/include/sm_32_atomic_functions.hpp:
+
+/usr/local/cuda-11.2/include/sm_35_atomic_functions.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/util/BlasUtil.h:
+
+/usr/local/cuda-11.2/include/sm_60_atomic_functions.h:
+
+/usr/local/cuda-11.2/include/sm_60_atomic_functions.hpp:
+
+/usr/local/cuda-11.2/include/sm_30_intrinsics.h:
+
+/usr/local/cuda-11.2/include/sm_32_intrinsics.h:
+
+/usr/include/c++/9/iosfwd:
+
+/usr/local/cuda-11.2/include/sm_61_intrinsics.h:
+
+/usr/include/c++/9/bits/memoryfwd.h:
+
+/usr/local/cuda-11.2/include/crt/sm_70_rt.h:
+
+/usr/local/cuda-11.2/include/crt/sm_70_rt.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
+
+/usr/local/cuda-11.2/include/crt/sm_80_rt.hpp:
+
+/usr/local/cuda-11.2/include/texture_indirect_functions.h:
+
+/usr/local/cuda-11.2/include/device_atomic_functions.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/floatn.h:
+
+/usr/local/cuda-11.2/include/device_launch_parameters.h:
+
 /usr/include/x86_64-linux-gnu/sys/time.h:
+
+/usr/local/include/eigen3/Eigen/src/Core/PartialReduxEvaluator.h:
 
 /usr/include/c++/9/ext/aligned_buffer.h:
 
 /usr/local/include/opencv4/opencv2/opencv.hpp:
-
-/usr/include/c++/9/ext/numeric_traits.h:
-
-/usr/include/c++/9/bits/unordered_map.h:
-
-/usr/local/include/opencv4/opencv2/core/cuda.hpp:
 
 /usr/include/c++/9/bits/locale_facets.h:
 
@@ -1978,17 +2347,11 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/include/c++/9/bits/allocated_ptr.h:
 
-/usr/include/c++/9/bits/ostream_insert.h:
-
-/usr/local/include/opencv4/opencv2/flann/lsh_index.h:
-
 /usr/local/include/opencv4/opencv2/core/neon_utils.hpp:
 
 /usr/local/include/eigen3/Eigen/src/Core/products/SelfadjointRank2Update.h:
 
 /usr/local/include/opencv4/opencv2/core/vsx_utils.hpp:
-
-/usr/local/include/eigen3/Eigen/src/Core/arch/CUDA/Half.h:
 
 /usr/local/include/opencv4/opencv2/core/check.hpp:
 
@@ -2014,17 +2377,7 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/opencv4/opencv2/core/persistence.hpp:
 
-/usr/local/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp:
-
-/usr/local/include/opencv4/opencv2/core/operations.hpp:
-
 /usr/local/include/opencv4/opencv2/core/cvstd.inl.hpp:
-
-/usr/include/c++/9/bits/ostream.tcc:
-
-/usr/local/include/eigen3/Eigen/src/Core/Replicate.h:
-
-/usr/local/include/opencv4/opencv2/core/utility.hpp:
 
 /usr/include/c++/9/ratio:
 
@@ -2038,6 +2391,12 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 
 /usr/local/include/opencv4/opencv2/core/ovx.hpp:
 
+/usr/local/include/opencv4/opencv2/flann/general.h:
+
+/usr/include/c++/9/bits/streambuf_iterator.h:
+
+/usr/local/include/opencv4/opencv2/calib3d.hpp:
+
 /usr/local/include/opencv4/opencv2/features2d.hpp:
 
 /usr/local/include/opencv4/opencv2/flann/defines.h:
@@ -2049,103 +2408,3 @@ CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc \
 /usr/local/include/opencv4/opencv2/dnn.hpp:
 
 /usr/local/include/opencv4/opencv2/dnn/dnn.hpp:
-
-/usr/local/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h:
-
-/usr/include/c++/9/bits/erase_if.h:
-
-/usr/local/include/opencv4/opencv2/dnn/dnn.inl.hpp:
-
-/usr/local/include/opencv4/opencv2/flann/result_set.h:
-
-/usr/local/include/opencv4/opencv2/dnn/utils/inference_engine.hpp:
-
-/usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h:
-
-/usr/local/include/eigen3/Eigen/src/Core/CoreIterators.h:
-
-/usr/local/include/opencv4/opencv2/flann/random.h:
-
-/usr/include/c++/9/bits/streambuf_iterator.h:
-
-/usr/local/include/opencv4/opencv2/calib3d.hpp:
-
-/usr/local/include/opencv4/opencv2/flann/general.h:
-
-/usr/local/include/opencv4/opencv2/flann/matrix.h:
-
-/usr/include/c++/9/bits/quoted_string.h:
-
-/usr/local/include/opencv4/opencv2/flann/params.h:
-
-/usr/include/c++/9/bits/stl_set.h:
-
-/usr/include/c++/9/bits/stl_multiset.h:
-
-/usr/local/include/opencv4/opencv2/flann/all_indices.h:
-
-/usr/local/include/opencv4/opencv2/flann/kdtree_index.h:
-
-/usr/local/include/opencv4/opencv2/flann/heap.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
-
-/usr/local/include/opencv4/opencv2/flann/allocator.h:
-
-/usr/local/include/opencv4/opencv2/flann/kdtree_single_index.h:
-
-/usr/local/include/opencv4/opencv2/flann/logger.h:
-
-/usr/local/include/opencv4/opencv2/flann/hierarchical_clustering_index.h:
-
-/usr/local/include/opencv4/opencv2/core/cuda_types.hpp:
-
-/usr/local/include/opencv4/opencv2/flann/lsh_table.h:
-
-/usr/include/c++/9/locale:
-
-/usr/include/x86_64-linux-gnu/c++/9/bits/time_members.h:
-
-/usr/include/pthread.h:
-
-/usr/include/x86_64-linux-gnu/c++/9/bits/messages_members.h:
-
-/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
-
-/usr/include/libintl.h:
-
-/usr/include/c++/9/bits/locale_facets_nonio.tcc:
-
-/usr/include/linux/limits.h:
-
-/usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h:
-
-/usr/include/c++/9/math.h:
-
-/usr/local/include/opencv4/opencv2/flann/autotuned_index.h:
-
-/usr/local/include/opencv4/opencv2/flann/index_testing.h:
-
-/usr/include/x86_64-linux-gnu/bits/typesizes.h:
-
-/usr/local/include/opencv4/opencv2/highgui.hpp:
-
-/usr/local/include/opencv4/opencv2/imgproc.hpp:
-
-/usr/lib/gcc/x86_64-linux-gnu/9/include/stdarg.h:
-
-/usr/local/include/opencv4/opencv2/imgproc/segmentation.hpp:
-
-/usr/local/include/opencv4/opencv2/ml/ml.inl.hpp:
-
-/usr/local/include/opencv4/opencv2/objdetect.hpp:
-
-/usr/local/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h:
-
-/usr/local/include/opencv4/opencv2/photo.hpp:
-
-/usr/local/include/opencv4/opencv2/stitching/detail/warpers.hpp:
-
-/usr/local/include/opencv4/opencv2/core/cuda.inl.hpp:
-
-/usr/local/include/opencv4/opencv2/stitching/detail/matchers.hpp:

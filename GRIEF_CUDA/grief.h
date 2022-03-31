@@ -16,7 +16,9 @@ namespace cv{
 
 namespace xfeatures2d
 {
-
+typedef int arr64[64];
+typedef int arr4[4];
+typedef int arr2[2];
 float evaluation(Eigen::MatrixXd individual);
 
 class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
@@ -27,6 +29,7 @@ public:
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
 	CV_WRAP virtual float get_b_fit();
+	CV_WRAP virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors);
 };
 
 /*
@@ -47,19 +50,21 @@ public:
 	virtual int descriptorType() const CV_OVERRIDE;
 	virtual int defaultNorm() const CV_OVERRIDE;
 
-	virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, OutputArray descriptors) CV_OVERRIDE;
+	virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors) CV_OVERRIDE;
 	virtual void getInd() CV_OVERRIDE;
 	virtual void evolve(uint ng) CV_OVERRIDE;
 	virtual void setInd(Eigen::MatrixXd new_individual) CV_OVERRIDE;
 	virtual float get_b_fit() CV_OVERRIDE;
 
+	void pixelTests64(InputArray sum, const std::vector<KeyPoint>& keypoints,cuda::GpuMat& descriptors, bool use_orientation, int individual[512][4]);
+
 protected:
 	int N_pop;
-	typedef void(*PixelTestFn)(InputArray, const std::vector<KeyPoint>&, OutputArray, bool use_orientation, int individual[512][4]);
+	//typedef void(*PixelTestFn)(InputArray, const std::vector<KeyPoint>&, OutputArray, bool use_orientation, int individual[512][4]);
 	int individual[512][4];
 	int bytes_;
 	bool use_orientation_;
-	PixelTestFn test_fn_;
+	//PixelTestFn test_fn_;
 };
 }
 }

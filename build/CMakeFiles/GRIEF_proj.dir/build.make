@@ -44,10 +44,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /snap/cmake/1035/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /snap/cmake/1035/bin/cmake -E rm -f
+RM = /usr/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -73,40 +73,126 @@ CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: CMakeFiles/GRIEF_proj.dir/flags.make
 CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: ../DE_CUDA/DE.cc
 CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o: CMakeFiles/GRIEF_proj.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o -MF CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o.d -o CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o -c /home/adriel/teste/GRIEF-DE/DE_CUDA/DE.cc
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o -MF CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o.d -o CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o -c /home/adriel/teste/GRIEF-DE/DE_CUDA/DE.cc
 
 CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/adriel/teste/GRIEF-DE/DE_CUDA/DE.cc > CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.i
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/adriel/teste/GRIEF-DE/DE_CUDA/DE.cc > CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.i
 
 CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/adriel/teste/GRIEF-DE/DE_CUDA/DE.cc -o CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.s
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/adriel/teste/GRIEF-DE/DE_CUDA/DE.cc -o CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.s
 
-CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: CMakeFiles/GRIEF_proj.dir/flags.make
-CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: ../GRIEF_CUDA/grief.cc
-CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o: CMakeFiles/GRIEF_proj.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o -MF CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o.d -o CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o -c /home/adriel/teste/GRIEF-DE/GRIEF_CUDA/grief.cc
+CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o: CMakeFiles/GRIEF_proj.dir/flags.make
+CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o: ../GRIEF_CUDA/grief.cu
+CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o: CMakeFiles/GRIEF_proj.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CUDA object CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o"
+	/usr/local/cuda-11.2/bin/nvcc -forward-unknown-to-host-compiler $(CUDA_DEFINES) $(CUDA_INCLUDES) $(CUDA_FLAGS) -MD -MT CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o -MF CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o.d -x cu -dc /home/adriel/teste/GRIEF-DE/GRIEF_CUDA/grief.cu -o CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o
 
-CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/adriel/teste/GRIEF-DE/GRIEF_CUDA/grief.cc > CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.i
+CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CUDA source to CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.i"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_PREPROCESSED_SOURCE
 
-CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/adriel/teste/GRIEF-DE/GRIEF_CUDA/grief.cc -o CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.s
+CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CUDA source to assembly CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.s"
+	$(CMAKE_COMMAND) -E cmake_unimplemented_variable CMAKE_CUDA_CREATE_ASSEMBLY_SOURCE
 
 # Object files for target GRIEF_proj
 GRIEF_proj_OBJECTS = \
 "CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o" \
-"CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o"
+"CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o"
+
+# External object files for target GRIEF_proj
+GRIEF_proj_EXTERNAL_OBJECTS =
+
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: CMakeFiles/GRIEF_proj.dir/build.make
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_gapi.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_stitching.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_alphamat.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_aruco.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_bgsegm.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_bioinspired.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_ccalib.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudabgsegm.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudafeatures2d.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudaobjdetect.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudastereo.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_dnn_objdetect.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_dnn_superres.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_dpm.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_face.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_freetype.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_fuzzy.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_hdf.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_hfs.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_img_hash.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_intensity_transform.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_line_descriptor.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_mcc.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_quality.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_rapid.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_reg.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_rgbd.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_saliency.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_sfm.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_stereo.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_structured_light.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_superres.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_surface_matching.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_tracking.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_videostab.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_wechat_qrcode.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_xfeatures2d.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_xobjdetect.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_xphoto.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/lib/x86_64-linux-gnu/libpython3.8.so
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_shape.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_highgui.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_datasets.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_plot.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_text.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_ml.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_phase_unwrapping.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_videoio.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudaoptflow.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudalegacy.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudawarping.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_optflow.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_ximgproc.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_video.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_dnn.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_imgcodecs.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_objdetect.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_calib3d.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_features2d.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_flann.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_photo.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudaimgproc.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudafilters.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_imgproc.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudaarithm.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_core.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: /usr/local/lib/libopencv_cudev.so.4.5.2
+CMakeFiles/GRIEF_proj.dir/cmake_device_link.o: CMakeFiles/GRIEF_proj.dir/dlink.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CUDA device code CMakeFiles/GRIEF_proj.dir/cmake_device_link.o"
+	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/GRIEF_proj.dir/dlink.txt --verbose=$(VERBOSE)
+
+# Rule to build all files generated by this target.
+CMakeFiles/GRIEF_proj.dir/build: CMakeFiles/GRIEF_proj.dir/cmake_device_link.o
+.PHONY : CMakeFiles/GRIEF_proj.dir/build
+
+# Object files for target GRIEF_proj
+GRIEF_proj_OBJECTS = \
+"CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o" \
+"CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o"
 
 # External object files for target GRIEF_proj
 GRIEF_proj_EXTERNAL_OBJECTS =
 
 ../lib/libGRIEF_proj.so: CMakeFiles/GRIEF_proj.dir/DE_CUDA/DE.cc.o
-../lib/libGRIEF_proj.so: CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cc.o
+../lib/libGRIEF_proj.so: CMakeFiles/GRIEF_proj.dir/GRIEF_CUDA/grief.cu.o
 ../lib/libGRIEF_proj.so: CMakeFiles/GRIEF_proj.dir/build.make
 ../lib/libGRIEF_proj.so: /usr/local/lib/libopencv_gapi.so.4.5.2
 ../lib/libGRIEF_proj.so: /usr/local/lib/libopencv_stitching.so.4.5.2
@@ -175,8 +261,9 @@ GRIEF_proj_EXTERNAL_OBJECTS =
 ../lib/libGRIEF_proj.so: /usr/local/lib/libopencv_cudaarithm.so.4.5.2
 ../lib/libGRIEF_proj.so: /usr/local/lib/libopencv_core.so.4.5.2
 ../lib/libGRIEF_proj.so: /usr/local/lib/libopencv_cudev.so.4.5.2
+../lib/libGRIEF_proj.so: CMakeFiles/GRIEF_proj.dir/cmake_device_link.o
 ../lib/libGRIEF_proj.so: CMakeFiles/GRIEF_proj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX shared library ../lib/libGRIEF_proj.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/adriel/teste/GRIEF-DE/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX shared library ../lib/libGRIEF_proj.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/GRIEF_proj.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

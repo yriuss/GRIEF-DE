@@ -60,6 +60,7 @@ protected:
 	int bytes_;
 	bool use_orientation_;
 	PixelTestFn test_fn_;
+	
 };
 }
 }

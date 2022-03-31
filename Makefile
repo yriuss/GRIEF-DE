@@ -45,6 +45,3 @@ clean:
 
 cleanall:
 	rm -f *.o 
-
-
- 
