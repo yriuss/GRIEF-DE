@@ -2,6 +2,10 @@
 # refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
 # to the root binary directory of the project as ${HELLO_BINARY_DIR}.
 cmake_minimum_required (VERSION 3.14.0)
+
+
+
+if(CMAKE_CUDA_COMPILER)
 project (GRIEF_proj C CXX CUDA)
 enable_language(CUDA)
 include(CheckLanguage)
@@ -22,10 +26,6 @@ ${PYTHON_INCLUDE_DIRS}
 ${EIGEN3_INCLUDE_DIR}
 ${CUDA_INCLUDE_DIRS}
 )
-
-check_language(CUDA)
-if(CMAKE_CUDA_COMPILER)
-
 
 set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 message("CUDA found!")
@@ -55,6 +55,25 @@ set_target_properties(teste PROPERTIES CUDA_ARCHITECTURES "86")
 set_target_properties( teste PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
 else()
+project (GRIEF_proj C CXX)
+include(CheckLanguage)
+
+find_package(PythonLibs REQUIRED)
+find_package(OpenCV REQUIRED)
+   if(NOT OpenCV_FOUND)
+      message(FATAL_ERROR "OpenCV not found.")
+   endif()
+find_package (Python3 COMPONENTS Interpreter NumPy)
+find_package( Eigen3 REQUIRED )
+
+include_directories(
+${PROJECT_SOURCE_DIR}
+${PROJECT_SOURCE_DIR}/DE
+${PROJECT_SOURCE_DIR}/GRIEF
+${PYTHON_INCLUDE_DIRS}
+${EIGEN3_INCLUDE_DIR}
+${CUDA_INCLUDE_DIRS}
+)
 message("CUDA not found!")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 add_library(${PROJECT_NAME} SHARED
