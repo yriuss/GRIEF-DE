@@ -14,7 +14,7 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include <opencv2/cudafeatures2d.hpp>
+//#include <opencv2/cudafeatures2d.hpp>
 
 #include "GRIEF/grief.h"
 
@@ -96,14 +96,14 @@ std::string CURRENT_DIR = get_current_dir_name();
 
 
 
-void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
+void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
 {
-	//Ptr<DescriptorMatcher> descriptorMatcher;
+	Ptr<DescriptorMatcher> descriptorMatcher;
 	vector<vector<DMatch> > allMatches1to2, allMatches2to1;
 
-	Ptr<cuda::DescriptorMatcher> descriptorMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
+	//Ptr<DescriptorMatcher> descriptorMatcher = cv::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
 
-	//descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
+	descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
 	
 	descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
 	if (!crossCheck)
@@ -174,7 +174,6 @@ void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& desc
 
 
 Mat dataset_imgs[600][600];
-cuda::GpuMat gpu_dataset_imgs[600][600];
 
 void plot_convergence(std::vector<int> x,std::vector<int> y){
     plt::plot(x,y);
@@ -203,11 +202,10 @@ float eval(Eigen::MatrixXd individual){
 	for (int location = 0;location<numLocations;location++){
 			
 		// detecting keypoints and generating descriptors
-		Mat cpu_descriptors[numSeasons];
-		cuda::GpuMat descriptors[numSeasons];
+		Mat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
-		cuda::GpuMat dp;
+		Mat dp;
 		
 		
 		for (int i = 0;i<numSeasons;i++){
@@ -216,9 +214,7 @@ float eval(Eigen::MatrixXd individual){
 			detector->detect(dataset_imgs[i][location], keypoints[i]);
 			
 			
-			descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
-			
-			descriptors[i].upload(cpu_descriptors[i]);
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			
 		}
 		
@@ -435,10 +431,6 @@ int main(int argc, char ** argv){
 	//		count++;
 	//	}
 	//}
-
-	for(int i = 0; i < 600; i++)
-		for(int j = 0; j < 600; j++)
-			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
     cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
 	
