@@ -61,7 +61,7 @@ float evaluation(Eigen::MatrixXd individual){
 }
 
 
-Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F)
+Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, float cr, float F)
 {
 	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F );
 }
@@ -301,8 +301,8 @@ void GriefDescriptorExtractor::evolve(uint ng){
 	
 }
 
-GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F) :
-	bytes_(bytes), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24})
+GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, float cr, float F) :
+	bytes_(bytes), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24},0,0)
 {
 	this->N_pop = N_pop;
 	load(individual, "test_pairs.brief");
