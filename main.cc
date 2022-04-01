@@ -14,8 +14,6 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-//#include <opencv2/cudafeatures2d.hpp>
-
 #include "GRIEF/grief.h"
 
 namespace plt = matplotlibcpp;
@@ -94,14 +92,10 @@ FILE *displacements;
 std::string CURRENT_DIR = get_current_dir_name();
 
 
-
-
 void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
 {
 	Ptr<DescriptorMatcher> descriptorMatcher;
 	vector<vector<DMatch> > allMatches1to2, allMatches2to1;
-
-	//Ptr<DescriptorMatcher> descriptorMatcher = cv::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
 
 	descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
 	
@@ -180,7 +174,6 @@ void plot_convergence(std::vector<int> x,std::vector<int> y){
     plt::show();
 }
 
-
 float eval(Eigen::MatrixXd individual){
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
 	Ptr<cv::ORB> detector = cv::ORB::create();
@@ -197,12 +190,11 @@ float eval(Eigen::MatrixXd individual){
 	
 	bool supervised = false;
 	
-
-	
 	for (int location = 0;location<numLocations;location++){
 			
 		// detecting keypoints and generating descriptors
 		Mat descriptors[numSeasons];
+		
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
 		Mat dp;
@@ -211,15 +203,9 @@ float eval(Eigen::MatrixXd individual){
 		for (int i = 0;i<numSeasons;i++){
 			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
 			
-			detector->detect(dataset_imgs[i][location], keypoints[i]);
-			
-			
-			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
-			
+			detector->detect(dataset_imgs[i][location], keypoints[i]);				
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);				
 		}
-		
-		
-		
 		
 		// matching the extracted features
 		for (int ik = 0;ik<numSeasons;ik++){
@@ -304,20 +290,14 @@ float eval(Eigen::MatrixXd individual){
 				}else{
 					matchFail = true;
 				}
-				
-				
+								
 				//end drawing
-			}
-			
-		}
-		
-		
+			}			
+		}		
 	}
-	
-	
-	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;
-	
-    return matchingFailures/matchingTests;
+
+	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
+	return matchingFailures/matchingTests;
 }
 
 int main(int argc, char ** argv){

@@ -3,4 +3,4 @@ teste_grief.cc
 build/
 .vscode/
 GRIEF-datasets/*
-GRIEF-datasets/
+GRIEF-datasets/ 
