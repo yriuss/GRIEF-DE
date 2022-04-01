@@ -12,18 +12,6 @@
 #include <Eigen/Dense>
 #include "../DE/DE.h"
 
-/* DEFINITION OF MUTATION ALGORITHM */
-#define            RAND_1 0 
-#define            RAND_2 1
-#define      RAND_TO_BEST 2
-#define            BEST_1 3
-#define            BEST_2 4
-#define CURRENT_TO_BEST_1 5
-#define CURRENT_TO_RAND_1 6
-
-/* DEFINITION OF CROSSOVER ALGORITHM */
-#define BIN 0
-#define EXP 1
 
 namespace cv
 {
