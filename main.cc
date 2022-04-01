@@ -14,12 +14,6 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#define GPU false
-
-#if GPU
-	#include <opencv2/cudafeatures2d.hpp>
-#endif
-
 #include "GRIEF/grief.h"
 
 namespace plt = matplotlibcpp;
@@ -98,437 +92,213 @@ FILE *displacements;
 std::string CURRENT_DIR = get_current_dir_name();
 
 
+void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
+{
+	Ptr<DescriptorMatcher> descriptorMatcher;
+	vector<vector<DMatch> > allMatches1to2, allMatches2to1;
 
-#if GPU
-	void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
+	descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
+	
+	descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
+	if (!crossCheck)
 	{
-		//Ptr<DescriptorMatcher> descriptorMatcher;
-		vector<vector<DMatch> > allMatches1to2, allMatches2to1;
-
-		Ptr<cuda::DescriptorMatcher> descriptorMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
-
-		//descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
-		
-		descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
-		if (!crossCheck)
+		for(unsigned int i=0; i < allMatches1to2.size(); i++)
 		{
-			for(unsigned int i=0; i < allMatches1to2.size(); i++)
+			if (allMatches1to2[i].size() == 2)
+			{ 
+				if (allMatches1to2[i][0].distance < allMatches1to2[i][1].distance * distance_factor)
+				{
+					DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
+					matches.push_back(match);
+				}
+			}         
+			else if (allMatches1to2[i].size() == 1)
 			{
-				if (allMatches1to2[i].size() == 2)
-				{ 
-					if (allMatches1to2[i][0].distance < allMatches1to2[i][1].distance * distance_factor)
+				DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
+				matches.push_back(match);
+				cout << "ERROR" << endl;
+			}
+
+		}
+	}
+	else
+	{
+		descriptorMatcher->knnMatch(descriptors2, descriptors1, allMatches2to1, 2);
+		for(unsigned int i=0; i < allMatches1to2.size(); i++)
+		{
+			if (allMatches1to2[i].size() == 2)
+			{ 
+				if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 2)
+				{
+					if (allMatches1to2[i][0].distance < allMatches1to2[i][1].distance * distance_factor && allMatches2to1[allMatches1to2[i][0].trainIdx][0].distance < allMatches2to1[allMatches1to2[i][0].trainIdx][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
 					{
 						DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
 						matches.push_back(match);
 					}
-				}         
-				else if (allMatches1to2[i].size() == 1)
-				{
-					DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-					matches.push_back(match);
-					cout << "ERROR" << endl;
 				}
-
-			}
-		}
-		else
-		{
-			descriptorMatcher->knnMatch(descriptors2, descriptors1, allMatches2to1, 2);
-			for(unsigned int i=0; i < allMatches1to2.size(); i++)
-			{
-				if (allMatches1to2[i].size() == 2)
-				{ 
-					if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 2)
-					{
-						if (allMatches1to2[i][0].distance < allMatches1to2[i][1].distance * distance_factor && allMatches2to1[allMatches1to2[i][0].trainIdx][0].distance < allMatches2to1[allMatches1to2[i][0].trainIdx][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
-						{
-							DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-							matches.push_back(match);
-						}
-					}
-					else if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 1)
-						if (allMatches1to2[i][0].distance  < allMatches1to2[i][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
-						{
-							DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-							matches.push_back(match);
-							cout << "ERROR" << endl;
-						} 
-				}
-				else if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 2)
-				{
-					if (allMatches2to1[allMatches1to2[i][0].trainIdx][0].distance < allMatches2to1[allMatches1to2[i][0].trainIdx][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
+				else if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 1)
+					if (allMatches1to2[i][0].distance  < allMatches1to2[i][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
 					{
 						DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
 						matches.push_back(match);
 						cout << "ERROR" << endl;
-					}
-				}
-				else if (allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
+					} 
+			}
+			else if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 2)
+			{
+				if (allMatches2to1[allMatches1to2[i][0].trainIdx][0].distance < allMatches2to1[allMatches1to2[i][0].trainIdx][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
 				{
 					DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
 					matches.push_back(match);
 					cout << "ERROR" << endl;
-				} 
-
+				}
 			}
+			else if (allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
+			{
+				DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
+				matches.push_back(match);
+				cout << "ERROR" << endl;
+			} 
 
 		}
 
 	}
 
-#else
-	void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
-	{
-		Ptr<DescriptorMatcher> descriptorMatcher;
-		vector<vector<DMatch> > allMatches1to2, allMatches2to1;
-
-		descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
-		
-		descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
-		if (!crossCheck)
-		{
-			for(unsigned int i=0; i < allMatches1to2.size(); i++)
-			{
-				if (allMatches1to2[i].size() == 2)
-				{ 
-					if (allMatches1to2[i][0].distance < allMatches1to2[i][1].distance * distance_factor)
-					{
-						DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-						matches.push_back(match);
-					}
-				}         
-				else if (allMatches1to2[i].size() == 1)
-				{
-					DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-					matches.push_back(match);
-					cout << "ERROR" << endl;
-				}
-
-			}
-		}
-		else
-		{
-			descriptorMatcher->knnMatch(descriptors2, descriptors1, allMatches2to1, 2);
-			for(unsigned int i=0; i < allMatches1to2.size(); i++)
-			{
-				if (allMatches1to2[i].size() == 2)
-				{ 
-					if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 2)
-					{
-						if (allMatches1to2[i][0].distance < allMatches1to2[i][1].distance * distance_factor && allMatches2to1[allMatches1to2[i][0].trainIdx][0].distance < allMatches2to1[allMatches1to2[i][0].trainIdx][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
-						{
-							DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-							matches.push_back(match);
-						}
-					}
-					else if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 1)
-						if (allMatches1to2[i][0].distance  < allMatches1to2[i][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
-						{
-							DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-							matches.push_back(match);
-							cout << "ERROR" << endl;
-						} 
-				}
-				else if (allMatches2to1[allMatches1to2[i][0].trainIdx].size() == 2)
-				{
-					if (allMatches2to1[allMatches1to2[i][0].trainIdx][0].distance < allMatches2to1[allMatches1to2[i][0].trainIdx][1].distance * distance_factor && allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
-					{
-						DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-						matches.push_back(match);
-						cout << "ERROR" << endl;
-					}
-				}
-				else if (allMatches1to2[i][0].trainIdx == allMatches2to1[allMatches1to2[i][0].trainIdx][0].queryIdx)
-				{
-					DMatch match = DMatch(allMatches1to2[i][0].queryIdx, allMatches1to2[i][0].trainIdx, allMatches1to2[i][0].distance);
-					matches.push_back(match);
-					cout << "ERROR" << endl;
-				} 
-
-			}
-
-		}
-
-	}
-
-#endif
+}
 
 
-#if GPU
-	cuda::GpuMat gpu_dataset_imgs[600][600];
-#else
-	Mat dataset_imgs[600][600];
-#endif
-
+Mat dataset_imgs[600][600];
 
 void plot_convergence(std::vector<int> x,std::vector<int> y){
     plt::plot(x,y);
     plt::show();
 }
 
+float eval(Eigen::MatrixXd individual){
+	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	Ptr<cv::ORB> detector = cv::ORB::create();
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
+	descriptor->setInd(individual);
+	
+	std::vector<cv::DMatch> matches;
+	
 
-#if GPU
-	float eval(Eigen::MatrixXd individual){
-		//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-		Ptr<cv::ORB> detector = cv::ORB::create();
-		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
-		descriptor->setInd(individual);
+	int matchingTests = 0;
+	int matchingFailures = 0;
+	
+	int i1,i2;
+	
+	bool supervised = false;
+	
+	for (int location = 0;location<numLocations;location++){
+			
+		// detecting keypoints and generating descriptors
+		Mat descriptors[numSeasons];
 		
-		std::vector<cv::DMatch> matches;
+		vector<KeyPoint> keypoints[numSeasons];
+		KeyPoint kp;
+		Mat dp;
 		
+		
+		for (int i = 0;i<numSeasons;i++){
+			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
+			
+			detector->detect(dataset_imgs[i][location], keypoints[i]);				
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);				
+		}
+		
+		// matching the extracted features
+		for (int ik = 0;ik<numSeasons;ik++){
+			for (int jk = ik+1;jk<numSeasons;jk++){
+				matches.clear();
+				/*if not empty*/
+				
+				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
+				
+				/*are there any tentative correspondences ?*/
+				int sumDev = 0;
+				int numPoints = 0;
 
-		int matchingTests = 0;
-		int matchingFailures = 0;
-		
-		int i1,i2;
-		
-		bool supervised = false;
-		
-		for (int location = 0;location<numLocations;location++){
-				
-			// detecting keypoints and generating descriptors
-			Mat cpu_descriptors[numSeasons];
-			cuda::GpuMat descriptors[numSeasons];
-			vector<KeyPoint> keypoints[numSeasons];
-			KeyPoint kp;
-			cuda::GpuMat dp;
-			
-			
-			for (int i = 0;i<numSeasons;i++){
-				sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
-				
-				detector->detect(dataset_imgs[i][location], keypoints[i]);
-				
-				
-				descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
-				
-				descriptors[i].upload(cpu_descriptors[i]);
-				
-			}
-				
-			
-			// matching the extracted features
-			for (int ik = 0;ik<numSeasons;ik++){
-				for (int jk = ik+1;jk<numSeasons;jk++){
-					matches.clear();
-					/*if not empty*/
-					
-					if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
-					
-					/*are there any tentative correspondences ?*/
-					int sumDev = 0;
-					int numPoints = 0;
-
-					int histMax = 0;
-					int auxMax=0;
-					int manualDir = 0; 
-					int histDir = 0;
-					int numBins = 100; 
-					int granularity = 20;
-					int maxS = 0;
-					int domDir = 0;
+				int histMax = 0;
+				int auxMax=0;
+				int manualDir = 0; 
+				int histDir = 0;
+				int numBins = 100; 
+				int granularity = 20;
+				int maxS = 0;
+				int domDir = 0;
+				int histogram[numBins];
+				int bestHistogram[numBins];
+				vector<unsigned char> mask;
+				if (matches.size() > 0){
+					//histogram assembly
 					int histogram[numBins];
 					int bestHistogram[numBins];
-					vector<unsigned char> mask;
-					if (matches.size() > 0){
-						//histogram assembly
-						int histogram[numBins];
-						int bestHistogram[numBins];
-						memset(bestHistogram,0,sizeof(int)*numBins);
-						for (int s = 0;s<granularity;s++){
-							memset(histogram,0,sizeof(int)*numBins);
-							for( size_t i = 0; i < matches.size(); i++ )
-							{
-								int i1 = matches[i].queryIdx;
-								int i2 = matches[i].trainIdx;
-								if ((fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y))<VERTICAL_LIMIT){
-									int devx = (int)(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x + numBins/2*granularity);
-									int index = (devx+s)/granularity;
-									if (index > -1 && index < numBins) histogram[index]++;
-								}
-							}
-							for (int i = 0;i<numBins;i++){
-								if (histMax < histogram[i]){
-									histMax = histogram[i];
-									maxS = s;
-									domDir = i;
-									memcpy(bestHistogram,histogram,sizeof(int)*numBins);
-								}
-							}
-						}
-
-						
-						for (int i =0;i<numBins;i++){
-							if (auxMax < bestHistogram[i] && bestHistogram[i] != histMax){
-								auxMax = bestHistogram[i];
-							}
-						}
-
-						/*calculate dominant direction*/
+					memset(bestHistogram,0,sizeof(int)*numBins);
+					for (int s = 0;s<granularity;s++){
+						memset(histogram,0,sizeof(int)*numBins);
 						for( size_t i = 0; i < matches.size(); i++ )
 						{
 							int i1 = matches[i].queryIdx;
 							int i2 = matches[i].trainIdx;
-							if ((int)((keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x+numBins/2*granularity+maxS)/granularity)==domDir && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
-							{
-								sumDev += keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x;
-								numPoints++;
+							if ((fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y))<VERTICAL_LIMIT){
+								int devx = (int)(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x + numBins/2*granularity);
+								int index = (devx+s)/granularity;
+								if (index > -1 && index < numBins) histogram[index]++;
 							}
 						}
-						histDir = (sumDev/numPoints);
-						manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
-						if (fabs(manualDir - histDir) > 35) matchFail = true; else matchFail = false;
-						
-						float realDir = histDir;
-						int strength = 1;
-						//if (matchFail) strength = 100;
-						if (matchFail && supervised) realDir = manualDir;
-
-						if (matchFail) matchingFailures++;
-						matchingTests++;
-						//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
-					}else{
-						matchFail = true;
+						for (int i = 0;i<numBins;i++){
+							if (histMax < histogram[i]){
+								histMax = histogram[i];
+								maxS = s;
+								domDir = i;
+								memcpy(bestHistogram,histogram,sizeof(int)*numBins);
+							}
+						}
 					}
-									
-					//end drawing
-				}			
-			}		
-		}
 
-		std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
-		return matchingFailures/matchingTests;
-	}
-
-#else
-
-	float eval(Eigen::MatrixXd individual){
-		//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-		Ptr<cv::ORB> detector = cv::ORB::create();
-		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
-		descriptor->setInd(individual);
-		
-		std::vector<cv::DMatch> matches;
-		
-
-		int matchingTests = 0;
-		int matchingFailures = 0;
-		
-		int i1,i2;
-		
-		bool supervised = false;
-		
-		for (int location = 0;location<numLocations;location++){
-				
-			// detecting keypoints and generating descriptors
-			Mat descriptors[numSeasons];
-			
-			vector<KeyPoint> keypoints[numSeasons];
-			KeyPoint kp;
-			Mat dp;
-			
-			
-			for (int i = 0;i<numSeasons;i++){
-				sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
-				
-				detector->detect(dataset_imgs[i][location], keypoints[i]);				
-				descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);				
-			}
-			
-			// matching the extracted features
-			for (int ik = 0;ik<numSeasons;ik++){
-				for (int jk = ik+1;jk<numSeasons;jk++){
-					matches.clear();
-					/*if not empty*/
 					
-					if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
-					
-					/*are there any tentative correspondences ?*/
-					int sumDev = 0;
-					int numPoints = 0;
-
-					int histMax = 0;
-					int auxMax=0;
-					int manualDir = 0; 
-					int histDir = 0;
-					int numBins = 100; 
-					int granularity = 20;
-					int maxS = 0;
-					int domDir = 0;
-					int histogram[numBins];
-					int bestHistogram[numBins];
-					vector<unsigned char> mask;
-					if (matches.size() > 0){
-						//histogram assembly
-						int histogram[numBins];
-						int bestHistogram[numBins];
-						memset(bestHistogram,0,sizeof(int)*numBins);
-						for (int s = 0;s<granularity;s++){
-							memset(histogram,0,sizeof(int)*numBins);
-							for( size_t i = 0; i < matches.size(); i++ )
-							{
-								int i1 = matches[i].queryIdx;
-								int i2 = matches[i].trainIdx;
-								if ((fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y))<VERTICAL_LIMIT){
-									int devx = (int)(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x + numBins/2*granularity);
-									int index = (devx+s)/granularity;
-									if (index > -1 && index < numBins) histogram[index]++;
-								}
-							}
-							for (int i = 0;i<numBins;i++){
-								if (histMax < histogram[i]){
-									histMax = histogram[i];
-									maxS = s;
-									domDir = i;
-									memcpy(bestHistogram,histogram,sizeof(int)*numBins);
-								}
-							}
+					for (int i =0;i<numBins;i++){
+						if (auxMax < bestHistogram[i] && bestHistogram[i] != histMax){
+							auxMax = bestHistogram[i];
 						}
+					}
 
-						
-						for (int i =0;i<numBins;i++){
-							if (auxMax < bestHistogram[i] && bestHistogram[i] != histMax){
-								auxMax = bestHistogram[i];
-							}
-						}
-
-						/*calculate dominant direction*/
-						for( size_t i = 0; i < matches.size(); i++ )
+					/*calculate dominant direction*/
+					for( size_t i = 0; i < matches.size(); i++ )
+					{
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((int)((keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x+numBins/2*granularity+maxS)/granularity)==domDir && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
 						{
-							int i1 = matches[i].queryIdx;
-							int i2 = matches[i].trainIdx;
-							if ((int)((keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x+numBins/2*granularity+maxS)/granularity)==domDir && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
-							{
-								sumDev += keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x;
-								numPoints++;
-							}
+							sumDev += keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x;
+							numPoints++;
 						}
-						histDir = (sumDev/numPoints);
-						manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
-						if (fabs(manualDir - histDir) > 35) matchFail = true; else matchFail = false;
-						
-						float realDir = histDir;
-						int strength = 1;
-						//if (matchFail) strength = 100;
-						if (matchFail && supervised) realDir = manualDir;
-
-						if (matchFail) matchingFailures++;
-						matchingTests++;
-						//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
-					}else{
-						matchFail = true;
 					}
-									
-					//end drawing
-				}			
-			}		
-		}
+					histDir = (sumDev/numPoints);
+					manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
+					if (fabs(manualDir - histDir) > 35) matchFail = true; else matchFail = false;
+					
+					float realDir = histDir;
+					int strength = 1;
+					//if (matchFail) strength = 100;
+					if (matchFail && supervised) realDir = manualDir;
 
-		std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
-		return matchingFailures/matchingTests;
+					if (matchFail) matchingFailures++;
+					matchingTests++;
+					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
+				}else{
+					matchFail = true;
+				}
+								
+				//end drawing
+			}			
+		}		
 	}
 
-#endif
+	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
+	return matchingFailures/matchingTests;
+}
 
 int main(int argc, char ** argv){
 	char filename[100];
@@ -641,12 +411,6 @@ int main(int argc, char ** argv){
 	//		count++;
 	//	}
 	//}
-
-#if GPU
-	for(int i = 0; i < 600; i++)
-		for(int j = 0; j < 600; j++)
-			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
-#endif
 
     cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
 	

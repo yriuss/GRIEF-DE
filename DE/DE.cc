@@ -79,16 +79,8 @@ namespace DE{
 			idx3 = dist(rng);
 		}
 		while(idx3 != ind_idx && idx3 != idx2 && idx3 != idx1);
-
-		// Eigen::MatrixXd ind_idx1 = population[idx1]; 
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-
-		// Eigen::MatrixXd ind_u = population[ind_idx1] + F * (population[ind_idx2] - population[ind_idx3]);
+		
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
-
-		// mutated_ind = ind_u;
-
 	}
 
 	void DE::rand_2(int ind_idx){
@@ -128,18 +120,7 @@ namespace DE{
 		}
 		while(idx5 != ind_idx && idx5 != idx4 && idx5 != idx3 && idx5 != idx2 && idx5 != idx1);
 
-
-		// Eigen::MatrixXd ind_idx1 = population[idx1]; 
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-		// Eigen::MatrixXd ind_idx4 = population[idx4]; 
-		// Eigen::MatrixXd ind_idx5 = population[idx5]; 
-
-		// Eigen::MatrixXd	ind_u = ind_idx1 + F * ( (population[idx2] - population[idx3]) + (population[idx4] - population[idx5]) );
-		
 		mutated_ind = population[idx1] + F * ( (population[idx2] - population[idx3]) + (population[idx4] - population[idx5]) );
-
-		// mutated_ind = ind_u;
 	}
 
 	void DE::randtobest_1(int ind_idx){
@@ -170,15 +151,7 @@ namespace DE{
 		}
 		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2 && idx3 != idx1);
 
-		// Eigen::MatrixXd ind_idxb = population[idxb];
-		// Eigen::MatrixXd ind_idx1 = population[idx1]; 
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-
-		// Eigen::MatrixXd ind_u = population[idx1] + F * ( (population[idxb] - population[idx1]) + (population[idx2] - population[idx3]) );
 		mutated_ind = population[idx1] + F * ( (population[idxb] - population[idx1]) + (population[idx2] - population[idx3]) );
-
-		// mutated_ind = ind_u;
 	}
 
 	void DE::best_1(int ind_idx){
@@ -203,15 +176,7 @@ namespace DE{
 		}
 		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2);
 
-		// Eigen::MatrixXd ind_idxb = population[idxb];
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-
-		// Eigen::MatrixXd ind_u = population[idxb] + F * (population[idx2] - population[idx3]);
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
-
-		// mutated_ind = ind_u;
-
 	}
 
 	void DE::best_2(int ind_idx){
@@ -247,17 +212,8 @@ namespace DE{
 			idx5 = dist(rng);
 		}
 		while(idx5 != ind_idx && idx5 != idxb && idx5 != idx4 && idx5 != idx3 && idx5 != idx2);
-		
-		// Eigen::MatrixXd ind_idxb = population[idxb];
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-		// Eigen::MatrixXd ind_idx4 = population[idx4]; 
-		// Eigen::MatrixXd ind_idx5 = population[idx5]; 
 
-		// Eigen::MatrixXd ind_u = population[idxb] + F * (population[idx2] - population[idx3]);
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
-
-		// mutated_ind = ind_u;
 	}
 
 	void DE::currenttobest_1(int ind_idx){
@@ -282,15 +238,7 @@ namespace DE{
 		}
 		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2);
 
-		// Eigen::MatrixXd ind_idxi = population[ind_idx];
-		// Eigen::MatrixXd ind_idxb = population[idxb];
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-
-		// Eigen::MatrixXd ind_u = population[ind_idx] + F * ((population[idxb] - population[idxi]) + (population[idx2] - population[idx3]));
 		mutated_ind = population[ind_idx] + F * ((population[idxb] - population[ind_idx]) + (population[idx2] - population[idx3]));
-
-		// mutated_ind = ind_u;
 	}
 
 	void DE::currenttorand_1(int ind_idx){
@@ -318,15 +266,7 @@ namespace DE{
 		}
 		while(idx3 != ind_idx && idx3 != idx1 && idx3 != idx2);
 
-		// Eigen::MatrixXd ind_idxi = population[ind_idx];
-		// Eigen::MatrixXd ind_idx1 = population[idx1];
-		// Eigen::MatrixXd ind_idx2 = population[idx2]; 
-		// Eigen::MatrixXd ind_idx3 = population[idx3]; 
-
-		// Eigen::MatrixXd ind_u = population[ind_idx] + F * ((population[idx1] - population[idxi]) + (population[idx2] - population[idx3]));
 		mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
-
-		// mutated_ind = ind_u;
 	}
 
 	void DE::bincross(int ind_idx){
