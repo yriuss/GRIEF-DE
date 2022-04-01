@@ -189,8 +189,8 @@ namespace cv
 			
 		}
 
-		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F) :
-			bytes_(bytes), test_fn_(NULL), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24})
+		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm) :
+			bytes_(bytes), test_fn_(NULL), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
 		{
 			this->N_pop = N_pop;
 			load(individual, "test_pairs.brief");
