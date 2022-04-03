@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <iostream>
+#include <random>
 
 namespace DE{
 
@@ -56,10 +57,10 @@ namespace DE{
 	}
 
 	void DE::rand_1(int ind_idx){
-
+		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idx1 = -1;
 		int idx2 = -1;
@@ -68,26 +69,26 @@ namespace DE{
 		do {
 			idx1 = dist(rng);
 		}
-		while(idx1 != ind_idx);
+		while(idx1 == ind_idx);
 
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idx1 );
+		while(idx2 == ind_idx && idx2 == idx1 );
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idx2 && idx3 != idx1);
+		while(idx3 == ind_idx && idx3 == idx2 && idx3 == idx1);
 		
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
 	}
 
 	void DE::rand_2(int ind_idx){
-
+		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idx1 = -1;
 		int idx2 = -1;
@@ -98,27 +99,27 @@ namespace DE{
 		do {
 			idx1 = dist(rng);
 		}
-		while(idx1 != ind_idx);
+		while(idx1 == ind_idx);
 
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idx1 );
+		while(idx2 == ind_idx && idx2 == idx1 );
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idx2 && idx3 != idx1);
+		while(idx3 == ind_idx && idx3 == idx2 && idx3 == idx1);
 
 		do {
 			idx4 = dist(rng);
 		}
-		while(idx4 != ind_idx && idx4 != idx3 && idx4 != idx2 && idx4 != idx1);
+		while(idx4 == ind_idx && idx4 == idx3 && idx4 == idx2 && idx4 == idx1);
 
 		do {
 			idx5 = dist(rng);
 		}
-		while(idx5 != ind_idx && idx5 != idx4 && idx5 != idx3 && idx5 != idx2 && idx5 != idx1);
+		while(idx5 == ind_idx && idx5 == idx4 && idx5 == idx3 && idx5 == idx2 && idx5 == idx1);
 
 		mutated_ind = population[idx1] + F * ( (population[idx2] - population[idx3]) + (population[idx4] - population[idx5]) );
 	}
@@ -127,7 +128,7 @@ namespace DE{
 
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idxb = -1;
 		int idx1 = -1;
@@ -139,17 +140,17 @@ namespace DE{
 		do {
 			idx1 = dist(rng);
 		}
-		while(idx1 != ind_idx && idx1 != idxb);
+		while(idx1 == ind_idx && idx1 == idxb);
 
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idxb && idx2 != idx1 );
+		while(idx2 == ind_idx && idx2 == idxb && idx2 == idx1 );
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2 && idx3 != idx1);
+		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2 && idx3 == idx1);
 
 		mutated_ind = population[idx1] + F * ( (population[idxb] - population[idx1]) + (population[idx2] - population[idx3]) );
 	}
@@ -158,7 +159,7 @@ namespace DE{
 
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idxb = -1;
 		int idx2 = -1;
@@ -169,12 +170,12 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idxb);
+		while(idx2 == ind_idx && idx2 == idxb);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2);
+		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2);
 
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
 	}
@@ -183,7 +184,7 @@ namespace DE{
 
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idxb = -1;
 		int idx2 = -1;
@@ -196,22 +197,22 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idxb);
+		while(idx2 == ind_idx && idx2 == idxb);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2);
+		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2);
 
 		do {
 			idx4 = dist(rng);
 		}
-		while(idx4 != ind_idx && idx4 != idxb && idx4 != idx3 && idx4 != idx2);
+		while(idx4 == ind_idx && idx4 == idxb && idx4 == idx3 && idx4 == idx2);
 
 		do {
 			idx5 = dist(rng);
 		}
-		while(idx5 != ind_idx && idx5 != idxb && idx5 != idx4 && idx5 != idx3 && idx5 != idx2);
+		while(idx5 == ind_idx && idx5 == idxb && idx5 == idx4 && idx5 == idx3 && idx5 == idx2);
 
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
 	}
@@ -220,7 +221,7 @@ namespace DE{
 
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idxb = -1;
 		int idx2 = -1;
@@ -231,12 +232,12 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idxb);
+		while(idx2 == ind_idx && idx2 == idxb);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idxb && idx3 != idx2);
+		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2);
 
 		mutated_ind = population[ind_idx] + F * ((population[idxb] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
@@ -245,7 +246,7 @@ namespace DE{
 
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, N_pop - 1);
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 
 		int idx1 = -1;
 		int idx2 = -1;
@@ -254,17 +255,17 @@ namespace DE{
 		do {
 			idx1 = dist(rng);
 		}
-		while(idx1 != ind_idx);
+		while(idx1 == ind_idx);
 
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 != ind_idx && idx2 != idx1);
+		while(idx2 == ind_idx && idx2 == idx1);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 != ind_idx && idx3 != idx1 && idx3 != idx2);
+		while(idx3 == ind_idx && idx3 == idx1 && idx3 == idx2);
 
 		mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
@@ -274,7 +275,7 @@ namespace DE{
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> r_dist(0,1);
-		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 1);
+		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
 
 		for(int i = 0; i < population[ind_idx].rows(); i++){
 			
@@ -294,7 +295,7 @@ namespace DE{
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> r_dist(0,1);
-		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 1);
+		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
 
 		Eigen::MatrixXd ind_cross = population[ind_idx];
 
@@ -303,8 +304,12 @@ namespace DE{
 			int e = 0;
 			
 			while(r_dist(rng) <= cr && e < population[ind_idx].cols()){
+				mutated_ind(i,j) = (int) mutated_ind(i,j);
+				if(!infeasible)
+					infeasible = is_infeasible(mutated_ind(i,j));
+
 				ind_cross(i,j) = mutated_ind(i,j);
-				j = (j + 1) % (ind_shape[1] - 1);
+				j = (j + 1) % (ind_shape[1]);
 				e++;
 			}			
 		}	
@@ -379,8 +384,7 @@ namespace DE{
 	// 	}
 	// }
 
-	void DE::repair(int ind_idx){
-		
+	void DE::repair(int ind_idx){		
 		weibull_repair(ind_idx);
 		infeasible = false;
 	}
@@ -421,12 +425,21 @@ namespace DE{
 	}
 
 	void DE::evolve(uint ng){
+
 		for(int g = 0; g < ng; g++){
 			for(int i = 0; i < population.size(); i++){
+				std::cout << "[ call mutate() ]" << std::endl;
 				mutate(i);
+				
+				std::cout << "[ call crossover() ]" << std::endl;
 				crossover(i);
-				if(infeasible)
+
+				if(infeasible){
+					std::cout << "[ call repair() ]" << std::endl;
 					repair(i);
+				}
+
+				std::cout << "[ call selection() ]" << std::endl;
 				selection(i);
 			}
 		}
