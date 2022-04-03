@@ -29,6 +29,9 @@ namespace DE {
 #define BIN 0
 #define EXP 1
 
+#define OPPOSITION_LEARNING true
+#define LOCAL_SEARCH true
+
 	class DE{
 
 		public:
@@ -37,6 +40,8 @@ namespace DE {
 			int mutation_algorithm, int crossover_algorithm);
 
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
+			Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape);
+
 			Eigen::MatrixXd get_best_ind();
 			void crossover(int ind_idx);
 			void mutate(int ind_idx);
@@ -67,6 +72,7 @@ namespace DE {
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
 			std::vector<Eigen::MatrixXd> population;
+			std::vector<Eigen::MatrixXd> opposite_population;
 			std::vector<float> fitness;
 			std::vector<int> ind_shape;
 			float cr;

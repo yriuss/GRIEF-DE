@@ -49,15 +49,12 @@ typedef struct{
 
 TRating griefRating[1024];
 
-
-
 int numLocations = 0;
 int numDisplacements = 0;
 int numSeasons = 0;
 
 typedef std::vector<Mat> Vector;
 typedef std::vector<Vector> ImgMat;
-
 
 int load(Eigen::MatrixXd& mat, std::string fileName) {
     
@@ -159,11 +156,8 @@ void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<D
 				matches.push_back(match);
 				cout << "ERROR" << endl;
 			} 
-
 		}
-
 	}
-
 }
 
 
@@ -289,8 +283,7 @@ float eval(Eigen::MatrixXd individual){
 					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
 				}else{
 					matchFail = true;
-				}
-								
+				}								
 				//end drawing
 			}			
 		}		
@@ -351,9 +344,6 @@ int main(int argc, char ** argv){
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	printf("Dataset: %ix%i images from %i seasons and %i places, annotated %i, loadTime %f\n",x,y,numSeasons,numLocations,numDisplacements, elapsed.count());
-
-	
-	
 	
 	/*check the dataset consistency*/
 	start = std::chrono::high_resolution_clock::now();
@@ -414,8 +404,7 @@ int main(int argc, char ** argv){
 
     cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
 	
-	grief_descriptor->evolve(1000);
-	
+	grief_descriptor->evolve(10);	
 	grief_descriptor->get_b_fit();
     return 0;
 }
