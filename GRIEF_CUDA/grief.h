@@ -11,11 +11,12 @@
 #include "opencv2/xfeatures2d.hpp"
 #include <Eigen/Dense>
 #include "../DE/DE.h"
-
+//#include "matplotlibcpp.h"
 namespace cv{
 
 namespace xfeatures2d
 {
+
 typedef int arr64[64];
 typedef int arr4[4];
 typedef int arr2[2];
@@ -29,7 +30,9 @@ public:
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
 	CV_WRAP virtual float get_b_fit();
+	CV_WRAP virtual std::vector<float> gbfit();
 	CV_WRAP virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors);
+	//CV_WRAP virtual void plot_convergence();
 };
 
 /*
@@ -55,15 +58,18 @@ public:
 	virtual void evolve(uint ng) CV_OVERRIDE;
 	virtual void setInd(Eigen::MatrixXd new_individual) CV_OVERRIDE;
 	virtual float get_b_fit() CV_OVERRIDE;
-
+	virtual std::vector<float> gbfit() CV_OVERRIDE;
+	//virtual void plot_convergence() CV_OVERRIDE;
 	void pixelTests64(InputArray sum, const std::vector<KeyPoint>& keypoints,cuda::GpuMat& descriptors, bool use_orientation, int individual[512][4]);
-
+	
 protected:
+	std::vector<float> bfit;
 	int N_pop;
 	//typedef void(*PixelTestFn)(InputArray, const std::vector<KeyPoint>&, OutputArray, bool use_orientation, int individual[512][4]);
 	int individual[512][4];
 	int bytes_;
 	bool use_orientation_;
+	
 	//PixelTestFn test_fn_;
 };
 }

@@ -43,7 +43,6 @@
 #include "precomp.hpp"
 #include <algorithm>
 #include <vector>
-
 #include <iostream>
 #include <iomanip>
 
@@ -63,6 +62,7 @@ float evaluation(Eigen::MatrixXd individual){
 
 Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, float cr, float F)
 {
+	
 	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F );
 }
 
@@ -282,17 +282,23 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 
 void GriefDescriptorExtractorImpl::evolve(uint ng){
 	for(int g = 0; g < ng; g++){
+		
 		auto start = std::chrono::high_resolution_clock::now();
 		for(int i = 0; i < N_pop; i++){
+			
 			mutate(i);
+			
 			crossover(i);
 			if(is_infeasible())
 				repair(i);
 			selection(i);
+			
 		}
+		//std::cout <<  get_best_fit() << std::endl;
+		bfit.emplace_back(get_best_fit());
 		auto finish = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
-		std::cout << "Gen " << g << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
+		std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 		
 	}
 }
@@ -301,11 +307,29 @@ void GriefDescriptorExtractor::evolve(uint ng){
 	
 }
 
+std::vector<float> GriefDescriptorExtractorImpl::gbfit(){
+	return bfit;
+}
+
+std::vector<float> GriefDescriptorExtractor::gbfit(){
+	
+}
+
+
+
+//void GriefDescriptorExtractor::plot_convergence(){
+//}
+
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, float cr, float F) :
 	bytes_(bytes), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24},0,0)
 {
-	this->N_pop = N_pop;
-	load(individual, "test_pairs.brief");
+	
+	if(N_pop > 0){
+		bfit.reserve(N_pop);
+		this->N_pop = N_pop;
+		load(individual, "test_pairs.brief");
+	}
+	
 	use_orientation_ = use_orientation;
 	switch (bytes)
 	{

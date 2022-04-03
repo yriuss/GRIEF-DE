@@ -1,4 +1,4 @@
-#include "matplotlibcpp.h"
+
 #include "DE/DE.h"
 #include <stdio.h>
 #include<cmath>
@@ -16,7 +16,7 @@
 
 #include "GRIEF/grief.h"
 
-namespace plt = matplotlibcpp;
+
 
 
 #define CROSSCHECK true 

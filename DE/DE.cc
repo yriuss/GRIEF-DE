@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 
+
 namespace DE{
 
 	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, EvalFunction evaluation, float F, 
@@ -15,7 +16,7 @@ namespace DE{
 		if(N_pop > 0){
 			population.reserve(N_pop);
 			fitness.reserve(N_pop);
-
+			//best_fitness.reserve(N_pop);
 			eval = evaluation;
 			for(int i = 0; i < N_pop; i++){
 				population.emplace_back(generate_individual(ind_shape));
@@ -25,9 +26,11 @@ namespace DE{
 			this->F = F;
 			this->problem_type = problem_type;
 			this->mutation_algorithm = mutation_algorithm;
+			
 			U = bounds[1];
 			L = bounds[0];
-			N_pop = N_pop;
+			this->N_pop = N_pop;
+			this->ind_shape = ind_shape;
 		}
 		else {}
 	}
@@ -74,13 +77,13 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idx1 );
+		while(idx2 == ind_idx || idx2 == idx1 );
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idx2 && idx3 == idx1);
-		
+		while(idx3 == ind_idx || idx3 == idx2 || idx3 == idx1);
+
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
 	}
 
@@ -88,7 +91,7 @@ namespace DE{
 		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, population.size() - 1);
+		std::uniform_int_distribution<int> dist(0, N_pop - 1);
 
 		int idx1 = -1;
 		int idx2 = -1;
@@ -104,23 +107,23 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idx1 );
+		while(idx2 == ind_idx || idx2 == idx1 );
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idx2 && idx3 == idx1);
+		while(idx3 == ind_idx || idx3 == idx2 || idx3 == idx1);
 
 		do {
 			idx4 = dist(rng);
 		}
-		while(idx4 == ind_idx && idx4 == idx3 && idx4 == idx2 && idx4 == idx1);
+		while(idx4 == ind_idx || idx4 == idx3 || idx4 == idx2 || idx4 == idx1);
 
 		do {
 			idx5 = dist(rng);
 		}
-		while(idx5 == ind_idx && idx5 == idx4 && idx5 == idx3 && idx5 == idx2 && idx5 == idx1);
-
+		while(idx5 == ind_idx || idx5 == idx4 || idx5 == idx3 || idx5 == idx2 || idx5 == idx1);
+		//std::cout << "funfou";
 		mutated_ind = population[idx1] + F * ( (population[idx2] - population[idx3]) + (population[idx4] - population[idx5]) );
 	}
 
@@ -140,17 +143,17 @@ namespace DE{
 		do {
 			idx1 = dist(rng);
 		}
-		while(idx1 == ind_idx && idx1 == idxb);
+		while(idx1 == ind_idx || idx1 == idxb);
 
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idxb && idx2 == idx1 );
+		while(idx2 == ind_idx || idx2 == idxb || idx2 == idx1 );
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2 && idx3 == idx1);
+		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2 || idx3 == idx1);
 
 		mutated_ind = population[idx1] + F * ( (population[idxb] - population[idx1]) + (population[idx2] - population[idx3]) );
 	}
@@ -170,12 +173,12 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idxb);
+		while(idx2 == ind_idx || idx2 == idxb);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2);
+		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2);
 
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
 	}
@@ -197,22 +200,22 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idxb);
+		while(idx2 == ind_idx || idx2 == idxb);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2);
+		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2);
 
 		do {
 			idx4 = dist(rng);
 		}
-		while(idx4 == ind_idx && idx4 == idxb && idx4 == idx3 && idx4 == idx2);
+		while(idx4 == ind_idx || idx4 == idxb || idx4 == idx3 || idx4 == idx2);
 
 		do {
 			idx5 = dist(rng);
 		}
-		while(idx5 == ind_idx && idx5 == idxb && idx5 == idx4 && idx5 == idx3 && idx5 == idx2);
+		while(idx5 == ind_idx || idx5 == idxb || idx5 == idx4 || idx5 == idx3 || idx5 == idx2);
 
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
 	}
@@ -232,12 +235,12 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idxb);
+		while(idx2 == ind_idx || idx2 == idxb);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idxb && idx3 == idx2);
+		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2);
 
 		mutated_ind = population[ind_idx] + F * ((population[idxb] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
@@ -260,18 +263,18 @@ namespace DE{
 		do {
 			idx2 = dist(rng);
 		}
-		while(idx2 == ind_idx && idx2 == idx1);
+		while(idx2 == ind_idx || idx2 == idx1);
 
 		do {
 			idx3 = dist(rng);
 		}
-		while(idx3 == ind_idx && idx3 == idx1 && idx3 == idx2);
+		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
 
 		mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
 
 	void DE::bincross(int ind_idx){
-
+		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> r_dist(0,1);
@@ -389,6 +392,11 @@ namespace DE{
 		infeasible = false;
 	}
 
+	//void DE::plot_convergence(){
+	//	plt::plot(best_fitness);
+	//	plt::show;
+	//}
+
 	void DE::weibull_repair(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
@@ -423,7 +431,9 @@ namespace DE{
 			}
 		}
 	}
-
+	//void DE::set_best_fit(){
+	//	best_fitness.emplace_back(get_best_fit());
+	//}
 	void DE::evolve(uint ng){
 
 		for(int g = 0; g < ng; g++){
@@ -442,6 +452,7 @@ namespace DE{
 				std::cout << "[ call selection() ]" << std::endl;
 				selection(i);
 			}
+			//best_fitness.emplace_back(get_best_fit());
 		}
 	}
 

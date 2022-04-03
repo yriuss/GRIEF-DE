@@ -66,7 +66,8 @@ namespace DE {
 			int get_max_elem();
 			bool is_infeasible(int element);
 			bool is_infeasible();
-			
+			//void plot_convergence();
+			//void set_best_fit();
 
 		private:
 			EvalFunction eval;
@@ -74,6 +75,7 @@ namespace DE {
 			std::vector<Eigen::MatrixXd> population;
 			std::vector<Eigen::MatrixXd> opposite_population;
 			std::vector<float> fitness;
+			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;
 			float F;

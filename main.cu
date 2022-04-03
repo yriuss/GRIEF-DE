@@ -13,7 +13,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/highgui/highgui.hpp>
-
+#include <unistd.h>
 #include <opencv2/cudafeatures2d.hpp>
 
 #include "GRIEF_CUDA/grief.h"
@@ -51,7 +51,10 @@ typedef struct{
 
 TRating griefRating[1024];
 
-
+void plot_convergence(std::vector<float> y){
+	plt::plot(y);
+	plt::show();
+}
 
 int numLocations = 0;
 int numDisplacements = 0;
@@ -176,13 +179,14 @@ void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& desc
 Mat dataset_imgs[600][600];
 cuda::GpuMat gpu_dataset_imgs[600][600];
 
-void plot_convergence(std::vector<int> x,std::vector<int> y){
-    plt::plot(x,y);
-    plt::show();
-}
+//void plot_convergence(std::vector<int> x,std::vector<int> y){
+//    plt::plot(x,y);
+//    plt::show();
+//}
 
 
 float eval(Eigen::MatrixXd individual){
+	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
 	Ptr<cv::ORB> detector = cv::ORB::create();
@@ -327,7 +331,9 @@ float eval(Eigen::MatrixXd individual){
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
-    return matchingFailures/matchingTests;
+	//std::cout << "-";
+	
+    return (float)100*matchingFailures/matchingTests;
 }
 
 int main(int argc, char ** argv){
@@ -448,8 +454,8 @@ int main(int argc, char ** argv){
 
     cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
 	
-	grief_descriptor->evolve(1000);
-	
-	grief_descriptor->get_b_fit();
+	grief_descriptor->evolve(10);
+	std::cout << grief_descriptor->gbfit()[0] << std::endl;
+	plot_convergence(grief_descriptor->gbfit());	
     return 0;
 }
