@@ -35,14 +35,16 @@ namespace DE {
 	class DE{
 
 		public:
-			DE(int N_pop, std::vector<int> ind_shape, float cr, 
+			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
 			int mutation_algorithm, int crossover_algorithm);
 
-			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
-			Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape);
-
 			Eigen::MatrixXd get_best_ind();
+			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
+			Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx);
+
+			void generate_oppsite_population();
+			void apply_opposition();
 			void crossover(int ind_idx);
 			void mutate(int ind_idx);
 			void repair(int ind_idx);
@@ -68,6 +70,7 @@ namespace DE {
 			bool is_infeasible();
 			//void plot_convergence();
 			//void set_best_fit();
+			float jr;
 
 		private:
 			EvalFunction eval;
@@ -75,20 +78,20 @@ namespace DE {
 			std::vector<Eigen::MatrixXd> population;
 			std::vector<Eigen::MatrixXd> opposite_population;
 			std::vector<float> fitness;
+			std::vector<float> opposite_fitness;
 			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;
 			float F;
+			// float jr;
 			bool problem_type;
+			bool infeasible = false;
 			int U;
 			int L;
-			bool infeasible = false;
 			int mutation_algorithm;
 			int crossover_algorithm;
 			int N_pop;
-
 	};
-
 }
 
 #endif

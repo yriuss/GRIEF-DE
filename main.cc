@@ -1,10 +1,11 @@
 
 #include "DE/DE.h"
 #include <stdio.h>
-#include<cmath>
-#include<Eigen/Dense>
+#include <unistd.h>
+#include <cmath>
+#include <Eigen/Dense>
 #include <vector>
-#include<iostream>
+#include <iostream>
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
 #include "opencv2/features2d.hpp"
@@ -15,8 +16,6 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "GRIEF/grief.h"
-
-
 
 
 #define CROSSCHECK true 
@@ -163,10 +162,10 @@ void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<D
 
 Mat dataset_imgs[600][600];
 
-void plot_convergence(std::vector<int> x,std::vector<int> y){
-    plt::plot(x,y);
-    plt::show();
-}
+// void plot_convergence(std::vector<int> x,std::vector<int> y){
+//     plt::plot(x,y);
+//     plt::show();
+// }
 
 float eval(Eigen::MatrixXd individual){
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
@@ -294,9 +293,8 @@ float eval(Eigen::MatrixXd individual){
 }
 
 int main(int argc, char ** argv){
+
 	char filename[100];
-	
-	
 	bool supervised = false;
 	Mat tmpIm;
 	int detectorThreshold = 0;
@@ -402,9 +400,9 @@ int main(int argc, char ** argv){
 	//	}
 	//}
 
-    cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
+    cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 20);
 	
-	grief_descriptor->evolve(10);	
+	grief_descriptor->evolve(30);	
 	grief_descriptor->get_b_fit();
     return 0;
 }

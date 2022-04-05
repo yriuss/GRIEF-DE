@@ -56,9 +56,10 @@ namespace cv
 			return -1;
 		}
 
-		Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm)
+		Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, 
+																	   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm)
 		{
-			return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F, mutation_algorithm, crossover_algorithm);
+			return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, jr, F, mutation_algorithm, crossover_algorithm);
 		}
 
 		int GriefDescriptorExtractorImpl::load(int mat[512][4], std::string fileName) {
@@ -169,9 +170,28 @@ namespace cv
 
 
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
+			
+			std::random_device rseed;
+			std::mt19937 rng(rseed());
+			std::uniform_real_distribution<float> distr(0,1);
+
 			for(int g = 0; g < ng; g++){
+				std::cout << "Gen " << g+1 << std::endl;
+
 				auto start = std::chrono::high_resolution_clock::now();
+
+				#if OPPOSITION_LEARNING
+					if(g == 0 || distr(rng) <= jr){
+						// std::cout << "Applying Opposition..." << std::endl;
+						apply_opposition();
+						continue;
+					}
+				#endif
+
 				for(int i = 0; i < N_pop; i++){
+					
+					// std::cout << "[ Applying DE mutation and crossover operators ]" << std::endl;
+					
 					mutate(i);
 					crossover(i);
 					if(is_infeasible())
@@ -180,7 +200,7 @@ namespace cv
 				}
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
-				std::cout << "Gen " << g << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
+				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 				
 			}
 		}
@@ -190,13 +210,16 @@ namespace cv
 		}
 
 		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
-																	int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm) :
+																	int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 			bytes_(bytes), test_fn_(NULL), 
-			DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
+			DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
 		{
 			this->N_pop = N_pop;
+			this->jr = jr;
+
 			load(individual, "test_pairs.brief");
 			use_orientation_ = use_orientation;
+
 			switch (bytes)
 			{
 				case 16:
