@@ -10,7 +10,7 @@
 
 namespace DE{
 
-	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, EvalFunction evaluation, float F, 
+	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, float jr, EvalFunction evaluation, float F, 
 			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm): mutated_ind(ind_shape[0], ind_shape[1] ){
 		
 		//Initialize population
@@ -25,6 +25,7 @@ namespace DE{
 			}
 			this->cr = cr;
 			this->F = F;
+			this->jr = jr;
 			this->problem_type = problem_type;
 			this->mutation_algorithm = mutation_algorithm;
 			
@@ -34,6 +35,7 @@ namespace DE{
 			this->ind_shape = ind_shape;
 		}
 		else {}
+
 	}
 
 	void DE::evaluate(int ind_idx){
@@ -62,6 +64,8 @@ namespace DE{
 
 	Eigen::MatrixXd DE::generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx){
 
+		// std::cout << "Generate Opposite Individual Called" << std::endl;
+
 		Eigen::MatrixXd opposite_individual(ind_shape[0], ind_shape[1]);
 
 		for (int i = 0; i < ind_shape[0]; i++){
@@ -70,10 +74,14 @@ namespace DE{
 			}
 		}
 
+		// std::cout << "[ Opposite Individual Returned ]" << std::endl;
+
 		return opposite_individual;
 	}
 
 	void DE::generate_oppsite_population(){
+
+		// std::cout << "Generate Opposition Population Called" << std::endl;
 
 		opposite_population.reserve(N_pop);
 		opposite_fitness.reserve(N_pop);
@@ -87,6 +95,8 @@ namespace DE{
 
 	void DE::apply_opposition(){
 		
+		// std::cout << "Applying Opposition Called" << std::endl;
+
 		generate_oppsite_population();
 
 		std::vector<Eigen::MatrixXd> aux_population;
@@ -95,6 +105,8 @@ namespace DE{
 		aux_population.reserve(N_pop*2);
 		aux_fitness.reserve(N_pop*2);
 
+		// std::cout << "[ Aux Population Reserved ]" << std::endl;
+		
 		for (int i = 0; i < N_pop; i++){
 			aux_population.emplace_back(population[i]);
 			aux_fitness.emplace_back(fitness[i]);
@@ -102,30 +114,41 @@ namespace DE{
 			aux_fitness.emplace_back(opposite_fitness[i]);
 		}
 
-		int index_vector[N_pop*2];
+		// std::cout << "[ Aux Population Created ]" << std::endl;
 
-		for(int i = 0; i< N_pop*2; i++)
+		std::vector<int> index_vector;
+		index_vector.reserve(N_pop*2);
+
+		for(int i = 0; i < N_pop*2; i++)
 			index_vector[i] = i;
 
-		float fitness_vector[N_pop*2];
-		for(int i = 0; i < N_pop*2; i++)
-			fitness[i] = aux_fitness[i];
+		// std::cout << "[ Index Vector Created ]" << std::endl;
 
-		// ordenar
-		QS::quicksort qs;
-		qs.sort( fitness_vector, index_vector, 0, (N_pop * 2) - 1 );
 
-		// separar
+		// float fitness_vector[N_pop*2];
+		// for(int i = 0; i < N_pop*2; i++)
+		// 	fitness[i] = aux_fitness[i];
+
+		// std::cout << "[ Fitness Vector Created ]" << std::endl;
+
 		
+		// std::cout << "Quicksort Called" << std::endl;
+		
+		QS::quicksort qs;
+		qs.sort( aux_fitness, index_vector, 0, (N_pop * 2) - 1 );
+
+		// std::cout << "[ Quicksort ok ]" << std::endl;
+
+	
+		// std::cout << "[ Getting np best fitted individuals ]" << std::endl;
+
 		for(int i = 0; i < N_pop; i++){
 			population[i] = aux_population[index_vector[i]];
 			fitness[i] = aux_fitness[i];
 		}
 
-		aux_population.clear();
-		aux_fitness.clear();
-		opposite_population.clear();
-		opposite_fitness.clear();
+		// std::cout << "[ OK ]" << std::endl;
+
 	}
 
 	void DE::rand_1(int ind_idx){
@@ -352,12 +375,15 @@ namespace DE{
 		for(int i = 0; i < population[ind_idx].rows(); i++){
 			
 			float J = dist(rng);
-			for(int j = 0; j < population[ind_idx].cols(); j++){			
-				if(r_dist(rng) <= cr || j == J){
+			for(int j = 0; j < population[ind_idx].cols(); j++)
+			{			
+				if(r_dist(rng) <= cr || j == J)
+				{
 					mutated_ind(i,j) = (int)mutated_ind(i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
-				}else
+				}
+				else
 					mutated_ind(i,j) = population[ind_idx](i,j);
 			}
 		}
@@ -504,17 +530,16 @@ namespace DE{
 	//	best_fitness.emplace_back(get_best_fit());
 	//}
 	void DE::evolve(uint ng){
-
+		
 		for(int g = 0; g < ng; g++){
 			for(int i = 0; i < population.size(); i++){
 				mutate(i);
 				crossover(i);
 
-				if(infeasible){
-					std::cout << "[ call repair() ]" << std::endl;
+				if(infeasible)
 					repair(i);
-				}
-				selection(i);
+				
+				selection(i);					
 			}
 			//best_fitness.emplace_back(get_best_fit());
 		}

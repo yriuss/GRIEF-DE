@@ -400,9 +400,9 @@ int main(int argc, char ** argv){
 	//	}
 	//}
 
-    cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 30);
+    cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 20);
 	
-	grief_descriptor->evolve(10);	
+	grief_descriptor->evolve(30);	
 	grief_descriptor->get_b_fit();
     return 0;
 }

@@ -2,7 +2,7 @@
 
 namespace QS{
 
-    int quicksort::sort(float fitness_vector[], int population_indexes[], int left, int right){
+    void quicksort::sort(std::vector<float> &fitness_vector, std::vector<int> &population_indexes, int left, int right){
         int i = 0, j = 0;
 
         partition(fitness_vector, population_indexes, left, right, &i, &j);
@@ -11,11 +11,9 @@ namespace QS{
             sort(fitness_vector, population_indexes, left, j);
         if (i < right)
             sort(fitness_vector, population_indexes, i, right);
-
-        return (fitness_vector[0], population_indexes[0]);
     }
 
-    void quicksort::partition(float fitness_vector[], int population_indexes[], int left, int right, int *i, int *j){
+    void quicksort::partition(std::vector<float> &fitness_vector, std::vector<int> &population_indexes, int left, int right, int *i, int *j){
         
         int x = 0, aux = 0;
         *i = left;

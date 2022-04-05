@@ -35,7 +35,7 @@ namespace DE {
 	class DE{
 
 		public:
-			DE(int N_pop, std::vector<int> ind_shape, float cr, 
+			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
 			int mutation_algorithm, int crossover_algorithm);
 
@@ -70,6 +70,7 @@ namespace DE {
 			bool is_infeasible();
 			//void plot_convergence();
 			//void set_best_fit();
+			float jr;
 
 		private:
 			EvalFunction eval;
@@ -82,16 +83,15 @@ namespace DE {
 			std::vector<int> ind_shape;
 			float cr;
 			float F;
+			// float jr;
 			bool problem_type;
+			bool infeasible = false;
 			int U;
 			int L;
-			bool infeasible = false;
 			int mutation_algorithm;
 			int crossover_algorithm;
 			int N_pop;
-
 	};
-
 }
 
 #endif
