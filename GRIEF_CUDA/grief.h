@@ -25,7 +25,8 @@ float evaluation(Eigen::MatrixXd individual);
 class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
 {
 public:
-	CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, int N_pop = 0, float cr = 0.5, float F = 0.5);
+	CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
+				int N_pop = 0, int cr = 0.5, int F = 0.5, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
 	CV_WRAP virtual void getInd( );
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
@@ -44,7 +45,9 @@ public:
 	enum { PATCH_SIZE = 48, KERNEL_SIZE = 9 };
 
 	// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
-	GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, int N_pop = 0, float cr = 0.5, float F = 0.5);
+	GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
+											  int N_pop = 10, int cr = 0.9, int F = 0.8, int mutation_algorithm=RAND_2, int crossover_algorithm=EXP);
+											  
 	int load(int mat[512][4], std::string fileName);
 	virtual void read( const FileNode& ) CV_OVERRIDE;
 	virtual void write( FileStorage& ) const CV_OVERRIDE;

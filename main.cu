@@ -189,7 +189,7 @@ float eval(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-	Ptr<cv::ORB> detector = cv::ORB::create();
+	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create();
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
 	descriptor->setInd(individual);
 	
@@ -217,7 +217,7 @@ float eval(Eigen::MatrixXd individual){
 		for (int i = 0;i<numSeasons;i++){
 			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
 			
-			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
 			
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			//Mat a;

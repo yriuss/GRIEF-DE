@@ -60,10 +60,9 @@ float evaluation(Eigen::MatrixXd individual){
 }
 
 
-Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, float cr, float F)
+Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm)
 {
-	
-	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F );
+	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F, mutation_algorithm, crossover_algorithm);
 }
 
 int GriefDescriptorExtractorImpl::load(int mat[512][4], std::string fileName) {
@@ -294,7 +293,7 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 			selection(i);
 			
 		}
-		//std::cout <<  get_best_fit() << std::endl;
+		std::cout <<  get_best_fit() << std::endl;
 		bfit.emplace_back(get_best_fit());
 		auto finish = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
@@ -320,16 +319,13 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 //void GriefDescriptorExtractor::plot_convergence(){
 //}
 
-GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, float cr, float F) :
-	bytes_(bytes), DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24},0,0)
+GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
+															int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm) :
+	bytes_(bytes),
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
 {
-	
-	if(N_pop > 0){
-		bfit.reserve(N_pop);
-		this->N_pop = N_pop;
-		load(individual, "test_pairs.brief");
-	}
-	
+	this->N_pop = N_pop;
+	load(individual, "test_pairs.brief");
 	use_orientation_ = use_orientation;
 	switch (bytes)
 	{
