@@ -60,9 +60,10 @@ float evaluation(Eigen::MatrixXd individual){
 }
 
 
-Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm)
+Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, 
+															   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm)
 {
-	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, F, mutation_algorithm, crossover_algorithm);
+	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, jr, F, mutation_algorithm, crossover_algorithm);
 }
 
 int GriefDescriptorExtractorImpl::load(int mat[512][4], std::string fileName) {
@@ -320,11 +321,12 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 //}
 
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
-															int N_pop, int cr, int F, int mutation_algorithm, int crossover_algorithm) :
-	bytes_(bytes),
-	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
+															int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
+	bytes_(bytes), 
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
 {
 	this->N_pop = N_pop;
+	this->jr = jr;
 	load(individual, "test_pairs.brief");
 	use_orientation_ = use_orientation;
 	switch (bytes)
@@ -341,7 +343,7 @@ GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_
 		default:
 			CV_Error(Error::StsBadArg, "bytes must be 16, 32, or 64");
 	}
-}
+	}
 
 int GriefDescriptorExtractorImpl::descriptorSize() const
 {

@@ -27,7 +27,7 @@ ${CUDA_INCLUDE_DIRS}
 
 check_language(CUDA)
 if(CMAKE_CUDA_COMPILER)
-
+enable_language(CUDA)
 
 set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
 message("CUDA found!")
@@ -37,6 +37,8 @@ DE/DE.cc
 GRIEF_CUDA/grief.cu
 DE/DE.h
 GRIEF_CUDA/grief.h
+QS/quicksort.cc
+QS/quicksort.h
 )
 
 
@@ -44,7 +46,9 @@ target_link_libraries (${PROJECT_NAME}
 ${OpenCV_LIBS}
 ${PYTHON_LIBRARIES}
 Python3::NumPy
-Eigen3::Eigen)
+Eigen3::Eigen
+
+)
 
 # Add executable called "helloDemo" that is built from the source files
 # "demo.cxx" and "demo_b.cxx". The extensions are automatically found.
