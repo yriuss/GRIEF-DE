@@ -4,4 +4,4 @@ build/
 .vscode/
 GRIEF-datasets/*
 GRIEF-datasets/ 
-lib/*
+lib/

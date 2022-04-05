@@ -1,4 +1,5 @@
 #include "DE.h"
+#include "QS/quicksort.h"
 #include <stdio.h>
 #include <cmath>
 #include <Eigen/Dense>
@@ -57,6 +58,74 @@ namespace DE{
 		//std::cout << individual << std::endl;
 		//std::cout << (float)(individual[0][0]) << std::endl;
 		return individual;
+	}
+
+	Eigen::MatrixXd DE::generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx){
+
+		Eigen::MatrixXd opposite_individual(ind_shape[0], ind_shape[1]);
+
+		for (int i = 0; i < ind_shape[0]; i++){
+			for (int j = 0; j < ind_shape[1]; j++){
+				opposite_individual(i,j) = L + U - population[ind_idx](i,j);
+			}
+		}
+
+		return opposite_individual;
+	}
+
+	void DE::generate_oppsite_population(){
+
+		opposite_population.reserve(N_pop);
+		opposite_fitness.reserve(N_pop);
+		
+		for (int i = 0; i < N_pop; i++){
+			opposite_population.emplace_back(generate_oppsite_individual(ind_shape, i));
+			opposite_fitness.emplace_back(eval(opposite_population[i]));
+		}
+
+	}
+
+	void DE::apply_opposition(){
+		
+		generate_oppsite_population();
+
+		std::vector<Eigen::MatrixXd> aux_population;
+		std::vector<float> aux_fitness;
+
+		aux_population.reserve(N_pop*2);
+		aux_fitness.reserve(N_pop*2);
+
+		for (int i = 0; i < N_pop; i++){
+			aux_population.emplace_back(population[i]);
+			aux_fitness.emplace_back(fitness[i]);
+			aux_population.emplace_back(opposite_population[i]);
+			aux_fitness.emplace_back(opposite_fitness[i]);
+		}
+
+		int index_vector[N_pop*2];
+
+		for(int i = 0; i< N_pop*2; i++)
+			index_vector[i] = i;
+
+		float fitness_vector[N_pop*2];
+		for(int i = 0; i < N_pop*2; i++)
+			fitness[i] = aux_fitness[i];
+
+		// ordenar
+		QS::quicksort qs;
+		qs.sort( fitness_vector, index_vector, 0, (N_pop * 2) - 1 );
+
+		// separar
+		
+		for(int i = 0; i < N_pop; i++){
+			population[i] = aux_population[index_vector[i]];
+			fitness[i] = aux_fitness[i];
+		}
+
+		aux_population.clear();
+		aux_fitness.clear();
+		opposite_population.clear();
+		opposite_fitness.clear();
 	}
 
 	void DE::rand_1(int ind_idx){
@@ -438,18 +507,13 @@ namespace DE{
 
 		for(int g = 0; g < ng; g++){
 			for(int i = 0; i < population.size(); i++){
-				std::cout << "[ call mutate() ]" << std::endl;
 				mutate(i);
-				
-				std::cout << "[ call crossover() ]" << std::endl;
 				crossover(i);
 
 				if(infeasible){
 					std::cout << "[ call repair() ]" << std::endl;
 					repair(i);
 				}
-
-				std::cout << "[ call selection() ]" << std::endl;
 				selection(i);
 			}
 			//best_fitness.emplace_back(get_best_fit());

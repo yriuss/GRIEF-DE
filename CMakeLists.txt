@@ -2,8 +2,10 @@
 # refer to the root source directory of the project as ${HELLO_SOURCE_DIR} and
 # to the root binary directory of the project as ${HELLO_BINARY_DIR}.
 cmake_minimum_required (VERSION 3.14.0)
-project (GRIEF_proj C CXX CUDA)
-enable_language(CUDA)
+project (GRIEF_proj C CXX)
+
+# enable_language(CUDA)
+
 include(CheckLanguage)
 
 find_package(PythonLibs REQUIRED)
@@ -62,6 +64,8 @@ DE/DE.cc
 GRIEF/grief.cc
 DE/DE.h
 GRIEF/grief.h
+QS/quicksort.cc
+QS/quicksort.h
 )
 
 target_link_libraries (${PROJECT_NAME}
