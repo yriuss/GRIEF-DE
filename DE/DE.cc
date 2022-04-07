@@ -28,7 +28,7 @@ namespace DE{
 			this->jr = jr;
 			this->problem_type = problem_type;
 			this->mutation_algorithm = mutation_algorithm;
-			
+			this->crossover_algorithm = crossover_algorithm;
 			U = bounds[1];
 			L = bounds[0];
 			this->N_pop = N_pop;
@@ -155,7 +155,7 @@ namespace DE{
 		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, population.size() - 1);
+		std::uniform_int_distribution<int> dist(0, N_pop - 1);
 
 		int idx1 = -1;
 		int idx2 = -1;
@@ -177,6 +177,7 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idx2 || idx3 == idx1);
 
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
+		
 	}
 
 	void DE::rand_2(int ind_idx){
@@ -371,22 +372,23 @@ namespace DE{
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> r_dist(0,1);
 		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
-
+		//std::cout << "passei aqui" << std::endl;
 		for(int i = 0; i < population[ind_idx].rows(); i++){
 			
 			float J = dist(rng);
 			for(int j = 0; j < population[ind_idx].cols(); j++)
-			{			
+			{
+				mutated_ind(i,j) = (int)mutated_ind(i,j);	
 				if(r_dist(rng) <= cr || j == J)
 				{
-					mutated_ind(i,j) = (int)mutated_ind(i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
 				}
 				else
-					mutated_ind(i,j) = population[ind_idx](i,j);
+					mutated_ind(i,j) = (int)population[ind_idx](i,j);
 			}
 		}
+		
 	}
 
 	void DE::expcross(int ind_idx){
@@ -404,9 +406,9 @@ namespace DE{
 			while(r_dist(rng) <= cr && e < population[ind_idx].cols()){
 				mutated_ind(i,j) = (int) mutated_ind(i,j);
 				if(!infeasible)
-					infeasible = is_infeasible(mutated_ind(i,j));
+					infeasible = is_infeasible((int)mutated_ind(i,j));
 
-				ind_cross(i,j) = mutated_ind(i,j);
+				ind_cross(i,j) = (int)mutated_ind(i,j);
 				j = (j + 1) % (ind_shape[1]);
 				e++;
 			}			
@@ -437,7 +439,7 @@ namespace DE{
 	}
 
 	void DE::crossover(int ind_idx){
-
+		//std::cout << "alsdjoasikl "<<crossover_algorithm << std::endl;
 		switch(crossover_algorithm){
 			case 0:
 				bincross(ind_idx); break;
@@ -509,11 +511,14 @@ namespace DE{
 				}
 			}
 		}
+		
 	}
 
 	void DE::selection(int ind_idx){
-		
-		float mutated_fit = eval(mutated_ind);		
+		//std::cout << mutated_ind.rows() << " "  << mutated_ind.cols() << std::endl << std::endl;
+		//std::cout << mutated_ind << std::endl << std::endl;
+		float mutated_fit = eval(mutated_ind);	
+		//std::cout << ind_idx << std::endl;	
 		if(!problem_type){
 			if(mutated_fit < fitness[ind_idx]){
 				population[ind_idx] = mutated_ind;

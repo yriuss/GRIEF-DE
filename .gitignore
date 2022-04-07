@@ -5,3 +5,6 @@ build/
 GRIEF-datasets/*
 GRIEF-datasets/ 
 lib/*
+0.bmp
+1.bmp
+Makefile

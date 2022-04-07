@@ -26,12 +26,13 @@ class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
 {
 public:
 	CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-				int N_pop = 0, float cr = 0.5, float jr = 0.3, float F = 0.5, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
+				int N_pop = 0, float cr = 0.5, float jr = 0.3, float F = 0.5, int mutation_algorithm=CURRENT_TO_BEST_1, int crossover_algorithm=BIN);
 	CV_WRAP virtual void getInd( );
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
 	CV_WRAP virtual float get_b_fit();
 	CV_WRAP virtual std::vector<float> gbfit();
+	CV_WRAP virtual Eigen::MatrixXd get_best_indv();
 	CV_WRAP virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors);
 	//CV_WRAP virtual void plot_convergence();
 };
@@ -46,9 +47,9 @@ public:
 
 	// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
 	GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-											  int N_pop = 0, float cr = 0.9, float jr = 0.2, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
+											  int N_pop = 0, float cr = 0.9, float jr = 0.2, float F = 0.8, int mutation_algorithm=CURRENT_TO_BEST_1, int crossover_algorithm=BIN);
 											  
-	int load(int mat[512][4], std::string fileName);
+	int load(std::string fileName);
 	virtual void read( const FileNode& ) CV_OVERRIDE;
 	virtual void write( FileStorage& ) const CV_OVERRIDE;
 	
@@ -63,8 +64,8 @@ public:
 	virtual float get_b_fit() CV_OVERRIDE;
 	virtual std::vector<float> gbfit() CV_OVERRIDE;
 	//virtual void plot_convergence() CV_OVERRIDE;
-	void pixelTests64(InputArray sum, const std::vector<KeyPoint>& keypoints,cuda::GpuMat& descriptors, bool use_orientation, int individual[512][4]);
-	
+	void pixelTests64(InputArray sum, const std::vector<KeyPoint>& keypoints,cuda::GpuMat& descriptors, bool use_orientation);
+	virtual Eigen::MatrixXd get_best_indv() CV_OVERRIDE;
 protected:
 	std::vector<float> bfit;
 	int N_pop;

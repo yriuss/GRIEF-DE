@@ -65,22 +65,24 @@ Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool u
 {
 	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, jr, F, mutation_algorithm, crossover_algorithm);
 }
-
-int GriefDescriptorExtractorImpl::load(int mat[512][4], std::string fileName) {
-	
+#include <unistd.h>
+int GriefDescriptorExtractorImpl::load(std::string fileName) {
+	std::string CURRENT_DIR = get_current_dir_name();
 	using namespace std;
-	ifstream file(fileName);
+	ifstream file(CURRENT_DIR +"/../GRIEF_CUDA/" + fileName);
 
 	std::string line;
 	uint16_t i = 0, j = 0;
 	bool successful=false;
 	std::string cell;
+	//std::cout << CURRENT_DIR +"../GRIEF_CUDA/" + fileName;
 	while (std::getline(file, line)) {
 		//std::cout << line;
 		std::vector<int> v;
 		istringstream is(line);
 		while (std::getline(is, cell, ' ')) {
-			mat[i][j] = std::stoi(cell);
+			//std::cout << std::stoi(cell);
+			individual[i][j] = std::stoi(cell);
 			j++;
 		}
 		successful=true;
@@ -165,7 +167,7 @@ static void pixelTests32(InputArray _sum, const std::vector<KeyPoint>& keypoints
 	}
 }
 
-__global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, float* y,cuda::PtrStepSz<int>  descriptors, bool* use_orientation, arr4* individual){
+__global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, float* y,cuda::PtrStepSz<uchar>  descriptors, bool* use_orientation, arr4* individual){
 	//Matx21f R;
 	//arr2* result_child = nullptr;
 	//arr4* individual_child = nullptr;
@@ -212,7 +214,15 @@ __global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, f
 //#include "generated_64.i"
 }
 
-void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vector<KeyPoint>& keypoints,cuda::GpuMat&  descriptors, bool use_orientation, int individual[512][4])
+Eigen::MatrixXd GriefDescriptorExtractorImpl::get_best_indv(){
+	return get_best_ind();
+}
+
+Eigen::MatrixXd GriefDescriptorExtractor::get_best_indv(){
+	return Eigen::MatrixXd(1,1);
+}
+
+void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vector<KeyPoint>& keypoints,cuda::GpuMat&  descriptors, bool use_orientation)
 {
 	//auto start = std::chrono::high_resolution_clock::now();
 	cuda::GpuMat _sum;
@@ -250,18 +260,19 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 	cudaMemcpy(_y, y, sizeof(float)*keypoints.size(), cudaMemcpyHostToDevice);
 	
 
-	cudaMemcpy(_use_orientation, &use_orientation, sizeof(bool), cudaMemcpyHostToDevice);
+	//cudaMemcpy(_use_orientation, &use_orientation, sizeof(bool), cudaMemcpyHostToDevice);
 	
 	cudaMemcpy(gpu_individual, individual, sizeof(int)*512*4, cudaMemcpyHostToDevice);
 	//cudaMemcpy(_descriptors, &aux, sizeof(cuda::GpuMat), cudaMemcpyHostToDevice);
 	
-
+	
 	
 	
 	//cudaMemcpy(_sum, &aux, sizeof(KeyPoint)*keypoints.size(), cudaMemcpyHostToDevice);
 	pixelTests64_kernel<<<keypoints.size(),64>>>(_sum, _x, _y,descriptors, _use_orientation, gpu_individual);
 	cudaDeviceSynchronize();
-	int k = 0;
+	
+	cudaFree(gpu_individual); cudaFree(_x); cudaFree(_y);
 	//std::cout << descriptors.size() << std::endl;
 	//cudaMemcpy(aux, _descriptors, sizeof(Mat), cudaMemcpyDeviceToHost);
 
@@ -281,6 +292,7 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 
 
 void GriefDescriptorExtractorImpl::evolve(uint ng){
+	
 	for(int g = 0; g < ng; g++){
 		
 		auto start = std::chrono::high_resolution_clock::now();
@@ -289,16 +301,22 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 			mutate(i);
 			
 			crossover(i);
+			
 			if(is_infeasible())
 				repair(i);
-			selection(i);
 			
-		}
+			selection(i);
+			//std::cout << i << std::endl;
+
+		}//exit(-1);
+		
 		std::cout <<  get_best_fit() << std::endl;
+		
 		bfit.emplace_back(get_best_fit());
 		auto finish = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
 		std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
+		
 		
 	}
 }
@@ -312,7 +330,7 @@ std::vector<float> GriefDescriptorExtractorImpl::gbfit(){
 }
 
 std::vector<float> GriefDescriptorExtractor::gbfit(){
-	
+	return std::vector<float>{0,0};
 }
 
 
@@ -323,11 +341,13 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
 															int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 	bytes_(bytes), 
-	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
 {
 	this->N_pop = N_pop;
 	this->jr = jr;
-	load(individual, "test_pairs.brief");
+
+	load("test_pairs.brief");
+	
 	use_orientation_ = use_orientation;
 	switch (bytes)
 	{
@@ -420,7 +440,7 @@ void GriefDescriptorExtractorImpl::compute(InputArray image,
 	
 	descriptors.create((int)keypoints.size(), bytes_, CV_8U);
 	descriptors.setTo(Scalar::all(0));
-	pixelTests64(sum, keypoints, descriptors, use_orientation_, individual);
+	pixelTests64(sum, keypoints, descriptors, use_orientation_);
 }
 
 void GriefDescriptorExtractor::compute(InputArray image,
@@ -430,6 +450,8 @@ void GriefDescriptorExtractor::compute(InputArray image,
 }
 
 void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
+	//load("test_pairs.brief");
+	std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
 	for(int i = 0; i < bytes_*8; i++){
 		for(int j=0; j<4; j++){
 			individual[i][j] = new_individual(i,j);
