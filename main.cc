@@ -1,5 +1,6 @@
 
 #include "DE/DE.h"
+#include "matplotlibcpp.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <cmath>
@@ -17,7 +18,7 @@
 
 #include "GRIEF/grief.h"
 
-
+namespace plt = matplotlibcpp;
 #define CROSSCHECK true 
 #define VERTICAL_LIMIT 100
 #define MAX_SEASONS 100
@@ -35,7 +36,7 @@ using namespace cv;
 unsigned int n;
 float distance_factor = 1.0;
 int griefDescriptorLength= 512;
-char dataset[1000];
+std::string dataset;
 char season[1000][1000]; 
 
 
@@ -54,6 +55,15 @@ int numSeasons = 0;
 
 typedef std::vector<Mat> Vector;
 typedef std::vector<Vector> ImgMat;
+
+bool dir_exist(const std::string &s)
+{
+  struct stat buffer;
+  return (stat (s.c_str(), &buffer) == 0);
+}
+void _mkdir(const std::string &s){
+	mkdir((s).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
+}
 
 int load(Eigen::MatrixXd& mat, std::string fileName) {
     
@@ -94,8 +104,8 @@ void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<D
 	vector<vector<DMatch> > allMatches1to2, allMatches2to1;
 
 	descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
-	
 	descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
+
 	if (!crossCheck)
 	{
 		for(unsigned int i=0; i < allMatches1to2.size(); i++)
@@ -155,8 +165,11 @@ void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<D
 				matches.push_back(match);
 				cout << "ERROR" << endl;
 			} 
+
 		}
+
 	}
+
 }
 
 
@@ -181,7 +194,7 @@ float eval(Eigen::MatrixXd individual){
 	
 	int i1,i2;
 	
-	bool supervised = false;
+	bool supervised = true;
 	
 	for (int location = 0;location<numLocations;location++){
 			
@@ -194,7 +207,7 @@ float eval(Eigen::MatrixXd individual){
 		
 		
 		for (int i = 0;i<numSeasons;i++){
-			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt","../GRIEF-datasets/michigan",i,location);
+			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+dataset).c_str(),i,location);
 			
 			detector->detect(dataset_imgs[i][location], keypoints[i]);				
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);				
@@ -291,27 +304,250 @@ float eval(Eigen::MatrixXd individual){
 	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
 	return matchingFailures/matchingTests;
 }
+float eval1(Eigen::MatrixXd individual){
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	Ptr<cv::ORB> detector = cv::ORB::create(1600);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
+	descriptor->setInd(individual);
+	for (int i = 0;i<1024;i++){
+		griefRating[i].value=0;
+		griefRating[i].id=i;
+	}
+	std::vector<cv::DMatch> matches;
+	
 
-int main(int argc, char ** argv){
+	int matchingTests = 0;
+	int matchingFailures = 0;
+	
+	int i1,i2;
+	
+	bool supervised = true;
+	
 
+	
+	for (int location = 0;location<numLocations;location++){
+		
+		
+		// detecting keypoints and generating descriptors
+		Mat descriptors[numSeasons];
+		vector<KeyPoint> keypoints[numSeasons];
+		KeyPoint kp;
+		Mat dp;
+		
+		Ptr<cv::ORB> detector = cv::ORB::create(1600);		//TODO make this selectable
+		//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);		//TODO make this selectable
+		//FakeFeatureDetector detector;		//TODO make this selectable
+		//BRISK detector(0,4);
+		
+		Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(griefDescriptorLength/8);
+		
+		for (int i = 0;i<numSeasons;i++){
+			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
+		}
+		
+		
+		
+		
+		// matching the extracted features
+		for (int ik = 0;ik<numSeasons;ik++){
+			for (int jk = ik+1;jk<numSeasons;jk++){
+				matches.clear();
+				/*if not empty*/
+				
+				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
+				
+
+				/*are there any tentative correspondences ?*/
+				int sumDev = 0;
+				int numPoints = 0;
+				
+				int histMax = 0;
+				int auxMax=0;
+				int manualDir = 0; 
+				int histDir = 0;
+				int numBins = 100; 
+				int granularity = 20;
+				int maxS = 0;
+				int domDir = 0;
+				vector<unsigned char> mask;
+				if (matches.size() > 0){
+					//histogram assembly
+					int histogram[numBins];
+					int bestHistogram[numBins];
+					memset(bestHistogram,0,sizeof(int)*numBins);
+					for (int s = 0;s<granularity;s++){
+						memset(histogram,0,sizeof(int)*numBins);
+						for( size_t i = 0; i < matches.size(); i++ )
+						{
+							int i1 = matches[i].queryIdx;
+							int i2 = matches[i].trainIdx;
+							if ((fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y))<VERTICAL_LIMIT){
+								int devx = (int)(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x + numBins/2*granularity);
+								int index = (devx+s)/granularity;
+								if (index > -1 && index < numBins) histogram[index]++;
+							}
+						}
+						for (int i = 0;i<numBins;i++){
+							if (histMax < histogram[i]){
+								histMax = histogram[i];
+								maxS = s;
+								domDir = i;
+								memcpy(bestHistogram,histogram,sizeof(int)*numBins);
+							}
+						}
+					}
+
+					
+					for (int i =0;i<numBins;i++){
+						if (auxMax < bestHistogram[i] && bestHistogram[i] != histMax){
+							auxMax = bestHistogram[i];
+						}
+					}
+
+					/*calculate dominant direction*/
+					for( size_t i = 0; i < matches.size(); i++ )
+					{
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((int)((keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x+numBins/2*granularity+maxS)/granularity)==domDir && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
+						{
+							sumDev += keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x;
+							numPoints++;
+						}
+					}
+					histDir = (sumDev/numPoints);
+					manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
+					if (fabs(manualDir - histDir) > 35) matchFail = true; else matchFail = false;
+					float realDir = histDir;
+					int strength = 1;
+					//if (matchFail) strength = 100;
+					if (matchFail && supervised) realDir = manualDir;
+
+					/*rate individual comparisons*/
+					for( size_t i = 0; i < matches.size(); i++ ){
+						char eff = 0;
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((abs(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x-realDir)< 35 ) && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
+						{
+							eff = -strength;
+						}else{
+							eff = +strength;
+						}
+						for (int o = 0;o<griefDescriptorLength/8;o++){
+							unsigned char b = descriptors[ik].at<uchar>(i1,o)^descriptors[jk].at<uchar>(i2,o);
+							unsigned char oo = 128;
+							for (int p = 0;p<8;p++){
+								if (oo&b)  griefRating[8*o+p].value+=eff; else griefRating[8*o+p].value-=eff;
+								oo=oo/2;
+							}
+						}
+					}
+					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
+				}else{
+					printf("%04i %02i%02i 1000 -1000 0 0\n",location,ik+1,jk+1);
+					matchFail = true;
+				}
+				
+				/*double minVal; 
+				double maxVal; 
+				Point minLoc; 
+				Point maxLoc;
+				minMaxLoc( global, &minVal, &maxVal, &minLoc, &maxLoc );
+				global = (global-minVal)/(maxVal-minVal)*255;
+				global.convertTo(submat, CV_8U);
+				imwrite("heh.bmp",submat);*/
+
+				if (matchFail) matchingFailures++;
+				matchingTests++;
+				
+				
+				//end drawing
+			}
+		}
+		
+	}
+	
+	int sum = 0;
+	
+	for (int i = 0;i<griefDescriptorLength;i++){
+		 sum+=griefRating[i].value;
+	}
+	sum=sum/griefDescriptorLength;
+
+	std::cout << "fitness is " << (float)sum << std::endl;
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "elapsed time: " << elapsed.count() << std::endl;
+	//std::cout << "-";
+	
+    return sum;
+}
+
+
+void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual){
+	
+
+	if(!dir_exist(CURRENT_DIR+"/../results/"))
+		_mkdir(CURRENT_DIR+"/../results/");
+	
+	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset))
+		_mkdir(CURRENT_DIR+"/../results/" + dataset);
+	
+	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset + "/" + exp))
+		_mkdir(CURRENT_DIR+"/../results/" + dataset+ "/" + exp);
+	
+	plt::plot(y);
+	plt::title("Convergence " + dataset);
+	plt::xlabel("Gerações");
+	plt::ylabel("Fitness");
+	plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "convergence.png");
+	plt::cla();
+	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
+
+	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
+    	f1 << *i << '\n';
+	}
+
+	if (f2.is_open())
+  	{
+    	f2 << best_individual;
+  	}
+	//plt::show();
+}
+
+int main(){
+	int argc=4;
+	std::string argv[4];
+	argv[1] = "michigan";
+	argv[2] = "10";
+	argv[3]  = "10";
 	char filename[100];
 	bool supervised = false;
 	Mat tmpIm;
 	int detectorThreshold = 0;
 	distance_factor = 1.0;
 	// process command line args
-	if (argc > 2 && strcmp(argv[2],"draw")==0) draw = true;
-	if (argc > 2 && strcmp(argv[2],"save")==0) save = true;
+	if(argc < 4){
+		std::cout << "\033[1;31m Error:\033[0m " "Give the dataset, number of generations and number of experiments!" 
+		<< std::endl << "\033[1;33m e.g.:\033[0m ./teste michigan 10 10" << std::endl;
+		exit(-1);
+	}
+	
+	dataset = argv[1];
 		
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
 	do{
-		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), "../GRIEF-datasets/michigan",numSeasons,numLocations);
+		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+dataset).c_str(),numSeasons,numLocations);
 		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
 		if (tmpIm.data != NULL)
 		{
-			sprintf(filename,"%s/season_%02i/displacements.txt","../GRIEF-datasets/michigan",numSeasons);
+			sprintf(filename,"%s/season_%02i/displacements.txt",("../GRIEF-datasets/"+dataset).c_str(),numSeasons);
 			if (fopen(filename,"r") != NULL) numDisplacements++;
 			x = tmpIm.cols;
 			y = tmpIm.rows;
@@ -333,7 +569,7 @@ int main(int argc, char ** argv){
 	
 	/*check the number of locations*/
 	do{
-		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), "../GRIEF-datasets/michigan",0,numLocations++);
+		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+dataset).c_str(),0,numLocations++);
 		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
 	}while (numLocations < MAX_LOCATIONS && tmpIm.data != NULL);
 
@@ -354,7 +590,7 @@ int main(int argc, char ** argv){
 	{
 		for (int j=0;j<numLocations;j++)
 		{
-			sprintf(filename,(CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), "../GRIEF-datasets/michigan",i,j);
+			sprintf(filename,(CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+dataset).c_str(),i,j);
 			dataset_imgs[i][j] =  imread(filename, cv::IMREAD_GRAYSCALE);
 			
 			if (dataset_imgs[i][j].empty()) {
@@ -367,7 +603,7 @@ int main(int argc, char ** argv){
 			}
 		}
 		if (supervised){
-			sprintf(filename,"%s/season_%02i/displacements.txt","../GRIEF-datasets/michigan",i);
+			sprintf(filename,"%s/season_%02i/displacements.txt",("../GRIEF-datasets/"+dataset).c_str(),i);
 			displacements = fopen(filename,"r");
 			int aX,aY,aR;
 			for (int j = 0;j<numLocations;j++){
@@ -400,9 +636,10 @@ int main(int argc, char ** argv){
 	//	}
 	//}
 
-    cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval, 20);
-	
-	grief_descriptor->evolve(30);	
-	grief_descriptor->get_b_fit();
+    for(int i = 0; i < atoi((argv[3]).c_str()); i++){
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 30);
+		grief_descriptor->evolve(atoi((argv[2]).c_str()));
+		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
+	}
     return 0;
 }

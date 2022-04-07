@@ -62,28 +62,46 @@ namespace cv
 			return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, jr, F, mutation_algorithm, crossover_algorithm);
 		}
 
-		int GriefDescriptorExtractorImpl::load(int mat[512][4], std::string fileName) {
-			
+		std::vector<float> GriefDescriptorExtractorImpl::gbfit(){
+			return bfit;
+		}
+
+		std::vector<float> GriefDescriptorExtractor::gbfit(){
+			return std::vector<float>{0,0};
+		}
+		
+		Eigen::MatrixXd GriefDescriptorExtractorImpl::get_best_indv(){
+			return get_best_ind();
+		}
+
+		Eigen::MatrixXd GriefDescriptorExtractor::get_best_indv(){
+			return Eigen::MatrixXd(1,1);
+		}
+#include <unistd.h>
+		int GriefDescriptorExtractorImpl::load(std::string fileName) {
+			std::string CURRENT_DIR = get_current_dir_name();
 			using namespace std;
-			ifstream file(fileName);
+			ifstream file(CURRENT_DIR +"/../GRIEF_CUDA/" + fileName);
 
 			std::string line;
 			uint16_t i = 0, j = 0;
 			bool successful=false;
 			std::string cell;
+			//std::cout << CURRENT_DIR +"../GRIEF_CUDA/" + fileName;
 			while (std::getline(file, line)) {
 				//std::cout << line;
 				std::vector<int> v;
 				istringstream is(line);
 				while (std::getline(is, cell, ' ')) {
-					mat[i][j] = std::stoi(cell);
+					//std::cout << std::stoi(cell);
+					individual[i][j] = std::stoi(cell);
 					j++;
 				}
 				successful=true;
 				i++;
 				j = 0;
 			}
-			
+
 			file.close();
 			return successful;
 		}
@@ -217,7 +235,7 @@ namespace cv
 			this->N_pop = N_pop;
 			this->jr = jr;
 
-			load(individual, "test_pairs.brief");
+			load("test_pairs.brief");
 			use_orientation_ = use_orientation;
 
 			switch (bytes)
@@ -313,11 +331,13 @@ namespace cv
 		}
 
 		void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
-			for(int i = 0; i < bytes_*8; i++){
-				for(int j=0; j<4; j++){
-					individual[i][j] = new_individual(i,j);
-				}
-			}
+			load("test_pairs.brief");
+			std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
+			//for(int i = 0; i < bytes_*8; i++){
+			//	for(int j=0; j<4; j++){
+			//		individual[i][j] = new_individual(i,j);
+			//	}
+			//}
 		}
 
 		void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){

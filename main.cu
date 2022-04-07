@@ -201,7 +201,7 @@ float eval(Eigen::MatrixXd individual){
 	
 	int i1,i2;
 	
-	bool supervised = false;
+	bool supervised = true;
 	
 
 	
@@ -224,6 +224,7 @@ float eval(Eigen::MatrixXd individual){
 			//std::cout << a << std::endl;
 			//exit(-1);
 			//descriptors[i].upload(cpu_descriptors[i]);
+			
 			
 		}
 		
@@ -379,6 +380,8 @@ float eval1(Eigen::MatrixXd individual){
 			//std::cout << "a" << std::endl;
 			//exit(-1);
 			descriptors[i].download(cpu_descriptors[i]);
+			std::cout << cpu_descriptors[0];
+			exit(-1);
 			
 		}
 		
