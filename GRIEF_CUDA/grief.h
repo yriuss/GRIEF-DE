@@ -31,6 +31,7 @@ public:
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
 	CV_WRAP virtual float get_b_fit();
+	CV_WRAP virtual uint get_change_percentage(uint ng);
 	CV_WRAP virtual std::vector<float> gbfit();
 	CV_WRAP virtual Eigen::MatrixXd get_best_indv();
 	CV_WRAP virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors);
@@ -56,7 +57,7 @@ public:
 	virtual int descriptorSize() const CV_OVERRIDE;
 	virtual int descriptorType() const CV_OVERRIDE;
 	virtual int defaultNorm() const CV_OVERRIDE;
-
+	virtual uint get_change_percentage(uint ng) CV_OVERRIDE;
 	virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors) CV_OVERRIDE;
 	virtual void getInd() CV_OVERRIDE;
 	virtual void evolve(uint ng) CV_OVERRIDE;

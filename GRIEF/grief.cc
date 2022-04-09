@@ -46,7 +46,7 @@
 
 #include <iostream>
 #include <iomanip>
-
+ 
 namespace cv
 {
 	namespace xfeatures2d

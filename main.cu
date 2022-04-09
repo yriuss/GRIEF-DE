@@ -341,7 +341,7 @@ float eval1(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-	Ptr<cv::ORB> detector = cv::ORB::create(1600);
+	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create(1600);
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
 	descriptor->setInd(individual);
 	for (int i = 0;i<1024;i++){
@@ -356,7 +356,7 @@ float eval1(Eigen::MatrixXd individual){
 	
 	int i1,i2;
 	
-	bool supervised = false;
+	bool supervised = true;
 	
 
 	
@@ -372,7 +372,7 @@ float eval1(Eigen::MatrixXd individual){
 		for (int i = 0;i<numSeasons;i++){
 			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
 			
-			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
 			
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			//Mat a;
@@ -380,8 +380,10 @@ float eval1(Eigen::MatrixXd individual){
 			//std::cout << "a" << std::endl;
 			//exit(-1);
 			descriptors[i].download(cpu_descriptors[i]);
-			std::cout << cpu_descriptors[0];
-			exit(-1);
+			//std::cout << cpu_descriptors[i];
+			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
+			//std::cout << cpu_descriptors[i].row(1599);
+			//exit(-1);
 			
 		}
 		
@@ -529,7 +531,7 @@ void _mkdir(const std::string &s){
 	mkdir((s).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
 }
 
-void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual){
+void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, uint change_percentage){
 	
 
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
@@ -557,6 +559,11 @@ void save_data(std::vector<float> y, const std::string &dataset, const std::stri
   	{
     	f2 << best_individual;
   	}
+
+	ofstream f3;
+  	f3.open ("details.txt");
+	f3 << change_percentage << "%";
+	f3.close();
 	//plt::show();
 }
 
@@ -682,7 +689,7 @@ int main(int argc, char ** argv){
 	for(int i = 0; i < atoi(argv[3]); i++){
     	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 30);
 		grief_descriptor->evolve(atoi(argv[2]));
-		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
+		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief->get_change_percentage(atoi(argv[2])));
 	}
 
     return 0;

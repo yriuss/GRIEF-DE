@@ -542,6 +542,10 @@ namespace DE{
 		
 	}
 
+	uint DE::get_change_counter(){
+		return change_counter;
+	}
+
 	void DE::selection(int ind_idx){
 		//std::cout << mutated_ind.rows() << " "  << mutated_ind.cols() << std::endl << std::endl;
 		//std::cout << mutated_ind << std::endl << std::endl;
@@ -549,11 +553,13 @@ namespace DE{
 		//std::cout << ind_idx << std::endl;	
 		if(!problem_type){
 			if(mutated_fit < fitness[ind_idx]){
+				change_counter++;
 				population[ind_idx] = mutated_ind;
 				fitness[ind_idx] = mutated_fit;
 			}
 		}else{
 			if(mutated_fit > fitness[ind_idx]){
+				change_counter++;
 				population[ind_idx] = mutated_ind;
 				fitness[ind_idx] = mutated_fit;
 			}
