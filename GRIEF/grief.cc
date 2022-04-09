@@ -331,13 +331,13 @@ namespace cv
 		}
 
 		void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
-			load("test_pairs.brief");
-			std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
-			//for(int i = 0; i < bytes_*8; i++){
-			//	for(int j=0; j<4; j++){
-			//		individual[i][j] = new_individual(i,j);
-			//	}
-			//}
+			//load("test_pairs.brief");
+			//std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
+			for(int i = 0; i < bytes_*8; i++){
+				for(int j=0; j<4; j++){
+					individual[i][j] = new_individual(i,j);
+				}
+			}
 		}
 
 		void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){

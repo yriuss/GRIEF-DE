@@ -71,7 +71,7 @@ namespace DE {
 			//void plot_convergence();
 			//void set_best_fit();
 			float jr;
-
+			uint get_change_counter();
 		private:
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
@@ -83,6 +83,7 @@ namespace DE {
 			std::vector<int> ind_shape;
 			float cr;
 			float F;
+			uint change_counter = 0;
 			// float jr;
 			bool problem_type;
 			bool infeasible = false;

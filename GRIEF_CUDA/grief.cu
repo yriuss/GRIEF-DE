@@ -102,19 +102,18 @@ float GriefDescriptorExtractor::get_b_fit(){
 	return 1;
 }
 
-__device__ int smoothedSum(cuda::PtrStepSz<int> sum, int x, int y, int _x, int _y)
+__device__ int smoothedSum(cuda::PtrStepSz<int> sum, float x, float y, int _x, int _y)
 {
 	static const int HALF_KERNEL = GriefDescriptorExtractorImpl::KERNEL_SIZE / 2;
 	//printf("ajsdihji%d\n", sum(1,1));
 	//printf("passou aqui%d\n", x);
 	int img_y = (int)(y + 0.5) + _y;
 	int img_x = (int)(x + 0.5) + _x;
+	//printf("%f e %f\n", x, y);
 	return   sum(img_y + HALF_KERNEL + 1, img_x + HALF_KERNEL + 1)
 		   - sum(img_y + HALF_KERNEL + 1, img_x - HALF_KERNEL)
 		   - sum(img_y - HALF_KERNEL, img_x + HALF_KERNEL + 1)
 		   + sum(img_y - HALF_KERNEL, img_x - HALF_KERNEL);
-	//printf("%d e %d\n", individual[0][0], individual[0][0]);
-	//printf("passou aqui%d\n", individual[0][0]);
 }
 
 __global__ void compare_results(uchar* desc, arr2 * result){
@@ -203,6 +202,8 @@ __global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, f
 	//cudaDeviceSynchronize();
 	//desc[0] = 1;
 	//printf("%d\n", desc[0]);
+	//if(blockIdx.x == 1599 && threadIdx.x == 56){
+		
 	descriptors(blockIdx.x,threadIdx.x) = ((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x][0], individual[8*threadIdx.x][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x][2], individual[8*threadIdx.x][3])) << 7)
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 1][0], individual[8*threadIdx.x + 1][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 1][2], individual[8*threadIdx.x + 1][3])) << 6)
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 2][0], individual[8*threadIdx.x + 2][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 2][2], individual[8*threadIdx.x + 2][3])) << 5)
@@ -211,6 +212,8 @@ __global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, f
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 5][0], individual[8*threadIdx.x + 5][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 5][2], individual[8*threadIdx.x + 5][3])) << 2)
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 6][0], individual[8*threadIdx.x + 6][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 6][2], individual[8*threadIdx.x + 6][3])) << 1)
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 7][0], individual[8*threadIdx.x + 7][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 7][2], individual[8*threadIdx.x + 7][3])));// << 0
+	//printf("%d", descriptors(blockIdx.x,threadIdx.x));
+	//}	
 //#include "generated_64.i"
 }
 
@@ -270,6 +273,7 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 	
 	//cudaMemcpy(_sum, &aux, sizeof(KeyPoint)*keypoints.size(), cudaMemcpyHostToDevice);
 	pixelTests64_kernel<<<keypoints.size(),64>>>(_sum, _x, _y,descriptors, _use_orientation, gpu_individual);
+	//std::cout << keypoints.size();
 	cudaDeviceSynchronize();
 	
 	cudaFree(gpu_individual); cudaFree(_x); cudaFree(_y);
@@ -289,7 +293,13 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 	
 }
 
+uint GriefDescriptorExtractorImpl::get_change_percentage(uint ng){
+	return 100*get_change_counter()/(N_pop*ng);
+}
 
+uint GriefDescriptorExtractor::get_change_percentage(uint ng){
+	return 1;
+}
 
 void GriefDescriptorExtractorImpl::evolve(uint ng){
 	
@@ -450,13 +460,13 @@ void GriefDescriptorExtractor::compute(InputArray image,
 }
 
 void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
-	load("test_pairs.brief");
-	std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
-	//for(int i = 0; i < bytes_*8; i++){
-	//	for(int j=0; j<4; j++){
-	//		individual[i][j] = new_individual(i,j);
-	//	}
-	//}
+	//load("test_pairs.brief");
+	//std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
+	for(int i = 0; i < bytes_*8; i++){
+		for(int j=0; j<4; j++){
+			individual[i][j] = new_individual(i,j);
+		}
+	}
 }
 
 void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){
