@@ -155,15 +155,15 @@ namespace DE{
 		// std::cout << "[ Getting np best fitted individuals ]" << std::endl;
 
 		#if problem_type == MINIMIZATION
-			std::cout << "MINIMIZATION" << std::endl;  
+			// std::cout << "MINIMIZATION" << std::endl;  
 			for(int i = 0; i < N_pop; i++){
 				population[i] = aux_population[index_vector[i]];
 				fitness[i] = aux_fitness[i];
 			}
 
 		#elif problem_type == MAXIMIZATION
-			std::cout << "MAXIMIZATION" << std::endl;  
-			for(int i = N_pop - 1; i >= 0; i++){
+			// std::cout << "MAXIMIZATION" << std::endl;  
+			for(int i = N_pop - 1; i >= 0; i--){
 				population[i] = aux_population[index_vector[i]];
 				fitness[i] = aux_fitness[i];
 			}
