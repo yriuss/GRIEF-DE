@@ -61,6 +61,7 @@ bool dir_exist(const std::string &s)
   struct stat buffer;
   return (stat (s.c_str(), &buffer) == 0);
 }
+
 void _mkdir(const std::string &s){
 	mkdir((s).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
 }
@@ -192,11 +193,11 @@ float eval(Eigen::MatrixXd individual){
 	int matchingTests = 0;
 	int matchingFailures = 0;
 	
-	int i1,i2;
+	int i1, i2;
 	
 	bool supervised = true;
 	
-	for (int location = 0;location<numLocations;location++){
+	for (int location = 0; location < numLocations; location++){
 			
 		// detecting keypoints and generating descriptors
 		Mat descriptors[numSeasons];
@@ -206,7 +207,7 @@ float eval(Eigen::MatrixXd individual){
 		Mat dp;
 		
 		
-		for (int i = 0;i<numSeasons;i++){
+		for (int i = 0; i < numSeasons; i++){
 			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+dataset).c_str(),i,location);
 			
 			detector->detect(dataset_imgs[i][location], keypoints[i]);				
@@ -214,8 +215,8 @@ float eval(Eigen::MatrixXd individual){
 		}
 		
 		// matching the extracted features
-		for (int ik = 0;ik<numSeasons;ik++){
-			for (int jk = ik+1;jk<numSeasons;jk++){
+		for (int ik = 0; ik < numSeasons; ik++){
+			for (int jk = ik+1; jk < numSeasons; jk++){
 				matches.clear();
 				/*if not empty*/
 				
@@ -325,11 +326,9 @@ float eval1(Eigen::MatrixXd individual){
 	
 	bool supervised = true;
 	
-
 	
-	for (int location = 0;location<numLocations;location++){
-		
-		
+	for (int location = 0; location < numLocations; location++){
+			 
 		// detecting keypoints and generating descriptors
 		Mat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
@@ -341,9 +340,9 @@ float eval1(Eigen::MatrixXd individual){
 		//FakeFeatureDetector detector;		//TODO make this selectable
 		//BRISK detector(0,4);
 		
-		Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(griefDescriptorLength/8);
+		// Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(griefDescriptorLength/8);
 		
-		for (int i = 0;i<numSeasons;i++){
+		for (int i = 0; i < numSeasons; i++){
 			detector->detect(dataset_imgs[i][location], keypoints[i]);
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 		}
@@ -352,8 +351,8 @@ float eval1(Eigen::MatrixXd individual){
 		
 		
 		// matching the extracted features
-		for (int ik = 0;ik<numSeasons;ik++){
-			for (int jk = ik+1;jk<numSeasons;jk++){
+		for (int ik = 0; ik < numSeasons; ik++){
+			for (int jk = ik+1; jk < numSeasons; jk++){
 				matches.clear();
 				/*if not empty*/
 				
@@ -463,8 +462,7 @@ float eval1(Eigen::MatrixXd individual){
 
 				if (matchFail) matchingFailures++;
 				matchingTests++;
-				
-				
+								
 				//end drawing
 			}
 		}
@@ -637,7 +635,7 @@ int main(){
 	//}
 
     for(int i = 0; i < atoi((argv[3]).c_str()); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 30);
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 5);
 		grief_descriptor->evolve(atoi((argv[2]).c_str()));
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
 	}

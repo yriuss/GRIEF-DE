@@ -136,10 +136,10 @@ namespace cv
 				const KeyPoint& pt = keypoints[i];
 				if ( use_orientation )
 				{
-				float angle = pt.angle;
-				angle *= (float)(CV_PI/180.f);
-				R(0,0) = sin(angle);
-				R(1,0) = cos(angle);
+					float angle = pt.angle;
+					angle *= (float)(CV_PI/180.f);
+					R(0,0) = sin(angle);
+					R(1,0) = cos(angle);
 				}
 
 #include "generated_16.i"
@@ -176,10 +176,10 @@ namespace cv
 				const KeyPoint& pt = keypoints[i];
 				if ( use_orientation )
 				{
-				float angle = pt.angle;
-				angle *= (float)(CV_PI/180.f);
-				R(0,0) = sin(angle);
-				R(1,0) = cos(angle);
+					float angle = pt.angle;
+					angle *= (float)(CV_PI/180.f);
+					R(0,0) = sin(angle);
+					R(1,0) = cos(angle);
 				}
 
 #include "generated_64.i"
@@ -230,7 +230,7 @@ namespace cv
 		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
 																	int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 			bytes_(bytes), test_fn_(NULL), 
-			DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MINIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
+			DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
 		{
 			this->N_pop = N_pop;
 			this->jr = jr;
@@ -331,13 +331,13 @@ namespace cv
 		}
 
 		void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
-			load("test_pairs.brief");
-			std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
-			//for(int i = 0; i < bytes_*8; i++){
-			//	for(int j=0; j<4; j++){
-			//		individual[i][j] = new_individual(i,j);
-			//	}
-			//}
+			// load("test_pairs.brief");
+			// std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
+			for(int i = 0; i < bytes_*8; i++){
+				for(int j = 0; j < 4; j++){
+					individual[i][j] = new_individual(i,j);
+				}
+			}
 		}
 
 		void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){

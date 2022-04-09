@@ -12,8 +12,8 @@ typedef float(*EvalFunction)(Eigen::MatrixXd);
 namespace DE {
 
 /* DEFINITION OF PROBLEM TYPE */
-#define MAXIMIZATION true
-#define MINIMIZATION false
+#define MAXIMIZATION false
+#define MINIMIZATION true
 #define DEBUG 1
 
 /* DEFINITION OF MUTATION ALGORITHM */
@@ -30,8 +30,7 @@ namespace DE {
 #define EXP 1
 
 #define OPPOSITION_LEARNING true
-#define LOCAL_SEARCH true
-
+	
 	class DE{
 
 		public:
@@ -42,6 +41,7 @@ namespace DE {
 			Eigen::MatrixXd get_best_ind();
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
 			Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx);
+			Eigen::MatrixXd truncate_individual(std::vector<int> ind_shape, Eigen::MatrixXd ind);
 
 			void generate_oppsite_population();
 			void apply_opposition();

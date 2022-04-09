@@ -21,7 +21,7 @@ namespace DE{
 			eval = evaluation;
 			for(int i = 0; i < N_pop; i++){
 				population.emplace_back(generate_individual(ind_shape));
-				fitness.emplace_back(eval(population[i]));
+				fitness.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 			}
 			this->cr = cr;
 			this->F = F;
@@ -35,11 +35,22 @@ namespace DE{
 			this->ind_shape = ind_shape;
 		}
 		else {}
-
+		
 	}
 
 	void DE::evaluate(int ind_idx){
-		fitness[ind_idx] = eval(population[ind_idx]);
+		fitness[ind_idx] = eval(truncate_individual(ind_shape, population[ind_idx]));
+	}
+
+	Eigen::MatrixXd DE::truncate_individual(std::vector<int> ind_shape, Eigen::MatrixXd ind){
+		
+		Eigen::MatrixXd truncated_individual = ind;
+		for (int i = 0; i < ind_shape[0]; i++){
+			for (int j = 0; j < ind_shape[1]; j++)
+				truncated_individual(i,j) = (int)truncated_individual(i,j);
+		}
+
+		return truncated_individual;
 	}
 
 	Eigen::MatrixXd DE::generate_individual(std::vector<int> ind_shape){
@@ -64,7 +75,7 @@ namespace DE{
 
 	Eigen::MatrixXd DE::generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx){
 
-		// std::cout << "Generate Opposite Individual Called" << std::endl;
+		// std::cout << "Individual " << population[ind_idx] << std::endl;
 
 		Eigen::MatrixXd opposite_individual(ind_shape[0], ind_shape[1]);
 
@@ -74,6 +85,7 @@ namespace DE{
 			}
 		}
 
+		// std::cout << "Opposite Individual " << opposite_individual << std::endl;
 		// std::cout << "[ Opposite Individual Returned ]" << std::endl;
 
 		return opposite_individual;
@@ -88,14 +100,14 @@ namespace DE{
 		
 		for (int i = 0; i < N_pop; i++){
 			opposite_population.emplace_back(generate_oppsite_individual(ind_shape, i));
-			opposite_fitness.emplace_back(eval(opposite_population[i]));
+			opposite_fitness.emplace_back(eval(truncate_individual(ind_shape, opposite_population[i])));
 		}
 
 	}
 
 	void DE::apply_opposition(){
 		
-		// std::cout << "Applying Opposition Called" << std::endl;
+		std::cout << "Apply Opposition Called" << std::endl;
 
 		generate_oppsite_population();
 
@@ -142,11 +154,25 @@ namespace DE{
 	
 		// std::cout << "[ Getting np best fitted individuals ]" << std::endl;
 
-		for(int i = 0; i < N_pop; i++){
-			population[i] = aux_population[index_vector[i]];
-			fitness[i] = aux_fitness[i];
-		}
+		#if problem_type == MINIMIZATION
+			std::cout << "MINIMIZATION" << std::endl;  
+			for(int i = 0; i < N_pop; i++){
+				population[i] = aux_population[index_vector[i]];
+				fitness[i] = aux_fitness[i];
+			}
 
+		#elif problem_type == MAXIMIZATION
+			std::cout << "MAXIMIZATION" << std::endl;  
+			for(int i = N_pop - 1; i >= 0; i++){
+				population[i] = aux_population[index_vector[i]];
+				fitness[i] = aux_fitness[i];
+			}
+
+		#else
+			std::cout << "ERROR: Problem type was not specified. \n" << std::endl;
+			exit(EXIT_FAILURE);
+
+		#endif
 		// std::cout << "[ OK ]" << std::endl;
 
 	}
@@ -373,19 +399,20 @@ namespace DE{
 		std::uniform_real_distribution<float> r_dist(0,1);
 		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
 		//std::cout << "passei aqui" << std::endl;
+
 		for(int i = 0; i < population[ind_idx].rows(); i++){
 			
 			float J = dist(rng);
 			for(int j = 0; j < population[ind_idx].cols(); j++)
 			{
-				mutated_ind(i,j) = (int)mutated_ind(i,j);	
+				mutated_ind(i,j) = mutated_ind(i,j);	
 				if(r_dist(rng) <= cr || j == J)
 				{
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
 				}
 				else
-					mutated_ind(i,j) = (int)population[ind_idx](i,j);
+					mutated_ind(i,j) = population[ind_idx](i,j);
 			}
 		}
 		
@@ -404,11 +431,11 @@ namespace DE{
 			int e = 0;
 			
 			while(r_dist(rng) <= cr && e < population[ind_idx].cols()){
-				mutated_ind(i,j) = (int) mutated_ind(i,j);
+				mutated_ind(i,j) = mutated_ind(i,j);
 				if(!infeasible)
-					infeasible = is_infeasible((int)mutated_ind(i,j));
+					infeasible = is_infeasible(mutated_ind(i,j));
 
-				ind_cross(i,j) = (int)mutated_ind(i,j);
+				ind_cross(i,j) = mutated_ind(i,j);
 				j = (j + 1) % (ind_shape[1]);
 				e++;
 			}			
@@ -498,15 +525,16 @@ namespace DE{
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::weibull_distribution<double> dist(2.0,23.0);
+
 		for(int i = 0; i < mutated_ind.rows(); i++){
 			for(int j = 0; j < mutated_ind.cols(); j++){
 				if(mutated_ind(i,j) > 0){
 					while(mutated_ind(i,j) > U){
-						mutated_ind(i,j) = (int)dist(rng);
+						mutated_ind(i,j) = dist(rng);
 					}
 				}else{
 					while(mutated_ind(i,j) < L){
-						mutated_ind(i,j) = -(int)dist(rng);
+						mutated_ind(i,j) = -dist(rng);
 					}
 				}
 			}
@@ -517,7 +545,7 @@ namespace DE{
 	void DE::selection(int ind_idx){
 		//std::cout << mutated_ind.rows() << " "  << mutated_ind.cols() << std::endl << std::endl;
 		//std::cout << mutated_ind << std::endl << std::endl;
-		float mutated_fit = eval(mutated_ind);	
+		float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
 		//std::cout << ind_idx << std::endl;	
 		if(!problem_type){
 			if(mutated_fit < fitness[ind_idx]){
