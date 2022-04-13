@@ -543,15 +543,15 @@ namespace DE{
 	void DE::evolve(uint ng){
 		
 		for(int g = 0; g < ng; g++){
+			change_counter  = 0;
 			for(int i = 0; i < population.size(); i++){
 				mutate(i);
 				crossover(i);
-
 				if(infeasible)
 					repair(i);
-				
 				selection(i);					
 			}
+			
 			//best_fitness.emplace_back(get_best_fit());
 		}
 	}

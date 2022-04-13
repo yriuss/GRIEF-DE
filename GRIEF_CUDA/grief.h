@@ -26,12 +26,12 @@ class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
 {
 public:
 	CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-				int N_pop = 0, float cr = 0.5, float jr = 0.3, float F = 0.5, int mutation_algorithm=CURRENT_TO_BEST_1, int crossover_algorithm=BIN);
+				int N_pop = 0, float cr = 0.6, float jr = 0.3, float F = 0.8, int mutation_algorithm=CURRENT_TO_BEST_1, int crossover_algorithm=BIN);
 	CV_WRAP virtual void getInd( );
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
 	CV_WRAP virtual float get_b_fit();
-	CV_WRAP virtual uint get_change_percentage(uint ng);
+	CV_WRAP virtual std::vector<float> get_change_percentage(uint ng);
 	CV_WRAP virtual std::vector<float> gbfit();
 	CV_WRAP virtual Eigen::MatrixXd get_best_indv();
 	CV_WRAP virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors);
@@ -48,7 +48,7 @@ public:
 
 	// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
 	GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-											  int N_pop = 0, float cr = 0.9, float jr = 0.2, float F = 0.8, int mutation_algorithm=CURRENT_TO_BEST_1, int crossover_algorithm=BIN);
+											  int N_pop = 0, float cr = 0.6, float jr = 0.3, float F = 0.8, int mutation_algorithm=CURRENT_TO_BEST_1, int crossover_algorithm=BIN);
 											  
 	int load(std::string fileName);
 	virtual void read( const FileNode& ) CV_OVERRIDE;
@@ -57,7 +57,7 @@ public:
 	virtual int descriptorSize() const CV_OVERRIDE;
 	virtual int descriptorType() const CV_OVERRIDE;
 	virtual int defaultNorm() const CV_OVERRIDE;
-	virtual uint get_change_percentage(uint ng) CV_OVERRIDE;
+	virtual std::vector<float> get_change_percentage(uint ng) CV_OVERRIDE;
 	virtual void compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors) CV_OVERRIDE;
 	virtual void getInd() CV_OVERRIDE;
 	virtual void evolve(uint ng) CV_OVERRIDE;
@@ -70,6 +70,7 @@ public:
 protected:
 	std::vector<float> bfit;
 	int N_pop;
+	std::vector<float> change_percentage;
 	//typedef void(*PixelTestFn)(InputArray, const std::vector<KeyPoint>&, OutputArray, bool use_orientation, int individual[512][4]);
 	int individual[512][4];
 	int bytes_;

@@ -341,7 +341,6 @@ float eval1(Eigen::MatrixXd individual){
 		//FakeFeatureDetector detector;		//TODO make this selectable
 		//BRISK detector(0,4);
 		
-		Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(griefDescriptorLength/8);
 		
 		for (int i = 0;i<numSeasons;i++){
 			detector->detect(dataset_imgs[i][location], keypoints[i]);

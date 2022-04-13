@@ -531,7 +531,7 @@ void _mkdir(const std::string &s){
 	mkdir((s).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
 }
 
-void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, uint change_percentage){
+void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, std::vector<float> change_percentage){
 	
 
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
@@ -560,9 +560,10 @@ void save_data(std::vector<float> y, const std::string &dataset, const std::stri
     	f2 << best_individual;
   	}
 
-	ofstream f3;
-  	f3.open ("details.txt");
-	f3 << change_percentage << "%";
+	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
+  	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
+	for(int i = 0; i < change_percentage.size(); i++)
+		f3 << change_percentage[i] << "%" << std::endl;
 	f3.close();
 	//plt::show();
 }
@@ -689,7 +690,7 @@ int main(int argc, char ** argv){
 	for(int i = 0; i < atoi(argv[3]); i++){
     	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 30);
 		grief_descriptor->evolve(atoi(argv[2]));
-		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief->get_change_percentage(atoi(argv[2])));
+		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
 	}
 
     return 0;

@@ -338,6 +338,7 @@ namespace cv
 					individual[i][j] = new_individual(i,j);
 				}
 			}
+			//std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
 		}
 
 		void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){
