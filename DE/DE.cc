@@ -23,9 +23,11 @@ namespace DE{
 				population.emplace_back(generate_individual(ind_shape));
 				fitness.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 			}
+			
 			this->cr = cr;
 			this->F = F;
 			this->jr = jr;
+			
 			this->problem_type = problem_type;
 			this->mutation_algorithm = mutation_algorithm;
 			this->crossover_algorithm = crossover_algorithm;
@@ -33,6 +35,7 @@ namespace DE{
 			L = bounds[0];
 			this->N_pop = N_pop;
 			this->ind_shape = ind_shape;
+			
 		}
 		else {}
 		
@@ -47,9 +50,8 @@ namespace DE{
 		Eigen::MatrixXd truncated_individual = ind;
 		for (int i = 0; i < ind_shape[0]; i++){
 			for (int j = 0; j < ind_shape[1]; j++)
-				truncated_individual(i,j) = (int)truncated_individual(i,j);
+				truncated_individual(i,j) = round(truncated_individual(i,j));
 		}
-
 		return truncated_individual;
 	}
 
@@ -203,7 +205,13 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idx2 || idx3 == idx1);
 
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
+	}
+
+
+	void DE::select_and_change(EvalRankFunction eval_and_rank){
+		std::vector<Eigen::Matrix2Xd> C;
 		
+		C = eval_and_rank(mutated_ind);
 	}
 
 	void DE::rand_2(int ind_idx){
@@ -405,14 +413,42 @@ namespace DE{
 			float J = dist(rng);
 			for(int j = 0; j < population[ind_idx].cols(); j++)
 			{
-				mutated_ind(i,j) = mutated_ind(i,j);	
 				if(r_dist(rng) <= cr || j == J)
 				{
+					mutated_ind(i,j) = mutated_ind(i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
 				}
 				else
 					mutated_ind(i,j) = population[ind_idx](i,j);
+			}
+		}
+		
+	}
+
+
+	void DE::aritcross(int ind_idx){
+		
+		std::random_device rseed;
+		std::mt19937 rng(rseed());
+		std::uniform_real_distribution<float> r_dist(0,1);
+		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
+		//std::cout << "passei aqui" << std::endl;
+
+		for(int i = 0; i < population[ind_idx].rows(); i++){
+			
+			float J = dist(rng);
+			for(int j = 0; j < population[ind_idx].cols(); j++)
+			{
+				if(r_dist(rng) <= cr || j == J)
+				{
+					mutated_ind(i,j) = 0.5*mutated_ind(i,j) + 0.5 * population[ind_idx](i,j);
+					if(!infeasible)
+						infeasible = is_infeasible(mutated_ind(i,j));
+				}
+				else{
+					mutated_ind(i,j) = population[ind_idx](i,j);
+				}
 			}
 		}
 		
@@ -431,7 +467,6 @@ namespace DE{
 			int e = 0;
 			
 			while(r_dist(rng) <= cr && e < population[ind_idx].cols()){
-				mutated_ind(i,j) = mutated_ind(i,j);
 				if(!infeasible)
 					infeasible = is_infeasible(mutated_ind(i,j));
 
@@ -472,6 +507,8 @@ namespace DE{
 				bincross(ind_idx); break;
 			case 1:
 				expcross(ind_idx); break;
+			case 2:
+				aritcross(ind_idx); break;
 		}
 
 	}
@@ -511,8 +548,19 @@ namespace DE{
 	// 	}
 	// }
 
-	void DE::repair(int ind_idx){		
-		weibull_repair(ind_idx);
+	void DE::repair(int ind_idx){
+		switch (1)
+		{
+		case 0:
+			uniform_repair(ind_idx);
+			break;
+		case 1:
+			weibull_repair(ind_idx);
+			break;
+		default:
+			break;
+		}
+		
 		infeasible = false;
 	}
 
@@ -542,6 +590,26 @@ namespace DE{
 		
 	}
 
+	void DE::uniform_repair(int ind_idx){
+		std::random_device rseed;
+		std::mt19937 rng(rseed());
+		std::uniform_real_distribution<float> dist(0,24);
+		int n=0;
+		for(int i = 0; i < mutated_ind.rows(); i++){
+			for(int j = 0; j < mutated_ind.cols(); j++){
+				if(mutated_ind(i,j) > 0){
+					while(mutated_ind(i,j) > U){
+						mutated_ind(i,j) = dist(rng);
+					}
+				}else{
+					while(mutated_ind(i,j) < L){
+						mutated_ind(i,j) = -dist(rng);
+					}
+				}
+			}
+		}
+	}
+
 	uint DE::get_change_counter(){
 		return change_counter;
 	}
@@ -551,7 +619,7 @@ namespace DE{
 		//std::cout << mutated_ind << std::endl << std::endl;
 		float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
 		//std::cout << ind_idx << std::endl;	
-		if(!problem_type){
+		if(problem_type == MINIMIZATION){
 			if(mutated_fit < fitness[ind_idx]){
 				change_counter++;
 				population[ind_idx] = mutated_ind;
@@ -564,6 +632,9 @@ namespace DE{
 				fitness[ind_idx] = mutated_fit;
 			}
 		}
+	}
+	void DE::set_change_counter(uint value){
+		change_counter = value;
 	}
 	//void DE::set_best_fit(){
 	//	best_fitness.emplace_back(get_best_fit());
@@ -589,21 +660,21 @@ namespace DE{
 	}
 
 	float DE::get_best_fit(){
-		if(!problem_type)
+		if(problem_type == MINIMIZATION)
 			return *std::min_element(this->fitness.begin(), this->fitness.end());
 		else
 			return *std::max_element(this->fitness.begin(), this->fitness.end());
 	}
 
 	Eigen::MatrixXd DE::get_best_ind(){
-		if(!problem_type)
+		if(problem_type == MINIMIZATION)
 			return population[std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
 		else
 			return population[std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
 	}
 
 	int DE::get_best_idx(){
-		if(!problem_type)
+		if(problem_type ==MINIMIZATION)
 			return std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin();
 		else
 			return std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin();

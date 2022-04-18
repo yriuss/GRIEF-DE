@@ -304,22 +304,19 @@ std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
 void GriefDescriptorExtractorImpl::evolve(uint ng){
 	
 	for(int g = 0; g < ng; g++){
-		
 		auto start = std::chrono::high_resolution_clock::now();
+		set_change_counter(0);
 		for(int i = 0; i < N_pop; i++){
-			
 			mutate(i);
 			
 			crossover(i);
-			
 			if(is_infeasible())
 				repair(i);
-			
 			selection(i);
 			//std::cout << i << std::endl;
 
 		}//exit(-1);
-		change_percentage.push_back((float)100*get_change_counter()/(N_pop*ng));
+		change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 		std::cout <<  get_best_fit() << std::endl;
 		
 		bfit.emplace_back(get_best_fit());
@@ -373,6 +370,7 @@ GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_
 		default:
 			CV_Error(Error::StsBadArg, "bytes must be 16, 32, or 64");
 	}
+	
 	}
 
 int GriefDescriptorExtractorImpl::descriptorSize() const
