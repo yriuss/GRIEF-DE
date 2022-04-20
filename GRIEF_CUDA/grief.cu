@@ -279,7 +279,7 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 	cudaFree(gpu_individual); cudaFree(_x); cudaFree(_y);
 	//std::cout << descriptors.size() << std::endl;
 	//cudaMemcpy(aux, _descriptors, sizeof(Mat), cudaMemcpyDeviceToHost);
-
+	free(x); free(y);
 	//Mat a;
 	//_descriptors.download(a);
 	//descriptors.assign(a);
@@ -293,33 +293,30 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 	
 }
 
-uint GriefDescriptorExtractorImpl::get_change_percentage(uint ng){
-	return 100*get_change_counter()/(N_pop*ng);
+std::vector<float> GriefDescriptorExtractorImpl::get_change_percentage(uint ng){
+	return change_percentage;
 }
 
-uint GriefDescriptorExtractor::get_change_percentage(uint ng){
-	return 1;
+std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
+	return std::vector<float>{};
 }
 
 void GriefDescriptorExtractorImpl::evolve(uint ng){
 	
 	for(int g = 0; g < ng; g++){
-		
 		auto start = std::chrono::high_resolution_clock::now();
+		set_change_counter(0);
 		for(int i = 0; i < N_pop; i++){
-			
 			mutate(i);
 			
 			crossover(i);
-			
 			if(is_infeasible())
 				repair(i);
-			
 			selection(i);
 			//std::cout << i << std::endl;
 
 		}//exit(-1);
-		
+		change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 		std::cout <<  get_best_fit() << std::endl;
 		
 		bfit.emplace_back(get_best_fit());
@@ -373,6 +370,7 @@ GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_
 		default:
 			CV_Error(Error::StsBadArg, "bytes must be 16, 32, or 64");
 	}
+	
 	}
 
 int GriefDescriptorExtractorImpl::descriptorSize() const

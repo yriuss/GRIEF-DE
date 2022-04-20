@@ -9,6 +9,8 @@
 
 typedef float(*EvalFunction)(Eigen::MatrixXd);
 
+typedef std::vector<Eigen::Matrix2Xd>(*EvalRankFunction)(Eigen::MatrixXd);
+
 namespace DE {
 
 /* DEFINITION OF PROBLEM TYPE */
@@ -28,6 +30,7 @@ namespace DE {
 /* DEFINITION OF CROSSOVER ALGORITHM */
 #define BIN 0
 #define EXP 1
+#define ARIT 2
 
 #define OPPOSITION_LEARNING true
 	
@@ -54,6 +57,7 @@ namespace DE {
 			void create_population();
 			void get_fitness();
 			void weibull_repair(int ind_idx);
+			void uniform_repair(int ind_idx);
 			void rand_1(int ind_idx);
 			void rand_2(int ind_idx);
 			void randtobest_1(int ind_idx);
@@ -63,15 +67,18 @@ namespace DE {
 			void currenttorand_1(int ind_idx);
 			void bincross(int ind_idx);
 			void expcross(int ind_idx);
+			void aritcross(int ind_idx);
 			float get_best_fit();
 			int get_best_idx();
 			int get_max_elem();
 			bool is_infeasible(int element);
 			bool is_infeasible();
+			void select_and_change(EvalRankFunction evaluation);
 			//void plot_convergence();
 			//void set_best_fit();
 			float jr;
 			uint get_change_counter();
+			void set_change_counter(uint value);
 		private:
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
