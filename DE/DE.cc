@@ -107,8 +107,6 @@ namespace DE{
 
 	void DE::apply_opposition(){
 		
-		std::cout << "Apply Opposition Called" << std::endl;
-
 		generate_oppsite_population();
 
 		std::vector<Eigen::MatrixXd> aux_population;
