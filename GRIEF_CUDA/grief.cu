@@ -54,11 +54,16 @@ namespace xfeatures2d
 
 
 
-
+#if CURRENT_TO_RAND
+Eigen::MatrixXd evaluation(Eigen::MatrixXd individual){
+	Eigen::MatrixXd m(1,1);
+	return m;
+}
+#else
 float evaluation(Eigen::MatrixXd individual){
 	return -1;
 }
-
+#endif
 
 Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, 
 															   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm)
@@ -217,10 +222,15 @@ __global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, f
 //#include "generated_64.i"
 }
 
+
+#if CURRENT_TO_RAND
+#else
+
+#endif
 Eigen::MatrixXd GriefDescriptorExtractorImpl::get_best_indv(){
+	
 	return get_best_ind();
 }
-
 Eigen::MatrixXd GriefDescriptorExtractor::get_best_indv(){
 	return Eigen::MatrixXd(1,1);
 }

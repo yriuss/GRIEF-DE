@@ -484,7 +484,7 @@ int compare(const void * a, const void * b)
   return 0;
 }
 
-float eval2(Eigen::MatrixXd individual){
+Eigen::MatrixXd eval2(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
@@ -604,21 +604,26 @@ float eval2(Eigen::MatrixXd individual){
 		//exit(-1);
 		
 	}
-	
+
+	Eigen::MatrixXd result(512, 512);
+	result.setZero(512,512);
+
+
 	int sum = 0;
-	std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+
 	for (int i = 0;i<griefDescriptorLength;i++){
-		 sum+=griefRating[i].value;
+		 result(i,i) = griefRating[i].value;
+		 sum+=result(i,i);
 	}
 	sum=sum/griefDescriptorLength;
 
-	std::cout << "fitness is " << (float)sum << std::endl;
+	std::cout << "fitness is " << sum << std::endl;
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
 	//std::cout << "-";
-	
-    return sum;
+    return result;
 }
 
 bool dir_exist(const std::string &s)
@@ -651,15 +656,18 @@ void save_data(std::vector<float> y, const std::string &dataset, const std::stri
 	plt::cla();
 	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
 
+	//std::cout << "bind is " << best_individual; exit(-1);
+	//std::cout << "b ind is " << population[std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];exit(-1);
+
 	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
     	f1 << *i << '\n';
 	}
-
+	f1.close();
 	if (f2.is_open())
   	{
     	f2 << best_individual;
   	}
-
+	f2.close();
 	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
   	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
 	for(int i = 0; i < change_percentage.size(); i++)
@@ -711,136 +719,136 @@ void save_individual(Eigen::MatrixXd x, int i)
 }
 
 int main(int argc, char ** argv){
-	std::vector<int> x;
-	x.push_back(512);
-	x.push_back(4);
-	for(int i = 0; i < 100; i++){
-		save_individual(generate_individual(x), i);
+//	std::vector<int> x;
+//	x.push_back(512);
+//	x.push_back(4);
+//	for(int i = 0; i < 100; i++){
+//		save_individual(generate_individual(x), i);
+//	}
+
+	char filename[100];
+	bool supervised = false;
+	Mat tmpIm;
+	int detectorThreshold = 0;
+	distance_factor = 1.0;
+	
+	if(argc < 4){
+		std::cout << "\033[1;31m Error:\033[0m " "Give the dataset, number of generations and number of experiments!" 
+		<< std::endl << "\033[1;33m e.g.:\033[0m ./teste michigan 10 10" << std::endl;
+		exit(-1);
+	}
+	
+	dataset = argv[1];
+
+	/*load dataset parameters, check dataset consistency*/
+	/*check the number of seasons and check for existance of the displacement files*/
+	auto start = std::chrono::high_resolution_clock::now();
+	do{
+		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+ dataset).c_str(),numSeasons,numLocations);
+		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
+		if (tmpIm.data != NULL)
+		{
+			sprintf(filename,"%s/season_%02i/displacements.txt",("../GRIEF-datasets/"+ dataset).c_str(),numSeasons);
+			if (fopen(filename,"r") != NULL) numDisplacements++;
+			x = tmpIm.cols;
+			y = tmpIm.rows;
+			numSeasons++;
+		}
+	}	
+	while (numSeasons < MAX_SEASONS && tmpIm.data != NULL);
+	
+	
+	if (numDisplacements > 0 && numDisplacements < numSeasons){
+		printf("WARNING: Dataset is annotated only partially (check if the ""displacements.txt"" files exist in every ""season_nn"" directory). Ignoring hand annotation \n");
 	}
 
-//	char filename[100];
-//	bool supervised = false;
-//	Mat tmpIm;
-//	int detectorThreshold = 0;
-//	distance_factor = 1.0;
-//	
-//	if(argc < 4){
-//		std::cout << "\033[1;31m Error:\033[0m " "Give the dataset, number of generations and number of experiments!" 
-//		<< std::endl << "\033[1;33m e.g.:\033[0m ./teste michigan 10 10" << std::endl;
-//		exit(-1);
-//	}
-//	
-//	dataset = argv[1];
-//
-//	/*load dataset parameters, check dataset consistency*/
-//	/*check the number of seasons and check for existance of the displacement files*/
-//	auto start = std::chrono::high_resolution_clock::now();
-//	do{
-//		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+ dataset).c_str(),numSeasons,numLocations);
-//		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
-//		if (tmpIm.data != NULL)
-//		{
-//			sprintf(filename,"%s/season_%02i/displacements.txt",("../GRIEF-datasets/"+ dataset).c_str(),numSeasons);
-//			if (fopen(filename,"r") != NULL) numDisplacements++;
-//			x = tmpIm.cols;
-//			y = tmpIm.rows;
-//			numSeasons++;
-//		}
-//	}	
-//	while (numSeasons < MAX_SEASONS && tmpIm.data != NULL);
-//	
-//	
-//	if (numDisplacements > 0 && numDisplacements < numSeasons){
-//		printf("WARNING: Dataset is annotated only partially (check if the ""displacements.txt"" files exist in every ""season_nn"" directory). Ignoring hand annotation \n");
-//	}
-//
-//	if(numSeasons == 0){
-//		std::cout << "Error: no images in path!" << std::endl;
-//		exit(EXIT_FAILURE);
-//	}
-//	supervised = (numDisplacements == numSeasons);
-//	
-//	/*check the number of locations*/
-//	do{
-//		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+ dataset).c_str(),0,numLocations++);
-//		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
-//	}while (numLocations < MAX_LOCATIONS && tmpIm.data != NULL);
-//
-//	numLocations--;
-//
-//	auto finish = std::chrono::high_resolution_clock::now();
-//	std::chrono::duration<double, std::milli> elapsed = finish - start;
-//	printf("Dataset: %ix%i images from %i seasons and %i places, annotated %i, loadTime %f\n",x,y,numSeasons,numLocations,numDisplacements, elapsed.count());
-//
-//	
-//	
-//	
-//	/*check the dataset consistency*/
-//	start = std::chrono::high_resolution_clock::now();
-//
-//	//rows are the num of seasons and columns are the num of locations
-//	offsetX = (int*)malloc(sizeof(int)*numSeasons*numLocations);
-//	int offsetY[numSeasons*numLocations];
-//	
-//	for (int i=0;i<numSeasons;i++)
-//	{
-//		for (int j=0;j<numLocations;j++)
-//		{
-//			sprintf(filename,(CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+ dataset).c_str(),i,j);
-//			dataset_imgs[i][j] =  imread(filename, cv::IMREAD_GRAYSCALE);
-//			
-//			if (dataset_imgs[i][j].empty()) {
-//				fprintf(stderr,"ERROR: Image %s could not be loaded. \n",filename);
-//				exit(EXIT_FAILURE);
-//			}		
-//			if (dataset_imgs[i][j].cols != x || dataset_imgs[i][j].rows != y) {
-//				fprintf(stderr,"ERROR: Incosistent dataset image dimensions. Image %s is %ix%i, but we expect %ix%i.\n",filename,tmpIm.cols,tmpIm.rows,x,y);
-//				exit(EXIT_FAILURE);
-//			}
-//		}
-//		if (supervised){
-//			sprintf(filename,"%s/season_%02i/displacements.txt",("../GRIEF-datasets/"+ dataset).c_str(),i);
-//			displacements = fopen(filename,"r");
-//			int aX,aY,aR;
-//			for (int j = 0;j<numLocations;j++){
-//				aR = fscanf(displacements,"%i %i\n",&aX,&aY);
-//				offsetX[j+i*numLocations] = aX;
-//				offsetY[j+i*numLocations] = aY;
-//				if (aR != 2){
-//					fprintf(stderr,"ERROR: Error reading %s file on line %i.\n",filename,j);
-//					exit(EXIT_FAILURE);
-//				}
-//				if (abs(aX) > x || abs(aY) > y) fprintf(stderr,"WARNING: %s file on line %i indicates displacements %i %i, but image dimensions are just %i %i.\n",filename,j,aX,aY,x,y);
-//			}	
-//			fclose(displacements);
-//		}
-//	}
-//	finish = std::chrono::high_resolution_clock::now();
-//	elapsed = finish - start;
-//	std::cout << "Dataset consistency check OK. Time " << elapsed.count() << " ms.\n" << std::endl;
-//	Eigen::MatrixXd individual(512,4);
-//
-//	load(individual, "test_pairs.brief");
-//	//UserData data = {.numSeasons=numSeasons, .numLocations=numLocations};
-//	//int count = 0;
-//	//for(int i=0; i< numSeasons;i++){
-//	//	for(int j =0; j<numLocations; j++){
-//	//		dataset_imgs[i][j] = dataset_imgs[i][j];
-//	//		offsetX[count] = offsetX[count];
-//	//		offsetY[count] = offsetY[count];
-//	//		count++;
-//	//	}
-//	//}
-//
-//	for(int i = 0; i < 600; i++)
-//		for(int j = 0; j < 600; j++)
-//			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
-//
-//	for(int i = 0; i < atoi(argv[3]); i++){
-//    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 5);
-//		grief_descriptor->evolve(atoi(argv[2]));
-//		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
-//	}
+	if(numSeasons == 0){
+		std::cout << "Error: no images in path!" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	supervised = (numDisplacements == numSeasons);
+	
+	/*check the number of locations*/
+	do{
+		sprintf(filename, (CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+ dataset).c_str(),0,numLocations++);
+		tmpIm =  imread(filename, cv::IMREAD_GRAYSCALE);
+	}while (numLocations < MAX_LOCATIONS && tmpIm.data != NULL);
+
+	numLocations--;
+
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	printf("Dataset: %ix%i images from %i seasons and %i places, annotated %i, loadTime %f\n",x,y,numSeasons,numLocations,numDisplacements, elapsed.count());
+
+	
+	
+	
+	/*check the dataset consistency*/
+	start = std::chrono::high_resolution_clock::now();
+
+	//rows are the num of seasons and columns are the num of locations
+	offsetX = (int*)malloc(sizeof(int)*numSeasons*numLocations);
+	int offsetY[numSeasons*numLocations];
+	
+	for (int i=0;i<numSeasons;i++)
+	{
+		for (int j=0;j<numLocations;j++)
+		{
+			sprintf(filename,(CURRENT_DIR + "/%s/season_%02i/%09i.bmp").c_str(), ("../GRIEF-datasets/"+ dataset).c_str(),i,j);
+			dataset_imgs[i][j] =  imread(filename, cv::IMREAD_GRAYSCALE);
+			
+			if (dataset_imgs[i][j].empty()) {
+				fprintf(stderr,"ERROR: Image %s could not be loaded. \n",filename);
+				exit(EXIT_FAILURE);
+			}		
+			if (dataset_imgs[i][j].cols != x || dataset_imgs[i][j].rows != y) {
+				fprintf(stderr,"ERROR: Incosistent dataset image dimensions. Image %s is %ix%i, but we expect %ix%i.\n",filename,tmpIm.cols,tmpIm.rows,x,y);
+				exit(EXIT_FAILURE);
+			}
+		}
+		if (supervised){
+			sprintf(filename,"%s/season_%02i/displacements.txt",("../GRIEF-datasets/"+ dataset).c_str(),i);
+			displacements = fopen(filename,"r");
+			int aX,aY,aR;
+			for (int j = 0;j<numLocations;j++){
+				aR = fscanf(displacements,"%i %i\n",&aX,&aY);
+				offsetX[j+i*numLocations] = aX;
+				offsetY[j+i*numLocations] = aY;
+				if (aR != 2){
+					fprintf(stderr,"ERROR: Error reading %s file on line %i.\n",filename,j);
+					exit(EXIT_FAILURE);
+				}
+				if (abs(aX) > x || abs(aY) > y) fprintf(stderr,"WARNING: %s file on line %i indicates displacements %i %i, but image dimensions are just %i %i.\n",filename,j,aX,aY,x,y);
+			}	
+			fclose(displacements);
+		}
+	}
+	finish = std::chrono::high_resolution_clock::now();
+	elapsed = finish - start;
+	std::cout << "Dataset consistency check OK. Time " << elapsed.count() << " ms.\n" << std::endl;
+	Eigen::MatrixXd individual(512,4);
+
+	load(individual, "test_pairs.brief");
+	//UserData data = {.numSeasons=numSeasons, .numLocations=numLocations};
+	//int count = 0;
+	//for(int i=0; i< numSeasons;i++){
+	//	for(int j =0; j<numLocations; j++){
+	//		dataset_imgs[i][j] = dataset_imgs[i][j];
+	//		offsetX[count] = offsetX[count];
+	//		offsetY[count] = offsetY[count];
+	//		count++;
+	//	}
+	//}
+
+	for(int i = 0; i < 600; i++)
+		for(int j = 0; j < 600; j++)
+			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
+
+	for(int i = 0; i < atoi(argv[3]); i++){
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval2, 30);
+		grief_descriptor->evolve(atoi(argv[2]));
+		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
+	}
 
     return 0;
 }
