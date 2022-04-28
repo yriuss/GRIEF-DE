@@ -484,7 +484,7 @@ int compare(const void * a, const void * b)
   return 0;
 }
 
-float eval2(Eigen::MatrixXd individual){
+Eigen::MatrixXd eval2(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
@@ -604,21 +604,26 @@ float eval2(Eigen::MatrixXd individual){
 		//exit(-1);
 		
 	}
-	
+
+	Eigen::MatrixXd result(512, 512);
+	result.setZero(512,512);
+
+
 	int sum = 0;
-	std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+
 	for (int i = 0;i<griefDescriptorLength;i++){
-		 sum+=griefRating[i].value;
+		 result(i,i) = griefRating[i].value;
+		 sum+=result(i,i);
 	}
 	sum=sum/griefDescriptorLength;
 
-	std::cout << "fitness is " << (float)sum << std::endl;
+	std::cout << "fitness is " << sum << std::endl;
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
 	//std::cout << "-";
-	
-    return sum;
+    return result;
 }
 
 bool dir_exist(const std::string &s)
@@ -651,15 +656,18 @@ void save_data(std::vector<float> y, const std::string &dataset, const std::stri
 	plt::cla();
 	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
 
+	//std::cout << "bind is " << best_individual; exit(-1);
+	//std::cout << "b ind is " << population[std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];exit(-1);
+
 	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
     	f1 << *i << '\n';
 	}
-
+	f1.close();
 	if (f2.is_open())
   	{
     	f2 << best_individual;
   	}
-
+	f2.close();
 	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
   	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
 	for(int i = 0; i < change_percentage.size(); i++)
@@ -668,7 +676,56 @@ void save_data(std::vector<float> y, const std::string &dataset, const std::stri
 	//plt::show();
 }
 
+
+
+Eigen::MatrixXd generate_individual(std::vector<int> ind_shape){
+	std::random_device rseed;
+	std::mt19937 rng(rseed());
+	std::uniform_int_distribution<int> dist(-24,24);
+	std::uniform_real_distribution<float> distr(0,1);
+	Eigen::MatrixXd individual(ind_shape[0], ind_shape[1]);
+	//std::cout << distr(rng) << std::endl;
+	for(int i = 0; i < ind_shape[0]; i++){
+		for(int j = 0; j < ind_shape[1]; j++){
+			individual(i,j) = dist(rng);
+		}
+	}
+	return individual;
+}
+
+void save_individual(Eigen::MatrixXd x, int i)
+{
+	int x1[512];
+	int y1[512];
+	int x2[512];
+	int y2[512];
+	int xWindow = WINDOW_SIZE;
+	int yWindow = WINDOW_SIZE;
+
+	FILE* file = fopen( (CURRENT_DIR + "/../indvs/" + "example" + std::to_string(0) +".txt").c_str(), "r+");
+	
+	for (int i = 0;i<512;i++){
+		fscanf(file,"%i %i %i %i\n",&x1[i],&y1[i],&x2[i],&y2[i]);
+	}
+	
+	std::cout << x2[0];
+	fclose(file);exit(-1);
+	fstream myfile;
+	myfile.open(CURRENT_DIR + "/../indvs/" + "example" + std::to_string(i) +".txt",fstream::out);
+	myfile << x;
+	myfile.close();
+
+
+}
+
 int main(int argc, char ** argv){
+//	std::vector<int> x;
+//	x.push_back(512);
+//	x.push_back(4);
+//	for(int i = 0; i < 100; i++){
+//		save_individual(generate_individual(x), i);
+//	}
+
 	char filename[100];
 	bool supervised = false;
 	Mat tmpIm;
@@ -788,7 +845,7 @@ int main(int argc, char ** argv){
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
 	for(int i = 0; i < atoi(argv[3]); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 30);
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval2, 30);
 		grief_descriptor->evolve(atoi(argv[2]));
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
 	}

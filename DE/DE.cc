@@ -12,7 +12,52 @@ namespace DE{
 
 	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, float jr, EvalFunction evaluation, float F, 
 			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm): mutated_ind(ind_shape[0], ind_shape[1] ){
+#if CURRENT_TO_RAND
+		//Initialize population
+		if(N_pop > 0){
+			population.reserve(N_pop);
+			this->F.reserve(N_pop);
+			fitness.reserve(N_pop);
+			//best_fitness.reserve(N_pop);
+			eval = evaluation;
+			for(int i = 0; i < N_pop; i++){
+				population.emplace_back(generate_individual(ind_shape));
+				this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
+				//std::cout << this->F[i](i,511);
+				
+				int fitness = 0;
+				int min = 0;
+				for(int j = 0; j < ind_shape[0]; j++){
+					if(min > this->F[i](j,j))
+						min = this->F[i](j,j);
+				}
 		
+				for(int j = 0; j < ind_shape[0]; j++){
+					fitness+= this->F[i](j,j);
+					this->F[i](j,j) = this->F[i](j,j) / (min);
+					if(this->F[i](j,j) < 0.8)
+						this->F[i](j,j) = 0;
+					//std::cout << this->F[i](j,j);
+				}
+				
+				fitness /= 512;
+				
+				this->fitness.emplace_back(fitness);
+			}
+			
+			this->cr = cr;
+			this->jr = jr;
+			
+			this->problem_type = problem_type;
+			this->mutation_algorithm = mutation_algorithm;
+			this->crossover_algorithm = crossover_algorithm;
+			U = bounds[1];
+			L = bounds[0];
+			this->N_pop = N_pop;
+			this->ind_shape = ind_shape;
+			
+		}
+#else
 		//Initialize population
 		if(N_pop > 0){
 			population.reserve(N_pop);
@@ -38,12 +83,17 @@ namespace DE{
 			
 			check_duplicates();
 		}
-		else {}
+#endif
 		
 	}
 
 	void DE::evaluate(int ind_idx){
+
+#if CURRENT_TO_RAND
+#else
 		fitness[ind_idx] = eval(truncate_individual(ind_shape, population[ind_idx]));
+#endif
+
 	}
 
 	Eigen::MatrixXd DE::truncate_individual(std::vector<int> ind_shape, Eigen::MatrixXd ind){
@@ -55,6 +105,8 @@ namespace DE{
 		}
 		return truncated_individual;
 	}
+
+
 
 	Eigen::MatrixXd DE::generate_individual(std::vector<int> ind_shape){
 		
@@ -103,11 +155,47 @@ namespace DE{
 		
 		for (int i = 0; i < N_pop; i++){
 			opposite_population.emplace_back(generate_oppsite_individual(ind_shape, i));
+
+#if CURRENT_TO_RAND
+#else
 			opposite_fitness.emplace_back(eval(truncate_individual(ind_shape, opposite_population[i])));
+#endif
 		}
 
 	}
- 
+
+#if CURRENT_TO_RAND
+
+	void DE::currenttorand_modified(int ind_idx){
+
+		std::random_device rseed;
+		std::mt19937 rng(rseed());
+		std::uniform_int_distribution<int> dist(0, population.size() - 1);
+
+		int idx1 = -1;
+		int idx2 = -1;
+		int idx3 = -1;
+		
+		do {
+			idx1 = dist(rng);
+		}
+		while(idx1 == ind_idx);
+
+		do {
+			idx2 = dist(rng);
+		}
+		while(idx2 == ind_idx || idx2 == idx1);
+
+		do {
+			idx3 = dist(rng);
+		}
+		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
+
+		mutated_ind = population[ind_idx] + F[ind_idx] * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
+	}
+
+#else
+
 	void DE::apply_opposition(){
 		
 		generate_oppsite_population();
@@ -399,6 +487,9 @@ namespace DE{
 		mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
 
+#endif
+
+
 	void DE::bincross(int ind_idx){
 		
 		std::random_device rseed;
@@ -478,7 +569,11 @@ namespace DE{
 	}
 
 	void DE::mutate(int ind_idx){
-		
+
+#if CURRENT_TO_RAND
+		currenttorand_modified(ind_idx);
+#else
+
 		switch(mutation_algorithm){
 
 			case 0:
@@ -496,7 +591,7 @@ namespace DE{
 			case 6:
 				currenttorand_1(ind_idx); break;
 		}		
-
+#endif
 	}
 
 	void DE::crossover(int ind_idx){
@@ -656,7 +751,43 @@ namespace DE{
 	void DE::selection(int ind_idx){
 		//std::cout << mutated_ind.rows() << " "  << mutated_ind.cols() << std::endl << std::endl;
 		//std::cout << mutated_ind << std::endl << std::endl;
+#if CURRENT_TO_RAND
+
+		Eigen::MatrixXd F = eval(truncate_individual(ind_shape, mutated_ind));
+
+
+		int mutated_fit = 0;
+		int min = 0;
+		for(int j = 0; j < ind_shape[0]; j++){
+			if(min > F(j,j))
+				min = F(j,j);
+		}
+
+		for(int j = 0; j < ind_shape[0]; j++){
+			mutated_fit+= F(j,j);
+			F(j,j) = F(j,j) / min;
+			if(F(j,j) < 0.8)
+				F(j,j) = 0;
+		}
+		
+		mutated_fit /= 512;
+
+		if(problem_type == MINIMIZATION){
+			if(mutated_fit < fitness[ind_idx]){
+				change_counter++;
+				population[ind_idx] = mutated_ind;
+				fitness[ind_idx] = mutated_fit;
+			}
+		}else{
+			if(mutated_fit > fitness[ind_idx]){
+				change_counter++;
+				population[ind_idx] = mutated_ind;
+				fitness[ind_idx] = mutated_fit;
+			}
+		}
+#else
 		float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
+
 		//std::cout << ind_idx << std::endl;	
 		if(problem_type == MINIMIZATION){
 			if(mutated_fit < fitness[ind_idx]){
@@ -671,7 +802,10 @@ namespace DE{
 				fitness[ind_idx] = mutated_fit;
 			}
 		}
+#endif
+
 	}
+
 	void DE::set_change_counter(uint value){
 		change_counter = value;
 	}
@@ -699,6 +833,23 @@ namespace DE{
 	bool DE::is_infeasible(){
 		return infeasible;
 	}
+
+#if CURRENT_TO_RAND
+
+	Eigen::MatrixXd DE::get_best_ind(){
+		if(problem_type == MINIMIZATION)
+			return population[std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
+		else
+			return population[std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
+	}
+	float DE::get_best_fit(){
+		if(problem_type == MINIMIZATION)
+			return *std::min_element(this->fitness.begin(), this->fitness.end());
+		else
+			return *std::max_element(this->fitness.begin(), this->fitness.end());
+	}
+
+#else
 
 	float DE::get_best_fit(){
 		if(problem_type == MINIMIZATION)
@@ -730,4 +881,7 @@ namespace DE{
 	int DE::get_max_elem(){
 		return population[0].maxCoeff();
 	}
+
+#endif
+
 }
