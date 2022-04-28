@@ -318,7 +318,6 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		set_change_counter(0);
 		for(int i = 0; i < N_pop; i++){
 			mutate(i);
-			
 			crossover(i);
 			if(is_infeasible())
 				repair(i);
