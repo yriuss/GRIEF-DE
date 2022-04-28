@@ -36,6 +36,7 @@ namespace DE{
 			this->N_pop = N_pop;
 			this->ind_shape = ind_shape;
 			
+			check_duplicates();
 		}
 		else {}
 		
@@ -106,7 +107,7 @@ namespace DE{
 		}
 
 	}
-
+ 
 	void DE::apply_opposition(){
 		
 		generate_oppsite_population();
@@ -413,7 +414,7 @@ namespace DE{
 			{
 				if(r_dist(rng) <= cr || j == J)
 				{
-					mutated_ind(i,j) = mutated_ind(i,j);
+					// mutated_ind(i,j) = mutated_ind(i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
 				}
@@ -567,6 +568,46 @@ namespace DE{
 	//	plt::show;
 	//}
 
+	void DE::check_duplicates(){
+				
+		std::cout << "Checking duplicates..." << std::endl;
+
+		std::random_device rseed;
+		std::mt19937 rng(rseed());
+		std::uniform_int_distribution<int> dist(-24,24);
+		std::uniform_real_distribution<float> distr(0,1);
+
+		for(int i = 0; i < N_pop - 1; i++)
+		{
+			for(int j = i + 1; j <= N_pop - 1; j++)
+			{
+				if(population[i] == population[j])
+				{	
+					// float p = distr(rng);
+					// for(int k = 0; k < population[j].rows(); k++)
+					// {
+					// 	for(int l = 0; l < population[j].cols(); l++)
+					// 	{
+					// 		if(distr(rng) >= p)
+					// 			population[j](k,l) = dist(rng);
+					// 	}
+					// }
+					std::cout << "Duplicated idendified... generating new." << std::endl;
+					population[j] = generate_individual(ind_shape);
+
+					/* 
+					 * in case of change an individual
+					 * the check duplicate process
+					 * is restarted 
+					 */
+					i = 0; 
+					break;
+				}
+			
+			}
+		}
+	}
+
 	void DE::weibull_repair(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
@@ -592,7 +633,7 @@ namespace DE{
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> dist(0,24);
-		int n=0;
+		// int n=0;
 		for(int i = 0; i < mutated_ind.rows(); i++){
 			for(int j = 0; j < mutated_ind.cols(); j++){
 				if(mutated_ind(i,j) > 0){
@@ -622,7 +663,7 @@ namespace DE{
 				change_counter++;
 				population[ind_idx] = mutated_ind;
 				fitness[ind_idx] = mutated_fit;
-			}
+			} 
 		}else{
 			if(mutated_fit > fitness[ind_idx]){
 				change_counter++;
@@ -641,6 +682,8 @@ namespace DE{
 		
 		for(int g = 0; g < ng; g++){
 			change_counter  = 0;
+			check_duplicates();
+
 			for(int i = 0; i < population.size(); i++){
 				mutate(i);
 				crossover(i);
@@ -672,7 +715,7 @@ namespace DE{
 	}
 
 	int DE::get_best_idx(){
-		if(problem_type ==MINIMIZATION)
+		if(problem_type == MINIMIZATION)
 			return std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin();
 		else
 			return std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin();

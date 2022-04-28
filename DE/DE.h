@@ -79,6 +79,11 @@ namespace DE {
 			float jr;
 			uint get_change_counter();
 			void set_change_counter(uint value);
+			void check_duplicates();
+			float indv_mean();
+			float indv_variance();
+			float indv_standard_deviation();
+
 		private:
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
@@ -86,6 +91,7 @@ namespace DE {
 			std::vector<Eigen::MatrixXd> opposite_population;
 			std::vector<float> fitness;
 			std::vector<float> opposite_fitness;
+			// std::vector<float> ;
 			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;

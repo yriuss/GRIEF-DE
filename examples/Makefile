@@ -9,7 +9,7 @@ EXECUTABLE=$(TARGET)
 #CFLAGS := -Wall -g -O3 -Wfatal-errors -mssse3 -msse2 -march=native
 CFLAGS := -ggdb 
 #LDFLAGS :=  grief/grief.cpp -I   -Llib -Wl,rpath='$$ORIGIN/lib' -g `pkg-config opencv --libs`  É O CERTO
-LDFLAGS :=  ../DE/DE.cc ../grief.cc -I/usr/include/python3.8 -I/home/adriel/.local/lib/python3.8/site-packages/numpy/core/include -Llib -Wl,-g `pkg-config opencv --libs` -lpython3.8
+LDFLAGS :=  ../DE/DE.cc ../grief.cc -I/usr/include/python3.8 -I~/.local/lib/python3.8/site-packages/numpy/core/include -Llib -Wl,-g `pkg-config opencv --libs` -lpython3.8
 
 
 
