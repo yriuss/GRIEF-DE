@@ -7,7 +7,7 @@
 #include <Eigen/Dense>
 #include <vector>
 
-#define CURRENT_TO_RAND true
+#define CURRENT_TO_RAND false
 
 #if CURRENT_TO_RAND
 typedef Eigen::MatrixXd(*EvalFunction)(Eigen::MatrixXd);
@@ -40,6 +40,8 @@ namespace DE {
 #define ARIT 2
 
 #define OPPOSITION_LEARNING false
+
+#define ROUND_ON_MUTATION  false
 	
 	class DE{
 
@@ -74,7 +76,7 @@ namespace DE {
 			int get_max_elem();
 			bool is_infeasible(int element);
 			bool is_infeasible();
-			//void select_and_change(EvalRankFunction evaluation);
+			// void select_and_change(EvalRankFunction evaluation);
 			//void plot_convergence();
 			//void set_best_fit();
 			float jr;
@@ -120,7 +122,7 @@ namespace DE {
 
 			float F;
 			std::vector<float> fitness;
-			
+
 #endif
 			uint change_counter = 0;
 			// float jr;

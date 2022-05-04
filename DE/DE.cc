@@ -12,7 +12,9 @@ namespace DE{
 
 	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, float jr, EvalFunction evaluation, float F, 
 			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm): mutated_ind(ind_shape[0], ind_shape[1] ){
+
 #if CURRENT_TO_RAND
+
 		//Initialize population
 		if(N_pop > 0){
 			population.reserve(N_pop);
@@ -90,6 +92,8 @@ namespace DE{
 	void DE::evaluate(int ind_idx){
 
 #if CURRENT_TO_RAND
+#elif ROUND_ON_MUTATION
+		fitness[ind_idx] = eval(ind_shape, population[ind_idx]);
 #else
 		fitness[ind_idx] = eval(truncate_individual(ind_shape, population[ind_idx]));
 #endif
@@ -156,10 +160,13 @@ namespace DE{
 		for (int i = 0; i < N_pop; i++){
 			opposite_population.emplace_back(generate_oppsite_individual(ind_shape, i));
 
-#if CURRENT_TO_RAND
-#else
-			opposite_fitness.emplace_back(eval(truncate_individual(ind_shape, opposite_population[i])));
-#endif
+			#if CURRENT_TO_RAND
+			#elif ROUND_ON_MUTATION
+				opposite_fitness.emplace_back(eval(ind_shape, opposite_population[i]));
+
+			#else
+				opposite_fitness.emplace_back(eval(truncate_individual(ind_shape, opposite_population[i])));
+			#endif
 		}
 
 	}
@@ -242,8 +249,11 @@ namespace DE{
 
 	
 		// std::cout << "[ Getting np best fitted individuals ]" << std::endl;
+		#if problem_type == MINIMIZATION && problem_type == MAXIMIZATION
+			std::cout << "Error. Problem type MINIMIZATION and MAXIMIZATION macros was both defined as the same value." << std::endl;
+			exit(EXIT_FAILURE);
 
-		#if problem_type == MINIMIZATION
+		#elif problem_type == MINIMIZATION
 			// std::cout << "MINIMIZATION" << std::endl;  
 			for(int i = 0; i < N_pop; i++){
 				population[i] = aux_population[index_vector[i]];
@@ -256,10 +266,6 @@ namespace DE{
 				population[i] = aux_population[index_vector[i]];
 				fitness[i] = aux_fitness[i];
 			}
-
-		#else
-			std::cout << "ERROR: Problem type was not specified. \n" << std::endl;
-			exit(EXIT_FAILURE);
 
 		#endif
 		// std::cout << "[ OK ]" << std::endl;
@@ -292,14 +298,19 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idx2 || idx3 == idx1);
 
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
-	}
-
-
-	void DE::select_and_change(EvalRankFunction eval_and_rank){
-		std::vector<Eigen::Matrix2Xd> C;
 		
-		C = eval_and_rank(mutated_ind);
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
+
 	}
+
+
+	// void DE::select_and_change(EvalRankFunction eval_and_rank){
+	// 	std::vector<Eigen::Matrix2Xd> C;
+		
+	// 	C = eval_and_rank(mutated_ind);
+	// }
 
 	void DE::rand_2(int ind_idx){
 		
@@ -339,6 +350,11 @@ namespace DE{
 		while(idx5 == ind_idx || idx5 == idx4 || idx5 == idx3 || idx5 == idx2 || idx5 == idx1);
 		//std::cout << "funfou";
 		mutated_ind = population[idx1] + F * ( (population[idx2] - population[idx3]) + (population[idx4] - population[idx5]) );
+
+
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
 	}
 
 	void DE::randtobest_1(int ind_idx){
@@ -370,6 +386,11 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2 || idx3 == idx1);
 
 		mutated_ind = population[idx1] + F * ( (population[idxb] - population[idx1]) + (population[idx2] - population[idx3]) );
+
+
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
 	}
 
 	void DE::best_1(int ind_idx){
@@ -395,6 +416,11 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2);
 
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
+
+
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
 	}
 
 	void DE::best_2(int ind_idx){
@@ -432,6 +458,11 @@ namespace DE{
 		while(idx5 == ind_idx || idx5 == idxb || idx5 == idx4 || idx5 == idx3 || idx5 == idx2);
 
 		mutated_ind = population[idxb] + F * (population[idx2] - population[idx3]);
+
+
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
 	}
 
 	void DE::currenttobest_1(int ind_idx){
@@ -457,6 +488,11 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idxb || idx3 == idx2);
 
 		mutated_ind = population[ind_idx] + F * ((population[idxb] - population[ind_idx]) + (population[idx2] - population[idx3]));
+
+
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
 	}
 
 	void DE::currenttorand_1(int ind_idx){
@@ -485,6 +521,11 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
 
 		mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
+
+
+		#if ROUND_ON_MUTATION
+		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+		#endif
 	}
 
 #endif
@@ -643,16 +684,17 @@ namespace DE{
 	// }
 
 	void DE::repair(int ind_idx){
+
 		switch (1)
 		{
-		case 0:
-			uniform_repair(ind_idx);
-			break;
-		case 1:
-			weibull_repair(ind_idx);
-			break;
-		default:
-			break;
+			case 0:
+				uniform_repair(ind_idx);
+				break;
+			case 1:
+				weibull_repair(ind_idx);
+				break;
+			default:
+				break;
 		}
 		
 		infeasible = false;
@@ -786,7 +828,14 @@ namespace DE{
 			}
 		}
 #else
-		float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
+		#if ROUND_ON_MUTATION
+			float mutated_fit = eval(ind_shape, mutated_ind);	
+
+		#else
+			float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
+
+		#endif
+
 
 		//std::cout << ind_idx << std::endl;	
 		if(problem_type == MINIMIZATION){
@@ -809,9 +858,11 @@ namespace DE{
 	void DE::set_change_counter(uint value){
 		change_counter = value;
 	}
+
 	//void DE::set_best_fit(){
 	//	best_fitness.emplace_back(get_best_fit());
 	//}
+
 	void DE::evolve(uint ng){
 		
 		for(int g = 0; g < ng; g++){
@@ -842,6 +893,7 @@ namespace DE{
 		else
 			return population[std::max_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];
 	}
+
 	float DE::get_best_fit(){
 		if(problem_type == MINIMIZATION)
 			return *std::min_element(this->fitness.begin(), this->fitness.end());
