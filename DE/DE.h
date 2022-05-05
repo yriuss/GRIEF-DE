@@ -40,8 +40,7 @@ namespace DE {
 #define ARIT 2
 
 #define OPPOSITION_LEARNING false
-
-#define ROUND_ON_MUTATION  false
+#define ROUND_ON_MUTATION  true
 	
 	class DE{
 

@@ -24,7 +24,13 @@ namespace DE{
 			eval = evaluation;
 			for(int i = 0; i < N_pop; i++){
 				population.emplace_back(generate_individual(ind_shape));
-				this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
+				
+				#if ROUND_ON_MUTATION
+					this->F.emplace_back(eval(population[i]));
+				#else
+					this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
+				#endif
+
 				//std::cout << this->F[i](i,511);
 				
 				int fitness = 0;
@@ -68,7 +74,13 @@ namespace DE{
 			eval = evaluation;
 			for(int i = 0; i < N_pop; i++){
 				population.emplace_back(generate_individual(ind_shape));
-				fitness.emplace_back(eval(truncate_individual(ind_shape, population[i])));
+
+				#if ROUND_ON_MUTATION
+					fitness.emplace_back(eval(population[i]));
+				#else
+					fitness.emplace_back(eval(truncate_individual(ind_shape, population[i])));
+				#endif
+
 			}
 			
 			this->cr = cr;
@@ -91,12 +103,12 @@ namespace DE{
 
 	void DE::evaluate(int ind_idx){
 
-#if CURRENT_TO_RAND
-#elif ROUND_ON_MUTATION
-		fitness[ind_idx] = eval(ind_shape, population[ind_idx]);
-#else
-		fitness[ind_idx] = eval(truncate_individual(ind_shape, population[ind_idx]));
-#endif
+		#if CURRENT_TO_RAND
+		#elif ROUND_ON_MUTATION
+			fitness[ind_idx] = eval(population[ind_idx]);
+		#else
+			fitness[ind_idx] = eval(truncate_individual(ind_shape, population[ind_idx]));
+		#endif
 
 	}
 
@@ -162,7 +174,7 @@ namespace DE{
 
 			#if CURRENT_TO_RAND
 			#elif ROUND_ON_MUTATION
-				opposite_fitness.emplace_back(eval(ind_shape, opposite_population[i]));
+				opposite_fitness.emplace_back(eval(opposite_population[i]));
 
 			#else
 				opposite_fitness.emplace_back(eval(truncate_individual(ind_shape, opposite_population[i])));
@@ -300,7 +312,7 @@ namespace DE{
 		mutated_ind = population[idx1] + F * (population[idx2] - population[idx3]);
 		
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 
 	}
@@ -353,7 +365,7 @@ namespace DE{
 
 
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 	}
 
@@ -389,7 +401,7 @@ namespace DE{
 
 
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 	}
 
@@ -419,7 +431,7 @@ namespace DE{
 
 
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 	}
 
@@ -461,7 +473,7 @@ namespace DE{
 
 
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 	}
 
@@ -491,7 +503,7 @@ namespace DE{
 
 
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 	}
 
@@ -524,7 +536,7 @@ namespace DE{
 
 
 		#if ROUND_ON_MUTATION
-		mutated_ind = truncate_individual(ind_shape, mutated_ind);
+			mutated_ind = truncate_individual(ind_shape, mutated_ind);
 		#endif
 	}
 
@@ -829,11 +841,9 @@ namespace DE{
 		}
 #else
 		#if ROUND_ON_MUTATION
-			float mutated_fit = eval(ind_shape, mutated_ind);	
-
+			float mutated_fit = eval(mutated_ind);	
 		#else
 			float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
-
 		#endif
 
 
