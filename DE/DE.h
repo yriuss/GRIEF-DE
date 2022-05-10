@@ -6,11 +6,14 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
+#include <unistd.h>
+#include <fstream>
+#define CURRENT_TO_RAND true
+#define READ_BEST_IND false
+#define RAND_TO_BEST_MOD false
 
-#define CURRENT_TO_RAND false
-
-#if CURRENT_TO_RAND
-typedef Eigen::MatrixXd(*EvalFunction)(Eigen::MatrixXd);
+#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
 #else
 typedef float(*EvalFunction)(Eigen::MatrixXd);
 #endif
@@ -47,7 +50,7 @@ namespace DE {
 		public:
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
-			int mutation_algorithm, int crossover_algorithm);
+			int mutation_algorithm, int crossover_algorithm, int K);
 
 			
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
@@ -87,9 +90,14 @@ namespace DE {
 			float indv_standard_deviation();
 			Eigen::MatrixXd get_best_ind();
 
+			void read_individuals(int n_of_individuals);
+
 #if CURRENT_TO_RAND
 
 			void currenttorand_modified(int ind_idx);
+#else
+#if RAND_TO_BEST
+			void randtobest_modified(int ind_idx);
 #else
 			
 			void rand_1(int ind_idx);
@@ -100,7 +108,7 @@ namespace DE {
 			void currenttobest_1(int ind_idx);
 			void currenttorand_1(int ind_idx);
 #endif
-
+#endif
 		private:
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
@@ -112,11 +120,14 @@ namespace DE {
 			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;
-
-#if CURRENT_TO_RAND
-
-			std::vector<Eigen::MatrixXd> F;
+#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+			std::vector<int> sort_idxs(std::vector<double> v);
+			//std::vector<Eigen::MatrixXd> F;
+			float K = 10;
+			std::vector<std::vector<double>> F;
+			float F_mut;
 			std::vector<float> fitness;
+			std::vector<float> fitness_aux;
 #else
 
 			float F;
