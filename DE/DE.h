@@ -21,8 +21,8 @@ namespace DE {
 
 
 /* DEFINITION OF PROBLEM TYPE */
-#define MAXIMIZATION false
-#define MINIMIZATION true
+#define MAXIMIZATION true
+#define MINIMIZATION false
 #define DEBUG 1
 
 /* DEFINITION OF MUTATION ALGORITHM */

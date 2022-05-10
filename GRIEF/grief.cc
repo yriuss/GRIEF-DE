@@ -185,7 +185,14 @@ namespace cv
 #include "generated_64.i"
 			}
 		}
-
+		
+		std::vector<float> GriefDescriptorExtractorImpl::get_change_percentage(uint ng){
+			return change_percentage;
+		}
+		
+		std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
+			return std::vector<float>{};
+		}
 
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
 			
@@ -220,7 +227,7 @@ namespace cv
 				}
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
-				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
+				// std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 				
 			}
 		}
@@ -228,6 +235,14 @@ namespace cv
 		void GriefDescriptorExtractor::evolve(uint ng){
 			
 		}
+
+		// std::vector<float> GriefDescriptorExtractorImpl::gbfit(){
+		// 	return bfit;
+		// }
+
+		// std::vector<float> GriefDescriptorExtractor::gbfit(){
+		// 	return std::vector<float>{0,0};
+		// }
 
 		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
 																	int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :

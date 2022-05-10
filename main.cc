@@ -305,6 +305,7 @@ float eval(Eigen::MatrixXd individual){
 	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
 	return matchingFailures/matchingTests;
 }
+
 float eval1(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();
@@ -486,7 +487,7 @@ float eval1(Eigen::MatrixXd individual){
 }
 
 
-void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual){
+void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, std::vector<float> change_percentage){
 	
 
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
@@ -509,20 +510,29 @@ void save_data(std::vector<float> y, const std::string &dataset, const std::stri
 	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
     	f1 << *i << '\n';
 	}
+	f1.close();
 
 	if (f2.is_open())
   	{
     	f2 << best_individual;
   	}
-	//plt::show();
+	f2.close();
+	
+	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
+  	
+	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
+	for(int i = 0; i < change_percentage.size(); i++)
+		f3 << change_percentage[i] << "%" << std::endl;
+	f3.close();
+	
 }
 
 int main(){
 	int argc=4;
 	std::string argv[4];
 	argv[1] = "michigan";
-	argv[2] = "10";
-	argv[3]  = "10";
+	argv[2] = "50";
+	argv[3]  = "1";
 	char filename[100];
 	bool supervised = false;
 	Mat tmpIm;
@@ -635,9 +645,9 @@ int main(){
 	//}
 
     for(int i = 0; i < atoi((argv[3]).c_str()); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 4);
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 30);
 		grief_descriptor->evolve(atoi((argv[2]).c_str()));
-		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
+		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi((argv[2]).c_str())));
 	}
     return 0;
 }

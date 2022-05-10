@@ -29,6 +29,7 @@ namespace cv
 				CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 				CV_WRAP virtual void evolve(uint ng);
 				CV_WRAP virtual float get_b_fit();
+				CV_WRAP virtual std::vector<float> get_change_percentage(uint ng);
 				CV_WRAP virtual Eigen::MatrixXd get_best_indv();
 		};
 
@@ -58,9 +59,12 @@ namespace cv
 				virtual void setInd(Eigen::MatrixXd new_individual) CV_OVERRIDE;
 				virtual float get_b_fit() CV_OVERRIDE;
 				virtual Eigen::MatrixXd get_best_indv() CV_OVERRIDE;
+				virtual std::vector<float> get_change_percentage(uint ng) CV_OVERRIDE;
+
 			protected:
 				std::vector<float> bfit;
 				int N_pop;
+				std::vector<float> change_percentage;
 				typedef void(*PixelTestFn)(InputArray, const std::vector<KeyPoint>&, OutputArray, bool use_orientation, int individual[512][4]);
 				int individual[512][4];
 				int bytes_;
