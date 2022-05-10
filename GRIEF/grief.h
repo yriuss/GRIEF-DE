@@ -17,15 +17,20 @@ namespace cv
 {
 	namespace xfeatures2d
 	{
+		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+		std::vector<double> evaluation(Eigen::MatrixXd individual);
+		#else
 		float evaluation(Eigen::MatrixXd individual);
+		#endif
 
 		class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
 		{
 			public:
 				CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-				int N_pop = 0, float cr = 0.7, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
+				int N_pop = 0, int K=10, float cr = 0.7, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
 				CV_WRAP virtual std::vector<float> gbfit();
 				CV_WRAP virtual void getInd( );
+				CV_WRAP virtual std::vector<float> get_change_percentage(uint ng);
 				CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 				CV_WRAP virtual void evolve(uint ng);
 				CV_WRAP virtual float get_b_fit();
@@ -42,12 +47,12 @@ namespace cv
 
 				// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
 				GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-											  int N_pop = 0, float cr = 0.7, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
+											  int N_pop = 0, int K=10, float cr = 0.7, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
 											  
 				int load(std::string fileName);
 				virtual void read( const FileNode& ) CV_OVERRIDE;
 				virtual void write( FileStorage& ) const CV_OVERRIDE;
-				
+				virtual std::vector<float> get_change_percentage(uint ng) CV_OVERRIDE;
 				virtual int descriptorSize() const CV_OVERRIDE;
 				virtual int descriptorType() const CV_OVERRIDE;
 				virtual int defaultNorm() const CV_OVERRIDE;
@@ -60,6 +65,7 @@ namespace cv
 				virtual Eigen::MatrixXd get_best_indv() CV_OVERRIDE;
 			protected:
 				std::vector<float> bfit;
+				std::vector<float> change_percentage;
 				int N_pop;
 				typedef void(*PixelTestFn)(InputArray, const std::vector<KeyPoint>&, OutputArray, bool use_orientation, int individual[512][4]);
 				int individual[512][4];

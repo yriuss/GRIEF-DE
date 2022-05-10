@@ -52,14 +52,21 @@ namespace cv
 	namespace xfeatures2d
 	{
 
+		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+		std::vector<double> evaluation(Eigen::MatrixXd individual){
+			std::vector<double> m;
+			return m;
+		}
+		#else
 		float evaluation(Eigen::MatrixXd individual){
 			return -1;
 		}
+		#endif
 
-		Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, 
+		Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int K,
 																	   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm)
 		{
-			return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, jr, F, mutation_algorithm, crossover_algorithm);
+			return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, K, cr, jr, F, mutation_algorithm, crossover_algorithm);
 		}
 
 		std::vector<float> GriefDescriptorExtractorImpl::gbfit(){
@@ -186,42 +193,37 @@ namespace cv
 			}
 		}
 
+		std::vector<float> GriefDescriptorExtractorImpl::get_change_percentage(uint ng){
+			return change_percentage;
+		}
 
+		std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
+			return std::vector<float>{};
+		}
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
-			
-			std::random_device rseed;
-			std::mt19937 rng(rseed());
-			std::uniform_real_distribution<float> distr(0,1);
 
 			for(int g = 0; g < ng; g++){
-				std::cout << "Gen " << g+1 << std::endl;
-
 				auto start = std::chrono::high_resolution_clock::now();
-
-				#if OPPOSITION_LEARNING
-					if(g == 0 || distr(rng) <= jr){
-						// std::cout << "Applying Opposition..." << std::endl;
-						apply_opposition();
-						continue;
-					}
-				#endif
-				
-				check_duplicates();
-
+				set_change_counter(0);
 				for(int i = 0; i < N_pop; i++){
-					
-					// std::cout << "[ Applying DE mutation and crossover operators ]" << std::endl;
-					
 					mutate(i);
 					crossover(i);
-					if(is_infeasible())
+					if(is_infeasible()){
 						repair(i);
+					}
 					selection(i);
-				}
+					//std::cout << i << std::endl;
+
+				}//exit(-1);
+				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
+				std::cout <<  get_best_fit() << std::endl;
+
+				bfit.emplace_back(get_best_fit());
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
 				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
-				
+
+
 			}
 		}
 
@@ -230,9 +232,9 @@ namespace cv
 		}
 
 		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
-																	int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
+																	int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 			bytes_(bytes), test_fn_(NULL), 
-			DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
+			DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm, K)
 		{
 			this->N_pop = N_pop;
 			this->jr = jr;
