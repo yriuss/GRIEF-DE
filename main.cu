@@ -341,7 +341,7 @@ float eval1(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create(1600);
+	Ptr<cv::ORB> detector = cv::ORB::create(1600);
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
 	descriptor->setInd(individual);
 	for (int i = 0;i<1024;i++){
@@ -370,9 +370,9 @@ float eval1(Eigen::MatrixXd individual){
 		//std::cout << numSeasons <<std::endl;
 		
 		for (int i = 0;i<numSeasons;i++){
-			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
+			//sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
 			
-			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
+			detector->detect(dataset_imgs[i][location], keypoints[i]);
 			
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			//Mat a;
@@ -415,13 +415,57 @@ float eval1(Eigen::MatrixXd individual){
 				vector<unsigned char> mask;
 				
 				if (matches.size() > 0){
+					//histogram assembly
+					int histogram[numBins];
+					int bestHistogram[numBins];
+					memset(bestHistogram,0,sizeof(int)*numBins);
+					for (int s = 0;s<granularity;s++){
+						memset(histogram,0,sizeof(int)*numBins);
+						for( size_t i = 0; i < matches.size(); i++ )
+						{
+							int i1 = matches[i].queryIdx;
+							int i2 = matches[i].trainIdx;
+							if ((fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y))<VERTICAL_LIMIT){
+								int devx = (int)(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x + numBins/2*granularity);
+								int index = (devx+s)/granularity;
+								if (index > -1 && index < numBins) histogram[index]++;
+							}
+						}
+						for (int i = 0;i<numBins;i++){
+							if (histMax < histogram[i]){
+								histMax = histogram[i];
+								maxS = s;
+								domDir = i;
+								memcpy(bestHistogram,histogram,sizeof(int)*numBins);
+							}
+						}
+					}
+
 					
+					for (int i =0;i<numBins;i++){
+						if (auxMax < bestHistogram[i] && bestHistogram[i] != histMax){
+							auxMax = bestHistogram[i];
+						}
+					}
+
+					/*calculate dominant direction*/
+					for( size_t i = 0; i < matches.size(); i++ )
+					{
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((int)((keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x+numBins/2*granularity+maxS)/granularity)==domDir && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
+						{
+							sumDev += keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x;
+							numPoints++;
+						}
+					}
+					histDir = (sumDev/numPoints);
 					manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
-					
-					float realDir = manualDir;
+					if (fabs(manualDir - histDir) > 35) matchFail = true; else matchFail = false;
+					float realDir = histDir;
 					int strength = 1;
-					if (matchFail) matchingFailures++;
-					matchingTests++;
+					//if (matchFail) strength = 100;
+					if (matchFail && supervised) realDir = manualDir;
 
 					/*rate individual comparisons*/
 					for( size_t i = 0; i < matches.size(); i++ ){
@@ -626,6 +670,149 @@ Eigen::MatrixXd eval2(Eigen::MatrixXd individual){
     return result;
 }
 
+
+std::vector<double> eval3(Eigen::MatrixXd individual){
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create(1600);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
+	
+	descriptor->setInd(individual);
+	for (int i = 0;i<1024;i++){
+		griefRating[i].value=0;
+		griefRating[i].id=i;
+	}
+	std::vector<cv::DMatch> matches;
+	
+
+	int matchingTests = 0;
+	int matchingFailures = 0;
+	
+	int i1,i2;
+	
+	bool supervised = true;
+	
+
+	
+	for (int location = 0;location<numLocations;location++){
+			
+		// detecting keypoints and generating descriptors
+		Mat cpu_descriptors[numSeasons];
+		cuda::GpuMat descriptors[numSeasons];
+		vector<KeyPoint> keypoints[numSeasons];
+		KeyPoint kp;
+		//std::cout << numSeasons <<std::endl;
+		
+		for (int i = 0;i<numSeasons;i++){
+			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
+			
+			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
+			
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
+			//Mat a;
+			//descriptors[i].download(a);
+			//std::cout << "a" << std::endl;
+			//exit(-1);
+			descriptors[i].download(cpu_descriptors[i]);
+			//std::cout << cpu_descriptors[i];
+			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
+			//std::cout << cpu_descriptors[i].row(1599);
+			//exit(-1);
+			
+		}
+		
+		
+		
+		
+		// matching the extracted features
+		for (int ik = 0;ik<numSeasons;ik++){
+			for (int jk = ik+1;jk<numSeasons;jk++){
+				matches.clear();
+				/*if not empty*/
+				
+				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
+				
+				/*are there any tentative correspondences ?*/
+				int sumDev = 0;
+				int numPoints = 0;
+
+				int histMax = 0;
+				int auxMax=0;
+				int manualDir = 0; 
+				int histDir = 0;
+				int numBins = 100; 
+				int granularity = 20;
+				int maxS = 0;
+				int domDir = 0;
+				int histogram[numBins];
+				int bestHistogram[numBins];
+				vector<unsigned char> mask;
+				
+				if (matches.size() > 0){
+					
+					manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
+					
+					float realDir = manualDir;
+					int strength = 1;
+					if (matchFail) matchingFailures++;
+					matchingTests++;
+
+					/*rate individual comparisons*/
+					for( size_t i = 0; i < matches.size(); i++ ){
+						char eff = 0;
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((abs(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x-realDir)< 35 ) && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
+						{
+							eff = -strength;
+						}else{
+							eff = +strength;
+						}
+						for (int o = 0;o<griefDescriptorLength/8;o++){
+							unsigned char b = cpu_descriptors[ik].at<uchar>(i1,o)^cpu_descriptors[jk].at<uchar>(i2,o);
+							unsigned char oo = 128;
+							for (int p = 0;p<8;p++){
+								if (oo&b)  griefRating[8*o+p].value+=eff; else griefRating[8*o+p].value-=eff;
+								oo=oo/2;
+							}
+						}
+					}
+					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
+				}else{
+					matchFail = true;
+				}
+				
+				
+				//end drawing
+			}
+			
+		}
+		//exit(-1);
+		
+	}
+
+	std::vector<double> result;
+	
+
+
+	int sum = 0;
+	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+
+	for (int i = 0;i<griefDescriptorLength;i++){
+		 result.push_back(griefRating[i].value);
+		 sum+=result[i];
+	}
+	sum=sum/griefDescriptorLength;
+
+	std::cout << "fitness is " << sum << std::endl;
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "elapsed time: " << elapsed.count() << std::endl;
+	//std::cout << "-";
+    return result;
+}
+
 bool dir_exist(const std::string &s)
 {
   struct stat buffer;
@@ -718,6 +905,11 @@ void save_individual(Eigen::MatrixXd x, int i)
 
 }
 
+
+
+
+
+
 int main(int argc, char ** argv){
 //	std::vector<int> x;
 //	x.push_back(512);
@@ -727,7 +919,7 @@ int main(int argc, char ** argv){
 //	}
 
 	char filename[100];
-	bool supervised = false;
+	bool supervised = true;
 	Mat tmpIm;
 	int detectorThreshold = 0;
 	distance_factor = 1.0;
@@ -740,6 +932,8 @@ int main(int argc, char ** argv){
 	
 	dataset = argv[1];
 
+	int K = atoi(argv[4]);
+	
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
@@ -766,7 +960,7 @@ int main(int argc, char ** argv){
 		std::cout << "Error: no images in path!" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	supervised = (numDisplacements == numSeasons);
+	//supervised = (numDisplacements == numSeasons);
 	
 	/*check the number of locations*/
 	do{
@@ -845,7 +1039,7 @@ int main(int argc, char ** argv){
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
 	for(int i = 0; i < atoi(argv[3]); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval2, 30);
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 10, K);
 		grief_descriptor->evolve(atoi(argv[2]));
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
 	}

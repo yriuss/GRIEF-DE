@@ -54,9 +54,9 @@ namespace xfeatures2d
 
 
 
-#if CURRENT_TO_RAND
-Eigen::MatrixXd evaluation(Eigen::MatrixXd individual){
-	Eigen::MatrixXd m(1,1);
+#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+std::vector<double> evaluation(Eigen::MatrixXd individual){
+	std::vector<double> m;
 	return m;
 }
 #else
@@ -65,10 +65,10 @@ float evaluation(Eigen::MatrixXd individual){
 }
 #endif
 
-Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, 
+Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int K,
 															   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm)
 {
-	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, cr, jr, F, mutation_algorithm, crossover_algorithm);
+	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, K, cr, jr, F, mutation_algorithm, crossover_algorithm);
 }
 #include <unistd.h>
 int GriefDescriptorExtractorImpl::load(std::string fileName) {
@@ -319,8 +319,9 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		for(int i = 0; i < N_pop; i++){
 			mutate(i);
 			crossover(i);
-			if(is_infeasible())
+			if(is_infeasible()){
 				repair(i);
+			}
 			selection(i);
 			//std::cout << i << std::endl;
 
@@ -355,9 +356,9 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 //}
 
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
-															int N_pop, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
+															int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 	bytes_(bytes), 
-	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm)
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm, K)
 {
 	this->N_pop = N_pop;
 	this->jr = jr;
