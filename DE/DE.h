@@ -6,11 +6,16 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
+<<<<<<< HEAD
 #include <unistd.h>
 #include <fstream>
 #define CURRENT_TO_RAND true
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
+=======
+
+#define CURRENT_TO_RAND false
+>>>>>>> ad1e278867a39f98de394e1fb11476c698169f7f
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
 typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
@@ -42,7 +47,8 @@ namespace DE {
 #define EXP 1
 #define ARIT 2
 
-#define OPPOSITION_LEARNING true
+#define OPPOSITION_LEARNING false
+#define ROUND_ON_MUTATION  true
 	
 	class DE{
 
@@ -77,17 +83,25 @@ namespace DE {
 			int get_max_elem();
 			bool is_infeasible(int element);
 			bool is_infeasible();
-			//void select_and_change(EvalRankFunction evaluation);
+			// void select_and_change(EvalRankFunction evaluation);
 			//void plot_convergence();
 			//void set_best_fit();
 			float jr;
 			uint get_change_counter();
 			void set_change_counter(uint value);
+			void check_duplicates();
+			float indv_mean();
+			float indv_variance();
+			float indv_standard_deviation();
 			Eigen::MatrixXd get_best_ind();
 
+<<<<<<< HEAD
 			void read_individuals(int n_of_individuals);
 
+=======
+>>>>>>> ad1e278867a39f98de394e1fb11476c698169f7f
 #if CURRENT_TO_RAND
+
 			void currenttorand_modified(int ind_idx);
 #else
 #if RAND_TO_BEST
@@ -110,20 +124,30 @@ namespace DE {
 			std::vector<Eigen::MatrixXd> opposite_population;
 			
 			std::vector<float> opposite_fitness;
+			// std::vector<float> ;
 			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;
+<<<<<<< HEAD
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
 			std::vector<int> sort_idxs(std::vector<double> v);
 			//std::vector<Eigen::MatrixXd> F;
 			float K = 10;
 			std::vector<std::vector<double>> F;
 			float F_mut;
+=======
+
+#if CURRENT_TO_RAND
+
+			std::vector<Eigen::MatrixXd> F;
+>>>>>>> ad1e278867a39f98de394e1fb11476c698169f7f
 			std::vector<float> fitness;
 			std::vector<float> fitness_aux;
 #else
+
 			float F;
 			std::vector<float> fitness;
+
 #endif
 			uint change_counter = 0;
 			// float jr;

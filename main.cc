@@ -635,7 +635,7 @@ int main(){
 	//}
 
     for(int i = 0; i < atoi((argv[3]).c_str()); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 5);
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval1, 4);
 		grief_descriptor->evolve(atoi((argv[2]).c_str()));
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
 	}

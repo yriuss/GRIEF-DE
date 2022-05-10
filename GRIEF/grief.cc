@@ -205,6 +205,8 @@ namespace cv
 						continue;
 					}
 				#endif
+				
+				check_duplicates();
 
 				for(int i = 0; i < N_pop; i++){
 					
