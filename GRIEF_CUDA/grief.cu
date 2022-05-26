@@ -319,9 +319,7 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		for(int i = 0; i < N_pop; i++){
 			mutate(i);
 			crossover(i);
-			if(is_infeasible()){
-				repair(i);
-			}
+			repair(i);
 			selection(i);
 			//std::cout << i << std::endl;
 

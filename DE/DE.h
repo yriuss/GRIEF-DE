@@ -12,7 +12,7 @@
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
-#define SECOND_MUTATED_FIT false
+#define SECOND_MUTATED_FIT true
 
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
@@ -71,7 +71,7 @@ namespace DE {
 			void create_population();
 			void get_fitness();
 			void weibull_repair(int ind_idx);
-			void uniform_repair(int ind_idx);
+			void uniform_repair_mutated(int ind_idx);
 			void bincross_modified(int ind_idx);
 			void bincross(int ind_idx);
 			void expcross(int ind_idx);
@@ -97,6 +97,9 @@ namespace DE {
 
 #if CURRENT_TO_RAND
 #if SECOND_MUTATED_FIT
+			void uniform_repair_mutated2(int ind_idx);
+			void uniform_repair_crossed(int ind_idx);
+
 			void currenttorand_modified2(int ind_idx);
 #endif
 			void currenttorand_modified(int ind_idx);
@@ -148,6 +151,10 @@ namespace DE {
 			// float jr;
 			bool problem_type;
 			bool infeasible = false;
+#if SECOND_MUTATED_FIT
+			bool infeasible2 = false;
+			bool infeasible3 = false;
+#endif
 			int U;
 			int aux;
 			int L;
