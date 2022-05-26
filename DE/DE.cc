@@ -200,7 +200,7 @@ namespace DE{
 		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(-24,24);
+		std::uniform_int_distribution<int> dist(-50,50);
 		std::uniform_real_distribution<float> distr(0,1);
 		Eigen::MatrixXd individual(ind_shape[0], ind_shape[1]);
 
@@ -1013,7 +1013,7 @@ namespace DE{
 	void DE::uniform_repair_mutated(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> dist(0,24);
+		std::uniform_real_distribution<float> dist(0,50);
 		// int n=0;
 		for(int i = 0; i < mutated_ind.rows(); i++){
 			for(int j = 0; j < mutated_ind.cols(); j++){
@@ -1030,7 +1030,7 @@ namespace DE{
 			}
 		}
 	}
-
+#if SECOND_MUTATED_FIT
 	void DE::uniform_repair_mutated2(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
@@ -1073,7 +1073,7 @@ namespace DE{
 			}
 		}
 	}
-
+#endif
 	void DE::F_repair(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
@@ -1176,21 +1176,21 @@ namespace DE{
 			}
 		}else{
 			//mutated_fit << std::endl;
-			if(mutated_fit > fitness[ind_idx] && mutated_fit > cross_fit && mutated_fit > second_mutated_fit){
+			if(mutated_fit > cross_fit && mutated_fit > second_mutated_fit){
 				this->F[ind_idx] = F;
 				change_counter++;
 				population[ind_idx] = mutated_ind;
 				fitness[ind_idx] = mutated_fit;
 			}
 
-			if(cross_fit > fitness[ind_idx] && cross_fit > mutated_fit && cross_fit > second_mutated_fit){
+			if(cross_fit > mutated_fit && cross_fit > second_mutated_fit){
 				this->F[ind_idx] = Fcross;
 				change_counter++;
 				population[ind_idx] = crossed_ind;
 				fitness[ind_idx] = cross_fit;
 			}
 
-			if(second_mutated_fit > fitness[ind_idx] && second_mutated_fit > cross_fit && second_mutated_fit > mutated_fit){
+			if(second_mutated_fit > cross_fit && second_mutated_fit > mutated_fit){
 				this->F[ind_idx] = F2;
 				change_counter++;
 				population[ind_idx] = mutated_ind2;
@@ -1299,7 +1299,7 @@ namespace DE{
 	}
 
 	bool DE::is_infeasible(){
-		return infeasible||infeasible2||infeasible3;
+		return infeasible;
 	}
 
 #if CURRENT_TO_RAND

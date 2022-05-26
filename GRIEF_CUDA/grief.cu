@@ -356,7 +356,7 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
 															int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 	bytes_(bytes), 
-	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm, K)
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-50, 50}, mutation_algorithm, crossover_algorithm, K)
 {
 	this->N_pop = N_pop;
 	this->jr = jr;
