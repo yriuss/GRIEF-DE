@@ -714,6 +714,7 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 			//descriptors[i].download(a);
 			//std::cout << "a" << std::endl;
 			//exit(-1);
+			//std::cout << "passei aqui" << std::endl;
 			descriptors[i].download(cpu_descriptors[i]);
 			//std::cout << cpu_descriptors[i];
 			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
@@ -1039,7 +1040,7 @@ int main(int argc, char ** argv){
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
 	for(int i = 0; i < atoi(argv[3]); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 10, K);
+    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 5, K);
 		grief_descriptor->evolve(atoi(argv[2]));
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
 	}

@@ -328,7 +328,7 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		}//exit(-1);
 		change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 		std::cout <<  get_best_fit() << std::endl;
-		
+		//std::cout <<  get_best_ind() << std::endl;
 		bfit.emplace_back(get_best_fit());
 		auto finish = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
@@ -452,6 +452,9 @@ void GriefDescriptorExtractorImpl::compute(InputArray image,
 	//else
 
 	integral( grayImage, sum, CV_32S);
+
+
+
 
 	//Remove keypoints very close to the border
 	KeyPointsFilter::runByImageBorder(keypoints, image.size(), PATCH_SIZE/2 + KERNEL_SIZE/2);
