@@ -8,11 +8,12 @@
 #include <vector>
 #include <unistd.h>
 #include <fstream>
+
 #define CURRENT_TO_RAND true
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
-#define SECOND_MUTATED_FIT true
+#define SECOND_MUTATED_FIT false
 
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD

@@ -23,9 +23,9 @@ namespace DE{
 		return index;
 	}
 
-
 	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, float jr, EvalFunction evaluation, float F, 
 			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm, int K): mutated_ind(ind_shape[0], ind_shape[1] ){
+
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
 		//Initialize population
 		if(N_pop > 0){
@@ -38,18 +38,13 @@ namespace DE{
 			eval = evaluation;
 			for(int i = 0; i < N_pop; i++){
 				population.emplace_back(generate_individual(ind_shape));
-#if MEAN_WORST
-				std::vector<double> F1;
-#endif
+				
 				#if ROUND_ON_MUTATION
 					this->F.emplace_back(eval(population[i]));
 				#else
 					this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 				#endif
-#if MEAN_WORST
-				F1 = this->F[i];
-				std::sort(F1.begin(), F1.end(), std::greater<int>());
-#endif
+
 				//std::cout << this->F[i](i,511);
 				
 				float fitness = 0;
@@ -61,27 +56,21 @@ namespace DE{
 
 				this->fitness_aux.emplace_back(this->F[i][0]);
 
-#if MEAN_WORST
-				for(int j = ind_shape[0] - K; j < ind_shape[0]; j++){
-					fitness+= F1[j];
-				}
-				fitness /= K;
-				for(int j = 0; j < ind_shape[0]; j++){
-					this->F[i][j] = this->F[i][j] / (min);
-				}
-				fitness /= K;
-#else
 				for(int j = 0; j < ind_shape[0]; j++){
 					fitness+= this->F[i][j];
 					this->F[i][j] = this->F[i][j] / (min);
 					//std::cout << this->F[i](j,j);
 				}
+				
+				std::vector<int> idxs = sort_idxs(this->F[i]);
+				
+				for(int j = 0; j < ind_shape[0]; j++){
+					if(j < 512 - K)
+						this->F[i][idxs[j]] = 0;
+					//std::cout << this->F[i][idxs[j]] << std::endl;
+				}
+				
 				fitness /= 512;
-#endif
-				
-				
-				std::vector<int> idxs = sort_idxs(this->F[i]);		
-				
 				
 				this->fitness.emplace_back(fitness);
 				
@@ -106,7 +95,9 @@ namespace DE{
 			fitness.reserve(N_pop);
 			//best_fitness.reserve(N_pop);
 			eval = evaluation;
+
 #if READ_BEST_IND
+
 		read_individuals(30);
 		//std::cout << population[0];
 		for(int i = 0; i < N_pop; i++){
@@ -258,7 +249,7 @@ namespace DE{
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_int_distribution<int> dist(0, population.size() - 1);
-		std::uniform_real_distribution<float> r_dist(0,1);
+
 		int idx1 = -1;
 		int idx2 = -1;
 		int idx3 = -1;
@@ -279,101 +270,13 @@ namespace DE{
 		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
 		Eigen::MatrixXd F(512,512);
 		F.setZero(512,512);
-		float th = 1./3;
-
-		std::vector<int> idxs = sort_idxs(this->F[ind_idx]);
 		for(int j = 0; j < ind_shape[0]; j++){
-			if(j < 512-K){
-				if(j < 512-K - 10 && j >= 512-K - 20){
-					if(r_dist(rng) < th){
-						F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-					}
-					else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}else{
-					if(j < 512-K - 20 && j >= 512-K - 30){
-						if(r_dist(rng) < (float)th/3){
-							F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-						}else{
-							F(idxs[j],idxs[j]) = 0;
-						}
-					}else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}
-				
-			}
-			else
-				F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
+			F(j,j) = this->F[ind_idx][j];
+			//std::cout << this->F[ind_idx][j] << std::endl;
 		}
-		
 		//exit(-1);
 		mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
-		aux = idx1;
 	}
-#if SECOND_MUTATED_FIT
-
-	void DE::currenttorand_modified2(int ind_idx){
-
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, population.size() - 1);
-		std::uniform_real_distribution<float> r_dist(0,1);
-		int idx1 = -1;
-		int idx2 = -1;
-		int idx3 = -1;
-		
-		do {
-			idx1 = dist(rng);
-		}
-		while(idx1 == ind_idx);
-
-		do {
-			idx2 = dist(rng);
-		}
-		while(idx2 == ind_idx || idx2 == idx1);
-
-		do {
-			idx3 = dist(rng);
-		}
-		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
-		Eigen::MatrixXd F(512,512);
-		F.setZero(512,512);
-		float th = 1./3;
-
-		std::vector<int> idxs = sort_idxs(this->F[ind_idx]);
-		for(int j = 0; j < ind_shape[0]; j++){
-			if(j < 512-K){
-				if(j < 512-K - 10 && j >= 512-K - 20){
-					if(r_dist(rng) < th){
-						F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-					}
-					else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}else{
-					if(j < 512-K - 20 && j >= 512-K - 30){
-						if(r_dist(rng) < (float)th/3){
-							F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-						}else{
-							F(idxs[j],idxs[j]) = 0;
-						}
-					}else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}
-				
-			}
-			else
-				F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-		}
-		
-		//exit(-1);
-		mutated_ind2 = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
-		//std::cout << mutated_ind2.cols() << " " << mutated_ind2.rows() << std::endl;
-	}
-#endif
 #else
 #if RAND_TO_BEST_MOD
 	void DE::randtobest_modified(int ind_idx){
@@ -738,54 +641,28 @@ namespace DE{
 #endif
 
 	void DE::bincross(int ind_idx){
+		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> r_dist(0,1);
 		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
 		//std::cout << "passei aqui" << std::endl;
-	
+
 		for(int i = 0; i < population[ind_idx].rows(); i++){
-			float J = dist(rng);
+			
+			//float J = dist(rng);
 			for(int j = 0; j < population[ind_idx].cols(); j++)
 			{
-				//if(r_dist(rng) <= cr || j == J)
-				//{
-					//crossed_ind(i,j) = mutated_ind(i,j);
+			//	if(r_dist(rng) <= cr || j == J)
+			//	{
+			//		mutated_ind(i,j) = mutated_ind(i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
-				//}
-				//else
-				//	mutated_ind(i,j) = population[ind_idx](i,j);
+			//	}
+			//	else
+			//		mutated_ind(i,j) = population[ind_idx](i,j);
 			}
 		}
-	}
-
-	void DE::bincross_modified(int ind_idx){
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> r_dist(0,1);
-		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
-		//std::cout << "passei aqui" << std::endl;
-		crossed_ind.setZero(512,4);
-		for(int i = 0; i < population[ind_idx].rows(); i++){
-			float J = dist(rng);
-			if(r_dist(rng) <= cr || jr == J)
-			{
-				for(int j = 0; j < population[ind_idx].cols(); j++)
-				{
-					crossed_ind(i,j) = mutated_ind(i,j);
-					if(!infeasible)
-						infeasible = is_infeasible(crossed_ind(i,j));
-				}
-			}
-			else{
-				for(int j = 0; j < population[ind_idx].cols(); j++)
-				{
-					crossed_ind(i,j) = population[ind_idx](i,j);
-				}
-			}
-		}
-		//std::cout << crossed_ind.cols() << " " << crossed_ind.rows() << std::endl;
 		
 	}
 
@@ -872,15 +749,13 @@ namespace DE{
 
 	void DE::crossover(int ind_idx){
 		//std::cout << "alsdjoasikl "<<crossover_algorithm << std::endl;
-		switch(3){
+		switch(crossover_algorithm){
 			case 0:
 				bincross(ind_idx); break;
 			case 1:
 				expcross(ind_idx); break;
 			case 2:
 				aritcross(ind_idx); break;
-			case 3:
-				bincross_modified(ind_idx); break;
 		}
 
 	}
@@ -926,17 +801,10 @@ namespace DE{
 		{
 			case 0:
 				uniform_repair_mutated(ind_idx);
-#if SECOND_MUTATED_FIT
-				uniform_repair_mutated2(ind_idx);
-				uniform_repair_crossed(ind_idx);
-#endif
 				break;
 			case 1:
 				weibull_repair(ind_idx);
 				break;
-			case 2:
-				F_repair(ind_idx);
-				break;	
 			default:
 				break;
 		}
@@ -1017,7 +885,6 @@ namespace DE{
 		// int n=0;
 		for(int i = 0; i < mutated_ind.rows(); i++){
 			for(int j = 0; j < mutated_ind.cols(); j++){
-				//std::cout << U << " " << L << std::endl;
 				if(mutated_ind(i,j) > 0){
 					while(mutated_ind(i,j) > U){
 						mutated_ind(i,j) = dist(rng);
@@ -1025,71 +892,6 @@ namespace DE{
 				}else{
 					while(mutated_ind(i,j) < L){
 						mutated_ind(i,j) = -dist(rng);
-					}
-				}
-			}
-		}
-	}
-
-	void DE::uniform_repair_mutated2(int ind_idx){
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> dist(0,24);
-		// int n=0;
-		// /std::cout << mutated_ind2 << std::endl;
-		for(int i = 0; i < mutated_ind2.rows(); i++){
-			for(int j = 0; j < mutated_ind2.cols(); j++){
-				//std::cout << U << " " << L << std::endl;
-				if(mutated_ind2(i,j) > 0){
-					while(mutated_ind2(i,j) > U){
-						mutated_ind2(i,j) = dist(rng);
-					}
-				}else{
-					while(mutated_ind2(i,j) < L){
-						mutated_ind2(i,j) = -dist(rng);
-					}
-				}
-			}
-		}
-	}
-
-	void DE::uniform_repair_crossed(int ind_idx){
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> dist(0,24);
-		// int n=0;
-		for(int i = 0; i < crossed_ind.rows(); i++){
-			for(int j = 0; j < crossed_ind.cols(); j++){
-				//std::cout << U << " " << L << std::endl;
-				if(crossed_ind(i,j) > 0){
-					while(crossed_ind(i,j) > U){
-						crossed_ind(i,j) = dist(rng);
-					}
-				}else{
-					while(crossed_ind(i,j) < L){
-						crossed_ind(i,j) = -dist(rng);
-					}
-				}
-			}
-		}
-	}
-
-	void DE::F_repair(int ind_idx){
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> dist(0,24);
-
-		// int n=0;
-		for(int i = 0; i < mutated_ind.rows(); i++){
-			for(int j = 0; j < mutated_ind.cols(); j++){
-				//std::cout << U << " " << L << std::endl;
-				if(mutated_ind(i,j) > 0){
-					while(mutated_ind(i,j) > U){
-						mutated_ind(i,j) = population[ind_idx](i,j);
-					}
-				}else{
-					while(mutated_ind(i,j) < L){
-						mutated_ind(i,j) = population[ind_idx](i,j);
 					}
 				}
 			}
@@ -1106,98 +908,29 @@ namespace DE{
 #if CURRENT_TO_RAND
 		std::vector<double> F = eval(truncate_individual(ind_shape, mutated_ind));
 		
-#if MEAN_WORST
-		std::vector<double> F1, F2;
-		F1 = F;
-		std::sort(F1.begin(), F1.end(), std::greater<int>());
-#endif
+
 		int mutated_fit = 0;
 		int min = 0;
 		for(int j = 0; j < ind_shape[0]; j++){
 			if(min > F[j])
 				min = F[j];
 		}
-#if MEAN_WORST
-		for(int j = ind_shape[0] - K; j < ind_shape[0]; j++){
-			mutated_fit+= F1[j];
-		}
-		for(int j = 0; j < ind_shape[0]; j++){
-			F[j] = F[j] / min;
-		}
-		mutated_fit /= K;
-#else
+
 		for(int j = 0; j < ind_shape[0]; j++){
 			mutated_fit+= F[j];
 			F[j] = F[j] / min;
 		}
-#endif
 		mutated_fit /= 512;
-
-#if SECOND_MUTATED_FIT
-		currenttorand_modified2(ind_idx);
-		uniform_repair_mutated2(ind_idx);
-		std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
-		std::vector<double> F2 = eval(truncate_individual(ind_shape, mutated_ind2));
-
-
-		int second_mutated_fit = 0;
 		
-		min = 0;
+		std::vector<int> idxs = sort_idxs(F);
+		
 		for(int j = 0; j < ind_shape[0]; j++){
-			if(min > F2[j])
-				min = F2[j];
+			if(j < 512 - K)
+				F[idxs[j]] = 0;
+			//std::cout << F[idxs[j]] << std::endl;
 		}
-		for(int j = 0; j < ind_shape[0]; j++){
-			second_mutated_fit+= F2[j];
-			F2[j] = F2[j] / min;
-		}
-		second_mutated_fit /= 512;
 
-		int cross_fit = 0;
-		min = 0;
-		for(int j = 0; j < ind_shape[0]; j++){
-			if(min > Fcross[j])
-				min = Fcross[j];
-		}
-		for(int j = 0; j < ind_shape[0]; j++){
-			cross_fit+= Fcross[j];
-			Fcross[j] = Fcross[j] / min;
-		}
-		cross_fit /= 512;
-
-
-		//std::cout << mutated_ind << std::endl;
-		if(problem_type == MINIMIZATION){
-			if(mutated_fit < fitness[ind_idx]){
-				this->F[ind_idx] = F;
-				change_counter++;
-				population[ind_idx] = mutated_ind;
-				fitness[ind_idx] = mutated_fit;
-			}
-		}else{
-			//mutated_fit << std::endl;
-			if(mutated_fit > fitness[ind_idx] && mutated_fit > cross_fit && mutated_fit > second_mutated_fit){
-				this->F[ind_idx] = F;
-				change_counter++;
-				population[ind_idx] = mutated_ind;
-				fitness[ind_idx] = mutated_fit;
-			}
-
-			if(cross_fit > fitness[ind_idx] && cross_fit > mutated_fit && cross_fit > second_mutated_fit){
-				this->F[ind_idx] = Fcross;
-				change_counter++;
-				population[ind_idx] = crossed_ind;
-				fitness[ind_idx] = cross_fit;
-			}
-
-			if(second_mutated_fit > fitness[ind_idx] && second_mutated_fit > cross_fit && second_mutated_fit > mutated_fit){
-				this->F[ind_idx] = F2;
-				change_counter++;
-				population[ind_idx] = mutated_ind2;
-				fitness[ind_idx] = second_mutated_fit;
-			}
-		}
-#else
+		
 		//std::cout << mutated_ind << std::endl;
 		if(problem_type == MINIMIZATION){
 			//if(mutated_fit < fitness[ind_idx]){
@@ -1207,7 +940,6 @@ namespace DE{
 				fitness[ind_idx] = mutated_fit;
 			//}
 		}else{
-			//mutated_fit << std::endl;
 			//if(mutated_fit > fitness[ind_idx]){
 				this->F[ind_idx] = F;
 				change_counter++;
@@ -1215,12 +947,6 @@ namespace DE{
 				fitness[ind_idx] = mutated_fit;
 			//}
 		}
-#endif
-
-		
-
-		
-
 #else
 #if RAND_TO_BEST_MOD
 		Eigen::MatrixXd F = eval(truncate_individual(ind_shape, mutated_ind));
@@ -1299,7 +1025,7 @@ namespace DE{
 	}
 
 	bool DE::is_infeasible(){
-		return infeasible||infeasible2||infeasible3;
+		return infeasible;
 	}
 
 #if CURRENT_TO_RAND
