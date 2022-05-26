@@ -371,7 +371,6 @@ namespace DE{
 		
 		//exit(-1);
 		mutated_ind2 = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
-		//std::cout << mutated_ind2.cols() << " " << mutated_ind2.rows() << std::endl;
 	}
 #endif
 #else
@@ -745,12 +744,13 @@ namespace DE{
 		//std::cout << "passei aqui" << std::endl;
 	
 		for(int i = 0; i < population[ind_idx].rows(); i++){
+			
 			float J = dist(rng);
 			for(int j = 0; j < population[ind_idx].cols(); j++)
 			{
 				//if(r_dist(rng) <= cr || j == J)
 				//{
-					//crossed_ind(i,j) = mutated_ind(i,j);
+				//	crossed_ind(i,j) = mutated_ind(i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
 				//}
@@ -758,15 +758,17 @@ namespace DE{
 				//	mutated_ind(i,j) = population[ind_idx](i,j);
 			}
 		}
+		
 	}
 
 	void DE::bincross_modified(int ind_idx){
+		
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> r_dist(0,1);
 		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
 		//std::cout << "passei aqui" << std::endl;
-		crossed_ind.setZero(512,4);
+		crossed_ind.setZero(512,512);
 		for(int i = 0; i < population[ind_idx].rows(); i++){
 			float J = dist(rng);
 			if(r_dist(rng) <= cr || jr == J)
@@ -774,18 +776,17 @@ namespace DE{
 				for(int j = 0; j < population[ind_idx].cols(); j++)
 				{
 					crossed_ind(i,j) = mutated_ind(i,j);
-					if(!infeasible)
-						infeasible = is_infeasible(crossed_ind(i,j));
+						if(!infeasible)
+							infeasible = is_infeasible(crossed_ind(i,j));
 				}
 			}
 			else{
 				for(int j = 0; j < population[ind_idx].cols(); j++)
 				{
-					crossed_ind(i,j) = population[ind_idx](i,j);
+						crossed_ind(i,j) = population[ind_idx](i,j);
 				}
 			}
 		}
-		//std::cout << crossed_ind.cols() << " " << crossed_ind.rows() << std::endl;
 		
 	}
 
@@ -872,7 +873,7 @@ namespace DE{
 
 	void DE::crossover(int ind_idx){
 		//std::cout << "alsdjoasikl "<<crossover_algorithm << std::endl;
-		switch(3){
+		switch(crossover_algorithm){
 			case 0:
 				bincross(ind_idx); break;
 			case 1:
@@ -925,11 +926,7 @@ namespace DE{
 		switch (0)
 		{
 			case 0:
-				uniform_repair_mutated(ind_idx);
-#if SECOND_MUTATED_FIT
-				uniform_repair_mutated2(ind_idx);
-				uniform_repair_crossed(ind_idx);
-#endif
+				uniform_repair(ind_idx);
 				break;
 			case 1:
 				weibull_repair(ind_idx);
@@ -1010,7 +1007,7 @@ namespace DE{
 		
 	}
 
-	void DE::uniform_repair_mutated(int ind_idx){
+	void DE::uniform_repair(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> dist(0,24);
@@ -1025,49 +1022,6 @@ namespace DE{
 				}else{
 					while(mutated_ind(i,j) < L){
 						mutated_ind(i,j) = -dist(rng);
-					}
-				}
-			}
-		}
-	}
-
-	void DE::uniform_repair_mutated2(int ind_idx){
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> dist(0,24);
-		// int n=0;
-		// /std::cout << mutated_ind2 << std::endl;
-		for(int i = 0; i < mutated_ind2.rows(); i++){
-			for(int j = 0; j < mutated_ind2.cols(); j++){
-				//std::cout << U << " " << L << std::endl;
-				if(mutated_ind2(i,j) > 0){
-					while(mutated_ind2(i,j) > U){
-						mutated_ind2(i,j) = dist(rng);
-					}
-				}else{
-					while(mutated_ind2(i,j) < L){
-						mutated_ind2(i,j) = -dist(rng);
-					}
-				}
-			}
-		}
-	}
-
-	void DE::uniform_repair_crossed(int ind_idx){
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> dist(0,24);
-		// int n=0;
-		for(int i = 0; i < crossed_ind.rows(); i++){
-			for(int j = 0; j < crossed_ind.cols(); j++){
-				//std::cout << U << " " << L << std::endl;
-				if(crossed_ind(i,j) > 0){
-					while(crossed_ind(i,j) > U){
-						crossed_ind(i,j) = dist(rng);
-					}
-				}else{
-					while(crossed_ind(i,j) < L){
-						crossed_ind(i,j) = -dist(rng);
 					}
 				}
 			}
@@ -1135,11 +1089,8 @@ namespace DE{
 
 #if SECOND_MUTATED_FIT
 		currenttorand_modified2(ind_idx);
-		uniform_repair_mutated2(ind_idx);
-		std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
 		std::vector<double> F2 = eval(truncate_individual(ind_shape, mutated_ind2));
-
-
+		std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
 		int second_mutated_fit = 0;
 		
 		min = 0;
@@ -1299,7 +1250,7 @@ namespace DE{
 	}
 
 	bool DE::is_infeasible(){
-		return infeasible||infeasible2||infeasible3;
+		return infeasible;
 	}
 
 #if CURRENT_TO_RAND
