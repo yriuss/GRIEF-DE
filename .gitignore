@@ -8,6 +8,6 @@ lib/*
 0.bmp
 1.bmp
 Makefile
-results/
 results_8ab/
 grief_history/*
+local_tests/*

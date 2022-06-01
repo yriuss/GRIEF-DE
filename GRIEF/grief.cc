@@ -53,14 +53,20 @@ namespace cv
 	{
 
 		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-		std::vector<double> evaluation(Eigen::MatrixXd individual){
-			std::vector<double> m;
-			return m;
-		}
+			std::vector<double> evaluation(Eigen::MatrixXd individual){
+				std::vector<double> m;
+				return m;
+			}
+		#elif BIN_CROSS_GENE
+			std::tuple<float, std::vector<float>> evaluation(Eigen::MatrixXd individual){
+				float sum;
+				std::vector<float> gene_fitness;
+				return std::make_tuple(sum, gene_fitness);
+			}
 		#else
-		float evaluation(Eigen::MatrixXd individual){
-			return -1;
-		}
+			float evaluation(Eigen::MatrixXd individual){
+				return -1;
+			}
 		#endif
 
 		Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int K,
@@ -200,6 +206,7 @@ namespace cv
 		std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
 			return std::vector<float>{};
 		}
+
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
 
 			for(int g = 0; g < ng; g++){
@@ -212,16 +219,17 @@ namespace cv
 						repair(i);
 					}
 					selection(i);
+					// check_duplicates();
 					//std::cout << i << std::endl;
 
 				}//exit(-1);
 				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
-				std::cout <<  get_best_fit() << std::endl;
+				std::cout << "Best fitted: " << get_best_fit() << std::endl;
 
 				bfit.emplace_back(get_best_fit());
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
-				// std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
+				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 				
 			}
 		}

@@ -8,17 +8,22 @@
 #include <vector>
 #include <unistd.h>
 #include <fstream>
-#define CURRENT_TO_RAND true
+
+
+#define CURRENT_TO_RAND false
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
 
+#define BIN_CROSS_GENE true
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
+	typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
+#elif BIN_CROSS_GENE
+	typedef std::tuple<float, std::vector<float>>(*EvalFunction)(Eigen::MatrixXd);
 #else
-typedef float(*EvalFunction)(Eigen::MatrixXd);
+	typedef float(*EvalFunction)(Eigen::MatrixXd);
 #endif
 
 
@@ -41,12 +46,13 @@ namespace DE {
 #define CURRENT_TO_RAND_1 6
 
 /* DEFINITION OF CROSSOVER ALGORITHM */
-#define BIN 3
-#define EXP 1
-#define ARIT 2
+#define EXP   1
+#define ARIT  2
+#define BIN   3
+#define BIN_G 4
 
 #define OPPOSITION_LEARNING false
-#define ROUND_ON_MUTATION  true
+#define ROUND_ON_MUTATION   false
 	
 	class DE{
 
@@ -95,66 +101,106 @@ namespace DE {
 
 			void read_individuals(int n_of_individuals);
 
-#if CURRENT_TO_RAND
-#if SECOND_MUTATED_FIT
-			void uniform_repair_mutated2(int ind_idx);
-			void uniform_repair_crossed(int ind_idx);
 
-			void currenttorand_modified2(int ind_idx);
-#endif
-			void currenttorand_modified(int ind_idx);
-#else
-#if RAND_TO_BEST_MOD
-			void randtobest_modified(int ind_idx);
-#else
-			
-			void rand_1(int ind_idx);
-			void rand_2(int ind_idx);
-			void randtobest_1(int ind_idx);
-			void best_1(int ind_idx);
-			void best_2(int ind_idx);
-			void currenttobest_1(int ind_idx);
-			void currenttorand_1(int ind_idx);
-#endif
-#endif
+			#if BIN_CROSS_GENE
+				
+				float normalize(float x, float min, float max);
+				void  bincrossnorm(int ind_idx);
+
+			#endif
+
+
+			#if CURRENT_TO_RAND
+
+				#if SECOND_MUTATED_FIT
+
+					void uniform_repair_mutated2(int ind_idx);
+					void uniform_repair_crossed(int ind_idx);
+
+					void currenttorand_modified2(int ind_idx);
+
+				#endif
+
+					void currenttorand_modified(int ind_idx);
+
+			#else
+				#if RAND_TO_BEST_MOD
+
+					void randtobest_modified(int ind_idx);
+
+				#else
+					
+					void rand_1(int ind_idx);
+					void rand_2(int ind_idx);
+					void randtobest_1(int ind_idx);
+					void best_1(int ind_idx);
+					void best_2(int ind_idx);
+					void currenttobest_1(int ind_idx);
+					void currenttorand_1(int ind_idx);
+
+				#endif
+			#endif
+
+
 		private:
+
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
-#if SECOND_MUTATED_FIT
-			Eigen::MatrixXd mutated_ind2;
-#endif
+
+			#if SECOND_MUTATED_FIT
+				Eigen::MatrixXd mutated_ind2;
+			#endif
+
 			Eigen::MatrixXd crossed_ind;
 			std::vector<Eigen::MatrixXd> population;
-			std::vector<Eigen::MatrixXd> opposite_population;
-			
-			std::vector<float> opposite_fitness;
+
+			#if OPPOSITION_LEARNING
+				std::vector<Eigen::MatrixXd> opposite_population;
+				std::vector<float> opposite_fitness;
+			#endif
+
+			#if OPPOSITION_LEARNING && BIN_CROSS_GENE
+				std::vector<vector<float>> opposite_gene_fitness;
+			#endif
+
 			// std::vector<float> ;
 			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;
 			std::vector<int> sort_idxs(std::vector<double> v);
-#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+
+			#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
 			
-			//std::vector<Eigen::MatrixXd> F;
-			float K = 10;
-			std::vector<std::vector<double>> F;
-			float F_mut;
-			std::vector<float> fitness;
-			std::vector<float> fitness_aux;
-#else
+				//std::vector<Eigen::MatrixXd> F;
+				float K = 10;
+				std::vector<std::vector<double>> F;
+				float F_mut;
+				std::vector<float> fitness;
+				std::vector<float> fitness_aux;
 
-			float F;
-			std::vector<float> fitness;
+			#else
 
-#endif
+				float F;
+				std::vector<float> fitness;
+
+			#endif
+
+			#if BIN_CROSS_GENE
+				
+				std::vector<std::vector<float>> gene_fitness;
+
+			#endif
+
 			uint change_counter = 0;
 			// float jr;
 			bool problem_type;
 			bool infeasible = false;
-#if SECOND_MUTATED_FIT
-			bool infeasible2 = false;
-			bool infeasible3 = false;
-#endif
+			
+			#if SECOND_MUTATED_FIT
+				bool infeasible2 = false;
+				bool infeasible3 = false;
+			#endif
+
 			int U;
 			int aux;
 			int L;

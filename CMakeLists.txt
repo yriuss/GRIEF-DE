@@ -7,6 +7,7 @@ project (GRIEF_proj C CXX)
 # enable_language(CUDA)
 
 include(CheckLanguage)
+set(CMAKE_CXX_STANDARD 17)
 
 find_package(PythonLibs REQUIRED)
 find_package(OpenCV REQUIRED)
