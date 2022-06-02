@@ -210,16 +210,28 @@ namespace cv
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
 
 			for(int g = 0; g < ng; g++){
+				std::cout << "Generation: " << g+1 << std::endl;
 				auto start = std::chrono::high_resolution_clock::now();
 				set_change_counter(0);
 				for(int i = 0; i < N_pop; i++){
+
+					// std::cout << "	[    ] mutate...";
 					mutate(i);
+					// std::cout << "\r	[ Ok ] mutate..." << std::endl;
+					
+					// std::cout << "	[    ] crossover...";
 					crossover(i);
+					// std::cout << "\r	[ Ok ] crossover..." << std::endl;
+
 					if(is_infeasible()){
 						repair(i);
 					}
+
+					// std::cout << "	[    ] selection...";
 					selection(i);
-					// check_duplicates();
+					// std::cout << "\r	[ Ok ] selection..." << std::endl;
+
+					check_duplicates();
 					//std::cout << i << std::endl;
 
 				}//exit(-1);

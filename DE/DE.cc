@@ -882,52 +882,52 @@ namespace DE{
 	
 	#endif
 	
+	#if BIN_CROSS_GENE
 
-	float DE::normalize(float x, float min, float max)
-	{
-		return (x - min) / (max - min);
-	}
-
-	void DE::bincrossnorm(int ind_idx)
-	{
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_real_distribution<float> r_dist(0,1);
-		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 1);
-		
-		std::vector<float> norm_fitness;
-		norm_fitness.reserve(N_pop);
-
-		auto minmax = std::minmax_element(gene_fitness[ind_idx].begin(), gene_fitness[ind_idx].end());
-
-		for (int i; i < gene_fitness[ind_idx].size(); i++)
-			norm_fitness[i] = normalize(gene_fitness[ind_idx][i], *minmax.first, *minmax.second);
-
-
-		float J = dist(rng);
-		for (int i = 0; i < population[ind_idx].cols(); i++){
-			
-			/* 
-			 * norm_fitness[i] have the normalised fitness of each
-			 * gene in an individual. In that case, the normalised
-			 * value replaces te standard Cr and the crossover 
-			 * probabilitie is adjusted acordingly to the fitness of
-			 * an individual's gene.
-			*/
-
-			if( !(r_dist(rng) <= norm_fitness[i] || J == i) )
-			{
-				mutated_ind(i) = population[ind_idx](i);
-				for(int j = 0; j < population[ind_idx].cols(); j++){
-					if(!infeasible)
-						infeasible = is_infeasible(mutated_ind(i,j));
-				}
-			}
-
+		float DE::normalize(float x, float min, float max)
+		{
+			return (x - min) / (max - min);
 		}
 
+		void DE::bincrossnorm(int ind_idx)
+		{
+			std::random_device rseed;
+			std::mt19937 rng(rseed());
+			std::uniform_real_distribution<float> r_dist(0,1);
+			std::uniform_int_distribution<int> dist(0, ind_shape[1] - 1);
+			
+			std::vector<float> norm_fitness;
+			norm_fitness.reserve(N_pop);
 
-	}
+			auto minmax = std::minmax_element(gene_fitness[ind_idx].begin(), gene_fitness[ind_idx].end());
+
+			for (int i; i < 512; i++)
+				norm_fitness[i] = normalize(gene_fitness[ind_idx][i], *minmax.first, *minmax.second);
+
+
+			float J = dist(rng);
+			for (int i = 0; i < population[ind_idx].rows(); i++){
+				
+				/* 
+				* norm_fitness[i] have the normalised fitness of each
+				* gene in an individual. In that case, the normalised
+				* value replaces te standard Cr and the crossover 
+				* probabilitie is adjusted acordingly to the fitness of
+				* an individual's gene.
+				*/
+
+				if( !(r_dist(rng) <= norm_fitness[i] || J == i) )
+				{
+					mutated_ind(i) = population[ind_idx](i);
+					for(int j = 0; j < population[ind_idx].cols(); j++){
+						if(!infeasible)
+							infeasible = is_infeasible(mutated_ind(i,j));
+					}
+				}
+			}
+		}
+
+	#endif
 
 	void DE::bincross(int ind_idx)
 	{
@@ -1084,8 +1084,11 @@ namespace DE{
 				aritcross(ind_idx); break;
 			case 3:
 				bincross_modified(ind_idx); break;
-			case 4:
-				bincrossnorm(ind_idx); break;
+	
+			#if BIN_CROSS_GENE
+				case 4:
+					bincrossnorm(ind_idx); break;
+			#endif
 		}
 
 	}
@@ -1161,9 +1164,6 @@ namespace DE{
 
 	void DE::check_duplicates()
 	{
-				
-		std::cout << "Checking duplicates..." << std::endl;
-
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
 		std::uniform_int_distribution<int> dist(-24,24);
@@ -1198,7 +1198,6 @@ namespace DE{
 			
 			}
 		}
-		std::cout << "[ ok ] Checking duplicates..." << std::endl;
 	}
 
 	void DE::weibull_repair(int ind_idx)
@@ -1499,8 +1498,7 @@ namespace DE{
 						std::vector<float> gene_fit_vec;
 						gene_fit_vec.reserve(N_pop);
 
-						std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, mutated_ind));
-						
+						std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, mutated_ind));						
 						float mutated_fit = fit;
 					#else
 						float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	
@@ -1508,7 +1506,7 @@ namespace DE{
 				#endif
 
 				//std::cout << ind_idx << std::endl;	
-				if(problem_type == MINIMIZATION){
+				if (problem_type == MINIMIZATION){
 					if(mutated_fit < fitness[ind_idx]){
 						change_counter++;
 						population[ind_idx] = mutated_ind;
@@ -1518,7 +1516,8 @@ namespace DE{
 							gene_fitness[ind_idx] = gene_fit_vec;
 						#endif
 					} 
-				}else{
+				}
+				else{
 					if(mutated_fit > fitness[ind_idx]){
 						change_counter++;
 						population[ind_idx] = mutated_ind;

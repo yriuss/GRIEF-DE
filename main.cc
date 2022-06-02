@@ -1112,9 +1112,18 @@ int main(int argc, char ** argv){
 	//}
 
     for(int i = 0; i < atoi((argv[3])); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval_norm, 5, K);
+    	// std::cout << "[    ]Creating individuals..." << std::endl;
+		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval_norm, 4, K);
+    	// std::cout << "\r[ Ok ]Creating individuals..." << std::endl;
+
+    	// std::cout << "[    ] Evolving..." << std::endl;
 		grief_descriptor->evolve(atoi((argv[2])));
+    	// std::cout << "[ Ok ] Evolving..." << std::endl;
+
+		// std::cout << "[    ] Saving results..." << std::endl;
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
+		// std::cout << "[ Ok ] Saving results..." << std::endl;
+
 	}
     return 0;
 }
