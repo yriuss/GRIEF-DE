@@ -12,23 +12,24 @@
 
 #define CURRENT_TO_RAND false
 #define READ_BEST_IND false
-#define RAND_TO_BEST_MOD false
+#define RAND_TO_BEST_MOD true
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
-
+ 
 #define BIN_CROSS_GENE true
 
-#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+#if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
+	typedef void (*EvalFunction)(Eigen::MatrixXd, std::vector<double> &, std::vector<float> &);
+#elif CURRENT_TO_RAND || RAND_TO_BEST_MOD
 	typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
 #elif BIN_CROSS_GENE
-	typedef std::tuple<float, std::vector<float>>(*EvalFunction)(Eigen::MatrixXd);
+	typedef void (*EvalFunction)(Eigen::MatrixXd, float &, std::vector<float> &);
 #else
 	typedef float(*EvalFunction)(Eigen::MatrixXd);
 #endif
 
 
 namespace DE {
-
 
 
 /* DEFINITION OF PROBLEM TYPE */
@@ -116,7 +117,6 @@ namespace DE {
 
 					void uniform_repair_mutated2(int ind_idx);
 					void uniform_repair_crossed(int ind_idx);
-
 					void currenttorand_modified2(int ind_idx);
 
 				#endif
@@ -169,7 +169,7 @@ namespace DE {
 			float cr;
 			std::vector<int> sort_idxs(std::vector<double> v);
 
-			#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+			#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
 			
 				//std::vector<Eigen::MatrixXd> F;
 				float K = 10;
@@ -185,8 +185,9 @@ namespace DE {
 
 			#endif
 
-			#if BIN_CROSS_GENE
-				
+
+			#if BIN_CROSS_GENE				
+
 				std::vector<std::vector<float>> gene_fitness;
 
 			#endif

@@ -492,7 +492,7 @@ float eval1(Eigen::MatrixXd individual)
     return sum;
 }
 
-std::tuple<float, std::vector<float>> eval_norm(Eigen::MatrixXd individual)
+void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec)
 {
 	
 	auto start = std::chrono::high_resolution_clock::now();
@@ -655,23 +655,22 @@ std::tuple<float, std::vector<float>> eval_norm(Eigen::MatrixXd individual)
 	}
 	
 	int sum = 0;
-	std::vector<float> gene_fitness;
-	gene_fitness.reserve(512);
+	// std::vector<float> gene_fitness;
+	// gene_fitness.reserve(512);
 
 	for (int i = 0;i<griefDescriptorLength;i++){
-		gene_fitness[i] = griefRating[i].value;
+		gene_fit_vec.emplace_back(griefRating[i].value);
 		sum+=griefRating[i].value;
 	}
 
 	sum=sum/griefDescriptorLength;
+	*(&fit) = (float) sum;
 
 	std::cout << "fitness is " << (float)sum << std::endl;
-	// auto finish = std::chrono::high_resolution_clock::now();
-	// std::chrono::duration<double, std::milli> elapsed = finish - start;
-	// std::cout << "elapsed time: " << elapsed.count() << std::endl;
-	//std::cout << "-";
-	
-    return std::make_tuple(sum, gene_fitness);
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "elapsed time: " << elapsed.count() << std::endl;
+
 }
 
 Eigen::MatrixXd eval2(Eigen::MatrixXd individual)
@@ -815,6 +814,149 @@ Eigen::MatrixXd eval2(Eigen::MatrixXd individual)
     return result;
 }
 
+void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector<float> &gene_fit_vec)
+{
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	Ptr<cv::ORB> detector = cv::ORB::create(1600);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
+	
+	descriptor->setInd(individual);
+	for (int i = 0;i<1024;i++){
+		griefRating[i].value=0;
+		griefRating[i].id=i;
+	}
+	std::vector<cv::DMatch> matches;
+	
+
+	int matchingTests = 0;
+	int matchingFailures = 0;
+	
+	int i1,i2;
+	
+	bool supervised = true;
+	
+
+	
+	for (int location = 0;location<numLocations;location++){
+			
+		// detecting keypoints and generating descriptors
+		Mat cpu_descriptors[numSeasons];
+		vector<KeyPoint> keypoints[numSeasons];
+		KeyPoint kp;
+		//std::cout << numSeasons <<std::endl;
+		
+		for (int i = 0;i<numSeasons;i++){
+			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
+			
+			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
+			//Mat a;
+			//descriptors[i].download(a);
+			//std::cout << "a" << std::endl;
+			//exit(-1);
+			//std::cout << cpu_descriptors[i];
+			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
+			//std::cout << cpu_descriptors[i].row(1599);
+			//exit(-1);
+			
+		}
+		
+		
+		
+		
+		// matching the extracted features
+		for (int ik = 0;ik<numSeasons;ik++){
+			for (int jk = ik+1;jk<numSeasons;jk++){
+				matches.clear();
+				/*if not empty*/
+				
+				if (cpu_descriptors[ik].rows*cpu_descriptors[jk].rows > 0) distinctiveMatch(cpu_descriptors[ik], cpu_descriptors[jk], matches, CROSSCHECK);
+				
+				/*are there any tentative correspondences ?*/
+				int sumDev = 0;
+				int numPoints = 0;
+
+				int histMax = 0;
+				int auxMax=0;
+				int manualDir = 0; 
+				int histDir = 0;
+				int numBins = 100; 
+				int granularity = 20;
+				int maxS = 0;
+				int domDir = 0;
+				int histogram[numBins];
+				int bestHistogram[numBins];
+				vector<unsigned char> mask;
+				
+				if (matches.size() > 0){
+					
+					manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
+					
+					float realDir = manualDir;
+					int strength = 1;
+					if (matchFail) matchingFailures++;
+					matchingTests++;
+
+					/*rate individual comparisons*/
+					for( size_t i = 0; i < matches.size(); i++ ){
+						char eff = 0;
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((abs(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x-realDir)< 35 ) && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
+						{
+							eff = -strength;
+						}else{
+							eff = +strength;
+						}
+						for (int o = 0;o<griefDescriptorLength/8;o++){
+							unsigned char b = cpu_descriptors[ik].at<uchar>(i1,o)^cpu_descriptors[jk].at<uchar>(i2,o);
+							unsigned char oo = 128;
+							for (int p = 0;p<8;p++){
+								if (oo&b)  griefRating[8*o+p].value+=eff; else griefRating[8*o+p].value-=eff;
+								oo=oo/2;
+							}
+						}
+					}
+					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
+				}else{
+					matchFail = true;
+				}
+				
+				
+				//end drawing
+			}
+			
+		}
+		//exit(-1);
+		
+	}
+
+	// Eigen::MatrixXd result(512, 512);
+	// result.setZero(512,512);
+
+	// std::vector<float> gene_fitness;
+	// gene_fitness.reserve(512);
+
+	int sum = 0;
+	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+
+	for (int i = 0;i<griefDescriptorLength;i++){
+		 result(i,i) = griefRating[i].value;
+		 gene_fit_vec.emplace_back(griefRating[i].value);
+		 sum+=result(i,i);
+	}
+	sum=sum/griefDescriptorLength;
+
+	std::cout << "fitness is " << sum << std::endl;
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "elapsed time: " << elapsed.count() << std::endl;
+	//std::cout << "-";
+    // return std::make_tuple(result, gene_fitness);
+}
 
 std::vector<double> eval3(Eigen::MatrixXd individual)
 {
@@ -954,6 +1096,152 @@ std::vector<double> eval3(Eigen::MatrixXd individual)
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
 	//std::cout << "-";
     return result;
+}
+
+void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector<float> &gene_fit_vec)
+{
+	
+	auto start = std::chrono::high_resolution_clock::now();
+	Ptr<cv::ORB> detector = cv::ORB::create(1600);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
+
+	descriptor->setInd(individual);
+
+	for (int i = 0;i<1024;i++){
+		griefRating[i].value=0;
+		griefRating[i].id=i;
+	}
+	std::vector<cv::DMatch> matches;
+	
+	int matchingTests = 0;
+	int matchingFailures = 0;
+	
+	int i1,i2;
+	
+	bool supervised = true;
+	
+
+	
+	for (int location = 0;location<numLocations;location++){
+			
+		// detecting keypoints and generating descriptors
+		Mat cpu_descriptors[numSeasons];
+		vector<KeyPoint> keypoints[numSeasons];
+		KeyPoint kp;
+		//std::cout << numSeasons <<std::endl;
+		
+		for (int i = 0;i<numSeasons;i++){
+			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
+			
+			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
+			//Mat a;
+			//descriptors[i].download(a);
+			//std::cout << "a" << std::endl;
+			//std::cout << cpu_descriptors[i];
+			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
+			//std::cout << cpu_descriptors[i].row(1599);
+			//exit(-1);
+			
+		}
+		
+		// matching the extracted features
+		for (int ik = 0;ik<numSeasons;ik++){
+			for (int jk = ik+1;jk<numSeasons;jk++){
+				matches.clear();
+				/*if not empty*/
+				
+				if (cpu_descriptors[ik].rows*cpu_descriptors[jk].rows > 0) distinctiveMatch(cpu_descriptors[ik], cpu_descriptors[jk], matches, CROSSCHECK);
+				
+				/*are there any tentative correspondences ?*/
+				int sumDev = 0;
+				int numPoints = 0;
+
+				int histMax = 0;
+				int auxMax=0;
+				int manualDir = 0; 
+				int histDir = 0;
+				int numBins = 100; 
+				int granularity = 20;
+				int maxS = 0;
+				int domDir = 0;
+				int histogram[numBins];
+				int bestHistogram[numBins];
+				vector<unsigned char> mask;
+				
+				if (matches.size() > 0){
+					
+					manualDir = offsetX[location+ik*numLocations] - offsetX[location+jk*numLocations];
+					
+					float realDir = manualDir;
+					int strength = 1;
+					if (matchFail) matchingFailures++;
+					matchingTests++;
+
+					/*rate individual comparisons*/
+					for( size_t i = 0; i < matches.size(); i++ ){
+						char eff = 0;
+						int i1 = matches[i].queryIdx;
+						int i2 = matches[i].trainIdx;
+						if ((abs(keypoints[ik][i1].pt.x-keypoints[jk][i2].pt.x-realDir)< 35 ) && fabs(keypoints[ik][i1].pt.y-keypoints[jk][i2].pt.y)<VERTICAL_LIMIT)
+						{
+							eff = -strength;
+						}else{
+							eff = +strength;
+						}
+						for (int o = 0;o<griefDescriptorLength/8;o++){
+							unsigned char b = cpu_descriptors[ik].at<uchar>(i1,o)^cpu_descriptors[jk].at<uchar>(i2,o);
+							unsigned char oo = 128;
+							for (int p = 0;p<8;p++){
+								if (oo&b)  griefRating[8*o+p].value+=eff; else griefRating[8*o+p].value-=eff;
+								oo=oo/2;
+							}
+						}
+					}
+					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
+				}else{
+					matchFail = true;
+				}
+				
+				
+				//end drawing
+			}			
+		}
+		//exit(-1);
+		
+	}
+
+
+	// std::vector<double> result;
+	// std::vector<float> gene_fitness_vec;
+	// gene_fitness_vec.reserve(512);
+
+
+	int sum = 0;
+	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
+
+	// std::cout << "				[      ] populating results and gene_fitness" << std::endl;
+	for (int i = 0;i<griefDescriptorLength;i++){
+		//  result.push_back(griefRating[i].value);
+		 fit.push_back(griefRating[i].value);
+		 gene_fit_vec.push_back(griefRating[i].value);
+		 sum+=fit[i];
+	}
+	// std::cout << "				[ pass ] populating results and gene_fitness" << std::endl;
+
+
+	sum=sum/griefDescriptorLength;
+
+	std::cout << "fitness is " << sum << std::endl;
+	auto finish = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double, std::milli> elapsed = finish - start;
+	std::cout << "elapsed time: " << elapsed.count() << std::endl;
+	//std::cout << "-";
+	// std::cout << "				[ pass ] eval3norm called" << std::endl;
+
+	// std::cout << "				[  ok  ] Returning...\n" << std::endl;
+	// return {result, gene_fitness_vec};
 }
 
 void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, std::vector<float> change_percentage)
@@ -1112,18 +1400,9 @@ int main(int argc, char ** argv){
 	//}
 
     for(int i = 0; i < atoi((argv[3])); i++){
-    	// std::cout << "[    ]Creating individuals..." << std::endl;
-		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval_norm, 4, K);
-    	// std::cout << "\r[ Ok ]Creating individuals..." << std::endl;
-
-    	// std::cout << "[    ] Evolving..." << std::endl;
+		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 5, K);
 		grief_descriptor->evolve(atoi((argv[2])));
-    	// std::cout << "[ Ok ] Evolving..." << std::endl;
-
-		// std::cout << "[    ] Saving results..." << std::endl;
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
-		// std::cout << "[ Ok ] Saving results..." << std::endl;
-
 	}
     return 0;
 }

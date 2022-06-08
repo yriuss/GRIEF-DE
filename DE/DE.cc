@@ -27,7 +27,7 @@ namespace DE{
 	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, float jr, EvalFunction evaluation, float F, 
 			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm, int K): mutated_ind(ind_shape[0], ind_shape[1] ){
 
-		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+		#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
 
 			//Initialize population
 			if(N_pop > 0){
@@ -37,10 +37,8 @@ namespace DE{
 				fitness.reserve(N_pop);
 				fitness_aux.reserve(N_pop);
 
-				#if BIN_CROSS_GENE
-			
-					gene_fitness.reserve(N_pop);
-			
+				#if BIN_CROSS_GENE			
+					this->gene_fitness.reserve(N_pop);			
 				#endif
 
 				//best_fitness.reserve(N_pop);
@@ -57,28 +55,30 @@ namespace DE{
 					#if ROUND_ON_MUTATION
 
 						#if BIN_CROSS_GENE
-							float fit;
+							std::vector<double> fit;							
 							std::vector<float> gene_fit_vec;
-							gene_fit_vec.reserve(N_pop);
+							// gene_fit_vec.reserve(ind_shape[0]);
+							// fit.reserve(N_pop);
 
-							std::tie(fit, gene_fit_vec) = eval(population[i]);
+							// std::tie(fit, gene_fit_vec) = eval(population[i]);
+							eval(population[i], fit, gene_fit_vec);
 
 							this->F.emplace_back(fit); 
-							gene_fitness[i] = gene_fit_vec;
+							this->gene_fitness.emplace_back(gene_fit_vec);
 						#else
 							this->F.emplace_back(eval(population[i]));
 						#endif
 
 					#else
 						#if BIN_CROSS_GENE
-							float fit;
+							std::vector<double> fit;
 							std::vector<float> gene_fit_vec;
-							gene_fit_vec.reserve(N_pop);
-
-							std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[i]);
-
+							// gene_fit_vec.reserve(512);
+							// fit.reserve(N_pop);
+							eval(truncate_individual(ind_shape, population[i]), fit, gene_fit_vec);
+							// std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[i]));
 							this->F.emplace_back(fit); 
-							gene_fitness[i]) = gene_fit_vec;
+							this->gene_fitness.emplace_back(gene_fit_vec);
 						#else
 							this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 						#endif
@@ -127,8 +127,8 @@ namespace DE{
 										
 					this->fitness.emplace_back(fitness);
 					
-				}
-				
+				}				
+								
 				this->cr = cr;
 				this->jr = jr;
 				this->F_mut = F;
@@ -153,7 +153,7 @@ namespace DE{
 
 				#if BIN_CROSS_GENE
 			
-					gene_fitness.reserve(N_pop);
+					this->gene_fitness.reserve(N_pop);
 			
 				#endif
 
@@ -168,16 +168,48 @@ namespace DE{
 						#if BIN_CROSS_GENE
 							float fit;
 							std::vector<float> gene_fit_vec;
-							gene_fit_vec.reserve(N_pop);
+							// gene_fit_vec.reserve(ind_shape[0]);
 
-							std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[i]));
+							// std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[i]));
+							eval(truncate_individual(ind_shape, population[i]), fit, gene_fit_vec);
 
 							fitness.emplace_back(fit);
 							gene_fitness[i] = gene_fit_vec;
 						#else
 							fitness.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 						#endif
-					}
+						
+							// std::cout << "[ sizeee ] " << gene_fit_vec.size() << std::endl;
+							// std::cout << "[ std::cout << "[ sizeee ] " << gene_fit_vec.size() << std::endl;
+							// std::cout << "[ IMPRIMINDO FIT ] " << std::endl;
+							
+							// for(int k = 0; k<512; k++)
+							// 	std::cout << gene_fit_vec[k] << " ";
+							
+							// std::cout << "[ IMPRIMINDO FIT - OK ] \n\n" << std::endl::cout << "[ sizeee ] " << gene_fit_vec.size() << std::endl;
+							// std::cout << "[ IMPRIMINDO FIT ] " << std::endl;
+							
+							// for(int k = 0; k<512; k++)
+							// 	std::cout << gene_fit_vec[k] << " ";
+							
+							// std::cout << "[ IMPRIMINDO FIT - OK ] \n\n" << std::endlIMINDO FIT ] " << std::endl;
+							
+							// for(int k = 0; k<512; k++)
+							// 	std::cout << gene_fit_vec[k] << " ";
+							
+							// std::cout << "[ IMPRIMINDO FIT - OK ] \n\n" << std::endlstd::cout << "[ sizeee ] " << gene_fit_vec.size() << std::endl;
+							// std::cout << "[ IMPRIMINDO FIT ] " << std::endl;
+							
+							// for(int k = 0; k<512; k++)
+							// 	std::cout << gene_fit_vec[k] << " ";
+							
+							// std::cout << "[ IMPRIMINDO FIT - OK ] \n\n" << std::endlene_fit_vec.size() << std::endl;
+							// std::cout << "[ IMPRIMINDO FIT ] " << std::endl;
+							
+							// for(int k = 0; k<512; k++)
+							// 	std::cout << gene_fit_vec[k] << " ";
+							
+							// std::cout << "[ IMPRIMINDO FIT - OK ] \n\n" << std::endl
 
 				#else
 
@@ -188,9 +220,10 @@ namespace DE{
 							#if BIN_CROSS_GENE
 								float fit;
 								std::vector<float> gene_fit_vec;
-								gene_fit_vec.reserve(N_pop);
+								// gene_fit_vec.reserve(ind_shape[0]);
 
-								std::tie(fit, gene_fit_vec) = eval(population[i]);
+								// std::tie(fit, gene_fit_vec) = eval(population[i]);
+								eval(ind_shape, population[i], fit, gene_fit_vec);
 
 								fitness.emplace_back(fit);
 								gene_fitness[i] = gene_fit_vec;
@@ -201,9 +234,10 @@ namespace DE{
 							#if BIN_CROSS_GENE
 								float fit;
 								std::vector<float> gene_fit_vec;
-								gene_fit_vec.reserve(N_pop);
+								// gene_fit_vec.reserve(ind_shape[0]);
 
-								std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[i]));
+								// std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[i]));
+								eval(truncate_individual(ind_shape, population[i]), fit, gene_fit_vec);
 
 								fitness.emplace_back(fit);
 								gene_fitness[i] = gene_fit_vec;
@@ -244,9 +278,10 @@ namespace DE{
 
 			float fit;
 			std::vector<float> gene_fit_vec;
-			gene_fit_vec.reserve(N_pop);
+			// gene_fit_vec.reserve(ind_shape[0]);
 
-			std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[ind_idx]));
+			// std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, population[ind_idx]));
+			eval(truncate_individual(ind_shape, population[ind_idx]), fit, gene_fit_vec);
 
 			fitness[ind_idx] = fit; 
 			gene_fitness[ind_idx] = gene_fit_vec;  
@@ -366,10 +401,11 @@ namespace DE{
 					#if BIN_CROSS_GENE
 						float fit;
 						std::vector<float> gene_fit_vec;
-						gene_fit_vec.reserve(N_pop);
+						// gene_fit_vec.reserve(ind_shape[0]);
 
-						std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, opposite_population[i]));
-
+						// std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, opposite_population[i]));
+						eval(truncate_individual(ind_shape, opposite_population[i]), fit, gene_fit_vec);
+						
 						opposite_fitness.emplace_back(fit);
 						opposite_gene_fitness[i] = gene_fit_vec;
 					#else
@@ -614,7 +650,6 @@ namespace DE{
 						}
 
 					#endif
-					// std::cout << "[ OK ]" << std::endl;
 
 				}
 			
@@ -894,16 +929,17 @@ namespace DE{
 			std::random_device rseed;
 			std::mt19937 rng(rseed());
 			std::uniform_real_distribution<float> r_dist(0,1);
-			std::uniform_int_distribution<int> dist(0, ind_shape[1] - 1);
+			std::uniform_int_distribution<int> dist(0, ind_shape[0] - 1);
 			
 			std::vector<float> norm_fitness;
-			norm_fitness.reserve(N_pop);
+			norm_fitness.reserve(512);
 
-			auto minmax = std::minmax_element(gene_fitness[ind_idx].begin(), gene_fitness[ind_idx].end());
-
-			for (int i; i < 512; i++)
-				norm_fitness[i] = normalize(gene_fitness[ind_idx][i], *minmax.first, *minmax.second);
-
+			std::vector<float> fitness_vector = gene_fitness[ind_idx];			
+			
+			auto minmax = std::minmax_element(fitness_vector.begin(), fitness_vector.end());
+			
+			for (int i=0; i < 512; i++)
+				norm_fitness[i] = normalize(fitness_vector[i], *minmax.first + 10, *minmax.second + 10);
 
 			float J = dist(rng);
 			for (int i = 0; i < population[ind_idx].rows(); i++){
@@ -1328,8 +1364,32 @@ namespace DE{
 
 		#if CURRENT_TO_RAND
 			
-			std::vector<double> F = eval(truncate_individual(ind_shape, mutated_ind));
+			#if BIN_CROSS_GENE
+				float fit;
+				std::vector<float> gene_fit_vec;
+				std::vector<double> F;
+				// gene_fit_vec.reserve(ind_shape[0]);
+				// F.reserve(N_pop);
+				// F.reserve(ind_shape[0]);
+
+				// std::cout << "			[     ] CTR BCG" << std::endl;
+
+				// std::tie(F, gene_fit_vec) = eval(truncate_individual(ind_shape, mutated_ind));
+				eval(truncate_individual(ind_shape, mutated_ind), F, gene_fit_vec);
 				
+				// for (int i = 0; i < 512; i++)
+				// 	std::cout << " CTR BCG " << gene_fit_vec[i];
+
+
+				// std::cout << "\n			[ pass ] CTR BCG" << std::endl;
+				// exit(-1);
+
+			#else
+
+				std::vector<double> F = eval(truncate_individual(ind_shape, mutated_ind));
+
+			#endif
+
 			#if MEAN_WORST
 				std::vector<double> F1, F2;
 				F1 = F;
@@ -1367,10 +1427,27 @@ namespace DE{
 
 			#if SECOND_MUTATED_FIT
 
-				currenttorand_modified2(ind_idx);
-				uniform_repair_mutated2(ind_idx);
-				std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
-				std::vector<double> F2 = eval(truncate_individual(ind_shape, mutated_ind2));
+				#if BIN_CROSS_GENE
+					currenttorand_modified2(ind_idx);
+					uniform_repair_mutated2(ind_idx);
+					std::vector<double> Fcross;
+					std::vector<double> F2;
+					std::vector<float> gene_fit_vec_c2;
+					std::vector<float> gene_fit_vec_m2;
+
+					// std::tie(Fcross, gene_fit_vec_c2) = eval(truncate_individual(ind_shape, crossed_ind));
+					// std::tie(F2, gene_fit_vec_m2) = eval(truncate_individual(ind_shape, mutated_ind2));
+					eval(truncate_individual(ind_shape, crossed_ind), Fcross, gene_fit_vec_c2);
+					eval(truncate_individual(ind_shape, mutated_ind2), F2, gene_fit_vec_m2);
+					
+					
+
+				#else
+					currenttorand_modified2(ind_idx);
+					uniform_repair_mutated2(ind_idx);
+					std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
+					std::vector<double> F2 = eval(truncate_individual(ind_shape, mutated_ind2));
+				#endif
 
 				int second_mutated_fit = 0;
 				
@@ -1404,6 +1481,10 @@ namespace DE{
 						change_counter++;
 						population[ind_idx] = mutated_ind;
 						fitness[ind_idx] = mutated_fit;
+						
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec;
+						#endif
 					}
 				}else{
 					//mutated_fit << std::endl;
@@ -1412,6 +1493,10 @@ namespace DE{
 						change_counter++;
 						population[ind_idx] = mutated_ind;
 						fitness[ind_idx] = mutated_fit;
+						
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec;
+						#endif
 					}
 
 					if(cross_fit > mutated_fit && cross_fit > second_mutated_fit){
@@ -1419,6 +1504,10 @@ namespace DE{
 						change_counter++;
 						population[ind_idx] = crossed_ind;
 						fitness[ind_idx] = cross_fit;
+
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec_c2;
+						#endif
 					}
 
 					if(second_mutated_fit > cross_fit && second_mutated_fit > mutated_fit){
@@ -1426,6 +1515,10 @@ namespace DE{
 						change_counter++;
 						population[ind_idx] = mutated_ind2;
 						fitness[ind_idx] = second_mutated_fit;
+
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec_m2;
+						#endif
 					}
 				}
 
@@ -1433,20 +1526,28 @@ namespace DE{
 
 				//std::cout << mutated_ind << std::endl;
 				if(problem_type == MINIMIZATION){
-					//if(mutated_fit < fitness[ind_idx]){
+					if(mutated_fit < fitness[ind_idx]){
 						this->F[ind_idx] = F;
 						change_counter++;
 						population[ind_idx] = mutated_ind;
 						fitness[ind_idx] = mutated_fit;
-					//}
+						
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec;
+						#endif
+					}
 				}else{
 					//mutated_fit << std::endl;
-					//if(mutated_fit > fitness[ind_idx]){
+					if(mutated_fit > fitness[ind_idx]){
 						this->F[ind_idx] = F;
 						change_counter++;
 						population[ind_idx] = mutated_ind;
 						fitness[ind_idx] = mutated_fit;
-					//}
+
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec;
+						#endif
+					}
 				}
 
 			#endif	
@@ -1455,12 +1556,27 @@ namespace DE{
 
 			#if RAND_TO_BEST_MOD
 
-				Eigen::MatrixXd F = eval(truncate_individual(ind_shape, mutated_ind));
+				#if BIN_CROSS_GENE
+					// Eigen::MatrixXd F(512,512);
+					std::vector<double> F;
+					std::vector<float> gene_fit_vec;
+					// gene_fit_vec.reserve(ind_shape[0]);
+					// F.reserve(N_pop);
+					// F.reserve(ind_shape[0]);
+					// std::tie(F, gene_fit_vec) = eval(truncate_individual(ind_shape, mutated_ind));
+					eval(truncate_individual(ind_shape, mutated_ind), F, gene_fit_vec);
+
+				#else
+					// Eigen::MatrixXd F = eval(truncate_individual(ind_shape, mutated_ind));
+					std::vector<double> F = eval(truncate_individual(ind_shape, mutated_ind));
+				#endif
+
 
 				int mutated_fit = 0;
 
 				for(int j = 0; j < ind_shape[0]; j++){
-					mutated_fit += F(j,j);
+					// mutated_fit += F(j,j);
+					mutated_fit += F[j];
 				}
 				mutated_fit = mutated_fit/ind_shape[0];
 
@@ -1469,12 +1585,20 @@ namespace DE{
 						change_counter++;
 						population[ind_idx] = mutated_ind;
 						fitness[ind_idx] = mutated_fit;
+
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec;
+						#endif
 					}
 				}else{
 					if(mutated_fit > fitness[ind_idx]){
 						change_counter++;
 						population[ind_idx] = mutated_ind;
 						fitness[ind_idx] = mutated_fit;
+						
+						#if BIN_CROSS_GENE
+							gene_fitness[ind_idx] = gene_fit_vec;
+						#endif
 					}
 				}
 
@@ -1484,9 +1608,10 @@ namespace DE{
 					#if BIN_CROSS_GENE
 						float fit;
 						std::vector<float> gene_fit_vec;
-						gene_fit_vec.reserve(N_pop);
+						// gene_fit_vec.reserve(ind_shape[0]);
 
-						std::tie(fit, gene_fit_vec) = eval(mutated_ind);
+						// std::tie(fit, gene_fit_vec) = eval(mutated_ind);
+						eval(mutated_ind, fit, gene_fit_vec);
 
 						float mutated_fit = fit;							
 					#else
@@ -1496,9 +1621,10 @@ namespace DE{
 					#if BIN_CROSS_GENE
 						float fit;
 						std::vector<float> gene_fit_vec;
-						gene_fit_vec.reserve(N_pop);
+						// gene_fit_vec.reserve(ind_shape[0]);
 
-						std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, mutated_ind));						
+						// std::tie(fit, gene_fit_vec) = eval(truncate_individual(ind_shape, mutated_ind));
+						eval(truncate_individual(ind_shape, mutated_ind), fit, gene_fit_vec);						
 						float mutated_fit = fit;
 					#else
 						float mutated_fit = eval(truncate_individual(ind_shape, mutated_ind));	

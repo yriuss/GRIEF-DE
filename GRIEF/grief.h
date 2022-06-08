@@ -17,10 +17,12 @@ namespace cv
 {
 	namespace xfeatures2d
 	{
-		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+		#if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
+			void evaluation(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector<float> &gene_fit_vec);
+		#elif CURRENT_TO_RAND || RAND_TO_BEST_MOD
 			std::vector<double> evaluation(Eigen::MatrixXd individual);
 		#elif BIN_CROSS_GENE
-			std::tuple<float, std::vector<float>> evaluation(Eigen::MatrixXd individual);
+			void evaluation(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec);
 		#else
 			float evaluation(Eigen::MatrixXd individual);
 		#endif

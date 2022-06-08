@@ -46,22 +46,27 @@
 
 #include <iostream>
 #include <iomanip>
- 
+  
 namespace cv
 {
 	namespace xfeatures2d
 	{
-
-		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+		#if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
+			void evaluation(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector<float> &gene_fit_vec){
+				// std::vector<double> m;
+				// std::vector<float> gene_fitness;
+				// return std::make_tuple(m, gene_fitness);
+			}
+		#elif CURRENT_TO_RAND || RAND_TO_BEST_MOD
 			std::vector<double> evaluation(Eigen::MatrixXd individual){
 				std::vector<double> m;
 				return m;
 			}
 		#elif BIN_CROSS_GENE
-			std::tuple<float, std::vector<float>> evaluation(Eigen::MatrixXd individual){
-				float sum;
-				std::vector<float> gene_fitness;
-				return std::make_tuple(sum, gene_fitness);
+			void evaluation(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec){
+				// float sum;
+				// std::vector<float> gene_fitness;
+				// return std::make_tuple(sum, gene_fitness);
 			}
 		#else
 			float evaluation(Eigen::MatrixXd individual){
@@ -215,24 +220,34 @@ namespace cv
 				set_change_counter(0);
 				for(int i = 0; i < N_pop; i++){
 
-					// std::cout << "	[    ] mutate...";
+					std::cout << "	[    ] mutate..."<< std::endl;
 					mutate(i);
-					// std::cout << "\r	[ Ok ] mutate..." << std::endl;
+					std::cout << "	[ Ok ] mutate..." << std::endl;
 					
-					// std::cout << "	[    ] crossover...";
+					std::cout << "	[    ] crossover..."<< std::endl;
 					crossover(i);
-					// std::cout << "\r	[ Ok ] crossover..." << std::endl;
+					std::cout << "	[ Ok ] crossover..." << std::endl;
 
+					std::cout << "	[    ] is infeasible..." << std::endl;
 					if(is_infeasible()){
+						
+						std::cout << "	[    ] repair..." << std::endl;
 						repair(i);
+						std::cout << "	[ Ok ] repair..." << std::endl;
+
 					}
+					std::cout << "	[ Ok ] is infeasible..." << std::endl;
 
-					// std::cout << "	[    ] selection...";
+
+					std::cout << "	[    ] selection..." << std::endl;
 					selection(i);
-					// std::cout << "\r	[ Ok ] selection..." << std::endl;
+					std::cout << "	[ Ok ] selection..." << std::endl;
 
+					std::cout << "	[    ] checking duplicates..." << std::endl;
 					check_duplicates();
-					//std::cout << i << std::endl;
+					std::cout << "	[ Ok ] checking duplicates..." << std::endl;
+
+					std::cout << ">>>> " << i << std::endl;
 
 				}//exit(-1);
 				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
