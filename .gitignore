@@ -11,3 +11,4 @@ Makefile
 results_8ab/
 grief_history/*
 local_tests/*
+results/*

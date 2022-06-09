@@ -670,7 +670,6 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
-
 }
 
 Eigen::MatrixXd eval2(Eigen::MatrixXd individual)
@@ -1400,7 +1399,7 @@ int main(int argc, char ** argv){
 	//}
 
     for(int i = 0; i < atoi((argv[3])); i++){
-		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 5, K);
+		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 8, K);
 		grief_descriptor->evolve(atoi((argv[2])));
 		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
 	}

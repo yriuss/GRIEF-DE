@@ -9,10 +9,9 @@
 #include <unistd.h>
 #include <fstream>
 
-
-#define CURRENT_TO_RAND false
+#define CURRENT_TO_RAND true
 #define READ_BEST_IND false
-#define RAND_TO_BEST_MOD true
+#define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
  

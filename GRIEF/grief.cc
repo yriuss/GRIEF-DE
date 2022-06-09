@@ -215,49 +215,29 @@ namespace cv
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
 
 			for(int g = 0; g < ng; g++){
+				
 				std::cout << "Generation: " << g+1 << std::endl;
 				auto start = std::chrono::high_resolution_clock::now();
 				set_change_counter(0);
+
 				for(int i = 0; i < N_pop; i++){
 
-					std::cout << "	[    ] mutate..."<< std::endl;
-					mutate(i);
-					std::cout << "	[ Ok ] mutate..." << std::endl;
-					
-					std::cout << "	[    ] crossover..."<< std::endl;
+					mutate(i);					
 					crossover(i);
-					std::cout << "	[ Ok ] crossover..." << std::endl;
-
-					std::cout << "	[    ] is infeasible..." << std::endl;
 					if(is_infeasible()){
-						
-						std::cout << "	[    ] repair..." << std::endl;
 						repair(i);
-						std::cout << "	[ Ok ] repair..." << std::endl;
-
 					}
-					std::cout << "	[ Ok ] is infeasible..." << std::endl;
-
-
-					std::cout << "	[    ] selection..." << std::endl;
 					selection(i);
-					std::cout << "	[ Ok ] selection..." << std::endl;
-
-					std::cout << "	[    ] checking duplicates..." << std::endl;
 					check_duplicates();
-					std::cout << "	[ Ok ] checking duplicates..." << std::endl;
 
-					std::cout << ">>>> " << i << std::endl;
-
-				}//exit(-1);
+				}
 				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 				std::cout << "Best fitted: " << get_best_fit() << std::endl;
 
 				bfit.emplace_back(get_best_fit());
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
-				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
-				
+				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;				
 			}
 		}
 
