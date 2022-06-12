@@ -312,7 +312,9 @@ std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
 }
 
 void GriefDescriptorExtractorImpl::evolve(uint ng){
-	
+	load("test_pairs.brief");
+	reset();
+	std::cout << "Exp is " << exp+1 << std::endl;
 	for(int g = 0; g < ng; g++){
 		auto start = std::chrono::high_resolution_clock::now();
 		set_change_counter(0);
@@ -332,8 +334,14 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
 		std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 		
-		
+		std_dev(pop(), SAVE);
+		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2);
 	}
+	
+	change_percentage.clear();
+	bfit.clear();
+	exp++;
+	std::cout << "Exp is " << exp+1 << std::endl;
 }
 
 void GriefDescriptorExtractor::evolve(uint ng){
@@ -356,7 +364,7 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
 															int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
 	bytes_(bytes), 
-	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-50, 50}, mutation_algorithm, crossover_algorithm, K)
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm, K)
 {
 	this->N_pop = N_pop;
 	this->jr = jr;

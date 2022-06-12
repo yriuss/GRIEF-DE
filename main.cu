@@ -1,4 +1,3 @@
-#include "matplotlibcpp.h"
 #include "DE/DE.h"
 #include <stdio.h>
 #include<cmath>
@@ -17,10 +16,9 @@
 #include <opencv2/cudafeatures2d.hpp>
 
 #include "GRIEF_CUDA/grief.h"
-#include <sys/stat.h>
 
 
-namespace plt = matplotlibcpp;
+
 
 
 #define CROSSCHECK true 
@@ -814,56 +812,6 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
     return result;
 }
 
-bool dir_exist(const std::string &s)
-{
-  struct stat buffer;
-  return (stat (s.c_str(), &buffer) == 0);
-}
-
-void _mkdir(const std::string &s){
-	mkdir((s).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
-}
-
-void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, std::vector<float> change_percentage){
-	
-
-	if(!dir_exist(CURRENT_DIR+"/../results/"))
-		_mkdir(CURRENT_DIR+"/../results/");
-	
-	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset))
-		_mkdir(CURRENT_DIR+"/../results/" + dataset);
-	
-	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset + "/" + exp))
-		_mkdir(CURRENT_DIR+"/../results/" + dataset+ "/" + exp);
-	
-	plt::plot(y);
-	plt::title("Convergence " + dataset);
-	plt::xlabel("Gerações");
-	plt::ylabel("Fitness");
-	plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "convergence.png");
-	plt::cla();
-	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
-
-	//std::cout << "bind is " << best_individual; exit(-1);
-	//std::cout << "b ind is " << population[std::min_element(this->fitness.begin(), this->fitness.end()) - fitness.begin()];exit(-1);
-
-	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
-    	f1 << *i << '\n';
-	}
-	f1.close();
-	if (f2.is_open())
-  	{
-    	f2 << best_individual;
-  	}
-	f2.close();
-	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
-  	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
-	for(int i = 0; i < change_percentage.size(); i++)
-		f3 << change_percentage[i] << "%" << std::endl;
-	f3.close();
-	//plt::show();
-}
-
 
 
 Eigen::MatrixXd generate_individual(std::vector<int> ind_shape){
@@ -934,7 +882,7 @@ int main(int argc, char ** argv){
 	dataset = argv[1];
 
 	int K = atoi(argv[4]);
-	
+	double cr = atof(argv[5]);
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
@@ -1039,10 +987,10 @@ int main(int argc, char ** argv){
 		for(int j = 0; j < 600; j++)
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
-	for(int i = 0; i < atoi(argv[3]); i++){
-    	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 5, K);
-		grief_descriptor->evolve(atoi(argv[2]));
-		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr);
+    for(int i = 0; i < atoi((argv[3])); i++){
+		grief_descriptor->evolve(atoi((argv[2])));
+		//save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
 	}
 
     return 0;

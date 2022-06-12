@@ -82,7 +82,7 @@ protected:
 	int individual[512][4];
 	int bytes_;
 	bool use_orientation_;
-	
+	int exp = 0;
 	//PixelTestFn test_fn_;
 };
 }

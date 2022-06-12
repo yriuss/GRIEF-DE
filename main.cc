@@ -1,33 +1,21 @@
 
 #include "DE/DE.h"
-#include "matplotlibcpp.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <cmath>
 #include <Eigen/Dense>
 #include <vector>
 #include <iostream>
-#include "opencv2/core.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/features2d.hpp"
-#include "opencv2/xfeatures2d.hpp"
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/core.hpp>
-#include <opencv2/features2d.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
 #include "GRIEF/grief.h"
 
-#include <tuple>
-
-
-namespace plt = matplotlibcpp;
 #define CROSSCHECK true 
 #define VERTICAL_LIMIT 100
 #define MAX_SEASONS 100
 #define MAX_LOCATIONS 1000
 #define WINDOW_SIZE 48 
 
+
+std::string CURRENT_DIR = get_current_dir_name();
 char fileInfo[1000];
 int numExchange = 10;
 int runs = 0;
@@ -59,15 +47,7 @@ int numSeasons = 0;
 typedef std::vector<Mat> Vector;
 typedef std::vector<Vector> ImgMat;
 
-bool dir_exist(const std::string &s)
-{
-  struct stat buffer;
-  return (stat (s.c_str(), &buffer) == 0);
-}
 
-void _mkdir(const std::string &s){
-	mkdir((s).c_str(), S_IRUSR | S_IWUSR | S_IXUSR);
-}
 
 int load(Eigen::MatrixXd& mat, std::string fileName) 
 {
@@ -100,7 +80,7 @@ int load(Eigen::MatrixXd& mat, std::string fileName)
 int x,y; 
 FILE *displacements;
 
-std::string CURRENT_DIR = get_current_dir_name();
+
 
 
 void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
@@ -1243,46 +1223,46 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 	// return {result, gene_fitness_vec};
 }
 
-void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, std::vector<float> change_percentage)
-{
+// void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, std::vector<float> change_percentage)
+// {
 	
 
-	if(!dir_exist(CURRENT_DIR+"/../results/"))
-		_mkdir(CURRENT_DIR+"/../results/");
+// 	if(!dir_exist(CURRENT_DIR+"/../results/"))
+// 		_mkdir(CURRENT_DIR+"/../results/");
 	
-	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset))
-		_mkdir(CURRENT_DIR+"/../results/" + dataset);
+// 	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset))
+// 		_mkdir(CURRENT_DIR+"/../results/" + dataset);
 	
-	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset + "/" + exp))
-		_mkdir(CURRENT_DIR+"/../results/" + dataset+ "/" + exp);
+// 	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset + "/" + exp))
+// 		_mkdir(CURRENT_DIR+"/../results/" + dataset+ "/" + exp);
 	
-	plt::plot(y);
-	plt::title("Convergence " + dataset);
-	plt::xlabel("Gerações");
-	plt::ylabel("Fitness");
-	plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "convergence.png");
-	plt::cla();
-	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
+// 	plt::plot(y);
+// 	plt::title("Convergence " + dataset);
+// 	plt::xlabel("Gerações");
+// 	plt::ylabel("Fitness");
+// 	plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "convergence.png");
+// 	plt::cla();
+// 	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
 
-	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
-    	f1 << *i << '\n';
-	}
-	f1.close();
+// 	for(vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
+//     	f1 << *i << '\n';
+// 	}
+// 	f1.close();
 
-	if (f2.is_open())
-  	{
-    	f2 << best_individual;
-  	}
-	f2.close();
+// 	if (f2.is_open())
+//   	{
+//     	f2 << best_individual;
+//   	}
+// 	f2.close();
 	
-	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
+// 	ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "details.txt");
   	
-	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
-	for(int i = 0; i < change_percentage.size(); i++)
-		f3 << change_percentage[i] << "%" << std::endl;
-	f3.close();
+// 	//f3.open (CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt");
+// 	for(int i = 0; i < change_percentage.size(); i++)
+// 		f3 << change_percentage[i] << "%" << std::endl;
+// 	f3.close();
 	
-}
+// }
 
 int main(int argc, char ** argv){
 	char filename[100];
@@ -1397,11 +1377,11 @@ int main(int argc, char ** argv){
 	//		count++;
 	//	}
 	//}
-
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 4, K);
     for(int i = 0; i < atoi((argv[3])); i++){
-		cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 8, K);
+		// cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 8, K);
 		grief_descriptor->evolve(atoi((argv[2])));
-		save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
+		// save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
 	}
     return 0;
 }

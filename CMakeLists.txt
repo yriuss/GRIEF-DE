@@ -37,6 +37,8 @@ add_library(${PROJECT_NAME} SHARED
 DE/DE.cc
 GRIEF_CUDA/grief.cu
 DE/DE.h
+measurements/measurements.h
+measurements/measurements.cc
 GRIEF_CUDA/grief.h
 QS/quicksort.cc
 QS/quicksort.h
@@ -68,6 +70,8 @@ add_library(${PROJECT_NAME} SHARED
 DE/DE.cc
 GRIEF/grief.cc
 DE/DE.h
+measurements/measurements.h
+measurements/measurements.cc
 GRIEF/grief.h
 QS/quicksort.cc
 QS/quicksort.h
