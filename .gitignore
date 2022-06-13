@@ -2,8 +2,8 @@ teste.py
 teste_grief.cc
 build/
 .vscode/
-GRIEF-datasets/*
-GRIEF-datasets/ 
+# GRIEF-datasets/
+# GRIEF-datasets/ 
 lib/*
 0.bmp
 1.bmp
