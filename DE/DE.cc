@@ -600,7 +600,7 @@ namespace DE{
 	}
 
 	#if SECOND_MUTATED_FIT
-	
+
 		void DE::currenttorand_modified2(int ind_idx)
 		{
 			std::random_device rseed;
@@ -1542,6 +1542,8 @@ namespace DE{
 		//std::cout << mutated_ind.rows() << " "  << mutated_ind.cols() << std::endl << std::endl;
 		//std::cout << mutated_ind << std::endl << std::endl;
 
+		std::cout << " [ sel  >> ] ";
+
 		#if CURRENT_TO_RAND
 			
 			#if BIN_CROSS_GENE
@@ -1610,7 +1612,7 @@ namespace DE{
 					// std::tie(Fcross, gene_fit_vec_c2) = eval(truncate_individual(ind_shape, crossed_ind));
 					// std::tie(F2, gene_fit_vec_m2) = eval(truncate_individual(ind_shape, mutated_ind2));
 					eval(truncate_individual(ind_shape, crossed_ind), Fcross, gene_fit_vec_c2);
-					eval(truncate_individual(ind_shape, crossed_ind2), Fcross, gene_fit_vec_c3);
+					eval(truncate_individual(ind_shape, crossed_ind2), Fcross2, gene_fit_vec_c3);
 					eval(truncate_individual(ind_shape, mutated_ind2), F2, gene_fit_vec_m2);
 					
 					
