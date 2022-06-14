@@ -340,21 +340,29 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		auto start = std::chrono::high_resolution_clock::now();
 		set_change_counter(0);
 		for(int i = 0; i < N_pop; i++){
+			std::cout << " [ i " << i+1 << "  ] ";
+			std::cout << " [ mut  ] ";
 			mutate(i);
+			std::cout << " [ cros ] ";
 			crossover(i);
+			std::cout << " [ rep  ] ";
 			repair(i);
+			std::cout << " [ sel  ] ";
 			selection(i);
 			//std::cout << i << std::endl;
 
 		}//exit(-1);
+		std::cout << std::endl;
+
 		change_percentage.push_back((float)100*get_change_counter()/(N_pop));
-		std::cout <<  get_best_fit() << std::endl;
+		std::cout << get_best_fit() << std::endl;
 		//std::cout <<  get_best_ind() << std::endl;
 		bfit.emplace_back(get_best_fit());
 		auto finish = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
 		std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 		
+		std::cout << " [ save ] ";
 		std_dev(pop(), SAVE);
 		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2);
 	}
