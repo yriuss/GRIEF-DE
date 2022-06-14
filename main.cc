@@ -1377,7 +1377,7 @@ int main(int argc, char ** argv){
 	//		count++;
 	//	}
 	//}
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 4, K);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K);
     for(int i = 0; i < atoi((argv[3])); i++){
 		// cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 8, K);
 		grief_descriptor->evolve(atoi((argv[2])));
