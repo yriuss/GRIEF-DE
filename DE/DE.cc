@@ -23,7 +23,7 @@ namespace DE{
 		return population;
 	}
 
-	void DE::reset(){
+	void DE::reset(){ 
 		this->Measurements::reset();
 		count_cross1 = 0;
 		count_mut1 = 0;
@@ -600,57 +600,59 @@ namespace DE{
 	}
 
 	#if SECOND_MUTATED_FIT
+	
+		void DE::currenttorand_modified2(int ind_idx)
+		{
+			std::random_device rseed;
+			std::mt19937 rng(rseed());
+			std::uniform_int_distribution<int> dist(0, population.size() - 1);
+			std::uniform_real_distribution<float> r_dist(0,1);
+			Eigen::MatrixXd ind1 = generate_individual(ind_shape), ind2 = generate_individual(ind_shape);
 
-		std::random_device rseed;
-		std::mt19937 rng(rseed());
-		std::uniform_int_distribution<int> dist(0, population.size() - 1);
-		std::uniform_real_distribution<float> r_dist(0,1);
-		Eigen::MatrixXd ind1 = generate_individual(ind_shape), ind2 = generate_individual(ind_shape);
+			Eigen::MatrixXd F(512,512);
+			F.setZero(512,512);
+			float th = 1./3;
 
-		Eigen::MatrixXd F(512,512);
-		F.setZero(512,512);
-		float th = 1./3;
-
-		std::vector<int> idxs = sort_idxs(this->F[ind_idx]);
-		for(int j = 0; j < ind_shape[0]; j++){
-			if(j < 512-K){
-				if(j < 512-K - 10 && j >= 512-K - 20){
-					if(r_dist(rng) < th){
-						F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-					}
-					else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}else{
-					if(j < 512-K - 20 && j >= 512-K - 30){
-						if(r_dist(rng) < (float)th/3){
+			std::vector<int> idxs = sort_idxs(this->F[ind_idx]);
+			for(int j = 0; j < ind_shape[0]; j++){
+				if(j < 512-K){
+					if(j < 512-K - 10 && j >= 512-K - 20){
+						if(r_dist(rng) < th){
 							F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-						}else{
-							if(j < 512-K - 20 && j >= 512-K - 30){
-								if(r_dist(rng) < (float)th/3){
-									F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
+						}
+						else{
+							F(idxs[j],idxs[j]) = 0;
+						}
+					}else{
+						if(j < 512-K - 20 && j >= 512-K - 30){
+							if(r_dist(rng) < (float)th/3){
+								F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
+							}else{
+								if(j < 512-K - 20 && j >= 512-K - 30){
+									if(r_dist(rng) < (float)th/3){
+										F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
+									}else{
+										F(idxs[j],idxs[j]) = 0;
+									}
 								}else{
 									F(idxs[j],idxs[j]) = 0;
 								}
-							}else{
-								F(idxs[j],idxs[j]) = 0;
 							}
+							
 						}
-						
+						else
+							F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
 					}
-					else
-						F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
+					
 				}
-				
+				else
+					F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
 			}
-			else
-				F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
+			
+			//exit(-1);
+			mutated_ind2 = population[ind_idx] + F * (ind1 - ind2);
+			//std::cout << mutated_ind2.cols() << " " << mutated_ind2.rows() << std::endl;
 		}
-		
-		//exit(-1);
-		mutated_ind2 = population[ind_idx] + F * (ind1 - ind2);
-		//std::cout << mutated_ind2.cols() << " " << mutated_ind2.rows() << std::endl;
-	}
 	#endif
 
 #else
