@@ -1,7 +1,7 @@
 git pull
 rm -rf build/*
 cd build
-cmake ..
-make
-./teste michigan 200 8 3
+cmake .. >> log
+make >> log
+./teste michigan 200 8 3 >> log
 cd ..
