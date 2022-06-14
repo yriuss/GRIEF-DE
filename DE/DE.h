@@ -144,16 +144,17 @@ namespace DE {
 				#endif
 			#endif
 
+			int count_mut1 = 0;
+			int count_cross1 = 0;
+			int count_mut2 = 0;
+			int count_cross2 = 0;
 
 		private:
 
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
 
-			// int count_mut1 = 0;
-			// int count_cross1 = 0;
-			// int count_mut2 = 0;
-			// int count_cross2 = 0;
+			
 
 			#if SECOND_MUTATED_FIT
 				Eigen::MatrixXd mutated_ind2;
