@@ -27,6 +27,7 @@
 #define MAX_LOCATIONS 1000
 #define WINDOW_SIZE 48 
 
+
 char fileInfo[1000];
 int numExchange = 10;
 int runs = 0;
@@ -1455,7 +1456,7 @@ int main(int argc, char ** argv){
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
 
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 4, K, cr);
     for(int i = 0; i < atoi((argv[3])); i++){
 
 		grief_descriptor->evolve(atoi((argv[2])));
