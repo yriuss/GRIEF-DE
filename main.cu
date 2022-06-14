@@ -1135,7 +1135,7 @@ void eval2norm(Eigen::MatrixXd individua, Eigen::MatrixXd & result, std::vector<
 }
 
 
-void eval3norm(Eigen::MatrixXd individual, std::vector<double>, &fit, std::vector<float> &gene_fit_vec){
+void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector<float> &gene_fit_vec){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
@@ -1266,7 +1266,7 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double>, &fit, std::vecto
 	for (int i = 0;i<griefDescriptorLength;i++){
 		fit.push_back(griefRating[i].value);
 		gene_fit_vec.emplace_back(griefRating[i].value);
-		sum+=result[i];
+		sum+=fit[i];
 	}
 	sum=sum/griefDescriptorLength;
 
