@@ -838,6 +838,7 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 			 
 		// detecting keypoints and generating descriptors
 		// Mat descriptors[numSeasons];
+		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
@@ -1022,6 +1023,7 @@ void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector
 			
 		// detecting keypoints and generating descriptors
 		// Mat cpu_descriptors[numSeasons];
+		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
@@ -1167,6 +1169,7 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 			
 		// detecting keypoints and generating descriptors
 		// Mat cpu_descriptors[numSeasons];
+		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
