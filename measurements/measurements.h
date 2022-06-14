@@ -12,7 +12,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <fstream>
-#include<math.h>
+#include <math.h>
 #define SAVE true
 
 //namespace plt = matplotlibcpp;

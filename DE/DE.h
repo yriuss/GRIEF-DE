@@ -16,9 +16,9 @@
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
-#define SECOND_MUTATED_FIT false
+#define SECOND_MUTATED_FIT true
  
-#define BIN_CROSS_GENE false
+#define BIN_CROSS_GENE true
 
 #if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
 	typedef void (*EvalFunction)(Eigen::MatrixXd, std::vector<double> &, std::vector<float> &);
@@ -49,10 +49,11 @@ namespace DE {
 #define CURRENT_TO_RAND_1 6
 
 /* DEFINITION OF CROSSOVER ALGORITHM */
-#define EXP   1
-#define ARIT  2
-#define BIN   3
-#define BIN_G 4
+#define EXP       1
+#define ARIT      2
+#define BIN       3
+#define BIN_G     4
+#define ARIT_MODF 5
 
 #define OPPOSITION_LEARNING false
 #define ROUND_ON_MUTATION   false

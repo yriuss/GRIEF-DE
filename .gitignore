@@ -13,3 +13,4 @@ grief_history/*
 local_tests/*
 results/*
 run.sh
+local_backups/*
