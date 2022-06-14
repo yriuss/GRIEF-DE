@@ -18,7 +18,7 @@
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
  
-#define BIN_CROSS_GENE true
+#define BIN_CROSS_GENE false
 
 #if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
 	typedef void (*EvalFunction)(Eigen::MatrixXd, std::vector<double> &, std::vector<float> &);
