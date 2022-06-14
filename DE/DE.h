@@ -55,7 +55,7 @@ namespace DE {
 #define BIN_G 4
 
 #define OPPOSITION_LEARNING false
-#define ROUND_ON_MUTATION   true
+#define ROUND_ON_MUTATION   false
 	
 	class DE: public Measurements{
 
