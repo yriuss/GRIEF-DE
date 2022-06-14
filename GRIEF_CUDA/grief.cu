@@ -362,7 +362,7 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		std::chrono::duration<double, std::milli> elapsed = finish - start;
 		std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
 		
-		std::cout << " [ save ] " std::endl;
+		std::cout << " [ save ] " << std::endl;
 		std_dev(pop(), SAVE);
 		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2);
 	}
