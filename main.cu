@@ -811,8 +811,7 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 }
 
 
-void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec)
-{
+void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
@@ -833,42 +832,50 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 	
 	bool supervised = true;
 	
+
 	
-	for (int location = 0; location < numLocations; location++){
-			 
+	for (int location = 0;location<numLocations;location++){
+			
 		// detecting keypoints and generating descriptors
-		// Mat descriptors[numSeasons];
 		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
 		KeyPoint kp;
-		Mat dp;
+		//std::cout << numSeasons <<std::endl;
 		
-		Ptr<cv::ORB> detector = cv::ORB::create(1600);		//TODO make this selectable
-		//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);		//TODO make this selectable
-		//FakeFeatureDetector detector;		//TODO make this selectable
-		//BRISK detector(0,4);
-		
-		// Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(griefDescriptorLength/8);
-		
-		for (int i = 0; i < numSeasons; i++){
+		for (int i = 0;i<numSeasons;i++){
+			//sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
+			
 			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
+			//Mat a;
+			//descriptors[i].download(a);
+			//std::cout << "a" << std::endl;
+			//exit(-1);
+			descriptors[i].download(cpu_descriptors[i]);
+			//std::cout << cpu_descriptors[i];
+			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
+			//std::cout << cpu_descriptors[i].row(1599);
+			//exit(-1);
+			
 		}
 		
+		
+		
+		
 		// matching the extracted features
-		for (int ik = 0; ik < numSeasons; ik++){
-			for (int jk = ik+1; jk < numSeasons; jk++){
+		for (int ik = 0;ik<numSeasons;ik++){
+			for (int jk = ik+1;jk<numSeasons;jk++){
 				matches.clear();
 				/*if not empty*/
 				
 				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
 				
-
 				/*are there any tentative correspondences ?*/
 				int sumDev = 0;
 				int numPoints = 0;
-				
+
 				int histMax = 0;
 				int auxMax=0;
 				int manualDir = 0; 
@@ -877,7 +884,10 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 				int granularity = 20;
 				int maxS = 0;
 				int domDir = 0;
+				int histogram[numBins];
+				int bestHistogram[numBins];
 				vector<unsigned char> mask;
+				
 				if (matches.size() > 0){
 					//histogram assembly
 					int histogram[numBins];
@@ -943,7 +953,7 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 							eff = +strength;
 						}
 						for (int o = 0;o<griefDescriptorLength/8;o++){
-							unsigned char b = descriptors[ik].at<uchar>(i1,o)^descriptors[jk].at<uchar>(i2,o);
+							unsigned char b = cpu_descriptors[ik].at<uchar>(i1,o)^cpu_descriptors[jk].at<uchar>(i2,o);
 							unsigned char oo = 128;
 							for (int p = 0;p<8;p++){
 								if (oo&b)  griefRating[8*o+p].value+=eff; else griefRating[8*o+p].value-=eff;
@@ -953,37 +963,23 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 					}
 					//if (histMax > 0) printf("\nDirection histogram %i %i %i\n",-(sumDev/histMax),histMax,auxMax); else printf("\nDirection histogram 1000 0 0\n");
 				}else{
-					printf("%04i %02i%02i 1000 -1000 0 0\n",location,ik+1,jk+1);
 					matchFail = true;
 				}
 				
-				/*double minVal; 
-				double maxVal; 
-				Point minLoc; 
-				Point maxLoc;
-				minMaxLoc( global, &minVal, &maxVal, &minLoc, &maxLoc );
-				global = (global-minVal)/(maxVal-minVal)*255;
-				global.convertTo(submat, CV_8U);
-				imwrite("heh.bmp",submat);*/
-
-				if (matchFail) matchingFailures++;
-				matchingTests++;
-								
+				
 				//end drawing
 			}
+			
 		}
+		//exit(-1);
 		
 	}
 	
 	int sum = 0;
-	// std::vector<float> gene_fitness;
-	// gene_fitness.reserve(512);
-
 	for (int i = 0;i<griefDescriptorLength;i++){
 		gene_fit_vec.emplace_back(griefRating[i].value);
-		sum+=griefRating[i].value;
+		 sum+=griefRating[i].value;
 	}
-
 	sum=sum/griefDescriptorLength;
 	*(&fit) = (float) sum;
 
@@ -991,15 +987,15 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 	auto finish = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
+	//std::cout << "-";
 }
 
 
-void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector<float> &gene_fit_vec)
-{
+void eval2norm(Eigen::MatrixXd individua, Eigen::MatrixXd & result, std::vector<float> &gene_fit_vec){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-	Ptr<cv::ORB> detector = cv::ORB::create(1600);
+	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create(1600);
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
 	
 	descriptor->setInd(individual);
@@ -1022,7 +1018,6 @@ void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector
 	for (int location = 0;location<numLocations;location++){
 			
 		// detecting keypoints and generating descriptors
-		// Mat cpu_descriptors[numSeasons];
 		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
@@ -1032,13 +1027,14 @@ void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector
 		for (int i = 0;i<numSeasons;i++){
 			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
 			
-			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
 			
-			descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			//Mat a;
 			//descriptors[i].download(a);
 			//std::cout << "a" << std::endl;
 			//exit(-1);
+			descriptors[i].download(cpu_descriptors[i]);
 			//std::cout << cpu_descriptors[i];
 			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
 			//std::cout << cpu_descriptors[i].row(1599);
@@ -1055,7 +1051,7 @@ void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector
 				matches.clear();
 				/*if not empty*/
 				
-				if (cpu_descriptors[ik].rows*cpu_descriptors[jk].rows > 0) distinctiveMatch(cpu_descriptors[ik], cpu_descriptors[jk], matches, CROSSCHECK);
+				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
 				
 				/*are there any tentative correspondences ?*/
 				int sumDev = 0;
@@ -1119,16 +1115,14 @@ void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector
 	// Eigen::MatrixXd result(512, 512);
 	// result.setZero(512,512);
 
-	// std::vector<float> gene_fitness;
-	// gene_fitness.reserve(512);
 
 	int sum = 0;
 	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
 
 	for (int i = 0;i<griefDescriptorLength;i++){
-		 result(i,i) = griefRating[i].value;
-		 gene_fit_vec.emplace_back(griefRating[i].value);
-		 sum+=result(i,i);
+		result(i,i) = griefRating[i].value;
+		gene_fit_vec.emplace_back(griefRating[i].value);
+		sum+=result(i,i);
 	}
 	sum=sum/griefDescriptorLength;
 
@@ -1137,25 +1131,25 @@ void eval2norm (Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
 	//std::cout << "-";
-    // return std::make_tuple(result, gene_fitness);
+    // return result;
 }
 
 
-void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector<float> &gene_fit_vec)
-{
+void eval3norm(Eigen::MatrixXd individual, std::vector<double>, &fit, std::vector<float> &gene_fit_vec){
 	
 	auto start = std::chrono::high_resolution_clock::now();
-	Ptr<cv::ORB> detector = cv::ORB::create(1600);
+	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
+	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create(1600);
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
-
+	
 	descriptor->setInd(individual);
-
 	for (int i = 0;i<1024;i++){
 		griefRating[i].value=0;
 		griefRating[i].id=i;
 	}
 	std::vector<cv::DMatch> matches;
 	
+
 	int matchingTests = 0;
 	int matchingFailures = 0;
 	
@@ -1168,7 +1162,6 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 	for (int location = 0;location<numLocations;location++){
 			
 		// detecting keypoints and generating descriptors
-		// Mat cpu_descriptors[numSeasons];
 		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
 		vector<KeyPoint> keypoints[numSeasons];
@@ -1178,12 +1171,15 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 		for (int i = 0;i<numSeasons;i++){
 			sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",("../GRIEF-datasets/"+ dataset).c_str(),i,location);
 			
-			detector->detect(dataset_imgs[i][location], keypoints[i]);
+			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
 			
-			descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			//Mat a;
 			//descriptors[i].download(a);
 			//std::cout << "a" << std::endl;
+			//exit(-1);
+			//std::cout << "passei aqui" << std::endl;
+			descriptors[i].download(cpu_descriptors[i]);
 			//std::cout << cpu_descriptors[i];
 			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
 			//std::cout << cpu_descriptors[i].row(1599);
@@ -1191,13 +1187,16 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 			
 		}
 		
+		
+		
+		
 		// matching the extracted features
 		for (int ik = 0;ik<numSeasons;ik++){
 			for (int jk = ik+1;jk<numSeasons;jk++){
 				matches.clear();
 				/*if not empty*/
 				
-				if (cpu_descriptors[ik].rows*cpu_descriptors[jk].rows > 0) distinctiveMatch(cpu_descriptors[ik], cpu_descriptors[jk], matches, CROSSCHECK);
+				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
 				
 				/*are there any tentative correspondences ?*/
 				int sumDev = 0;
@@ -1251,7 +1250,8 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 				
 				
 				//end drawing
-			}			
+			}
+			
 		}
 		//exit(-1);
 		
@@ -1259,23 +1259,15 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 
 
 	// std::vector<double> result;
-	// std::vector<float> gene_fitness_vec;
-	// gene_fitness_vec.reserve(512);
-
-
+	
 	int sum = 0;
 	//std::qsort (griefRating,griefDescriptorLength,sizeof(TRating),compare);
 
-	// std::cout << "				[      ] populating results and gene_fitness" << std::endl;
 	for (int i = 0;i<griefDescriptorLength;i++){
-		//  result.push_back(griefRating[i].value);
-		 fit.push_back(griefRating[i].value);
-		 gene_fit_vec.push_back(griefRating[i].value);
-		 sum+=fit[i];
+		fit.push_back(griefRating[i].value);
+		gene_fit_vec.emplace_back(griefRating[i].value);
+		sum+=result[i];
 	}
-	// std::cout << "				[ pass ] populating results and gene_fitness" << std::endl;
-
-
 	sum=sum/griefDescriptorLength;
 
 	std::cout << "fitness is " << sum << std::endl;
@@ -1283,10 +1275,7 @@ void eval3norm(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
 	//std::cout << "-";
-	// std::cout << "				[ pass ] eval3norm called" << std::endl;
-
-	// std::cout << "				[  ok  ] Returning...\n" << std::endl;
-	// return {result, gene_fitness_vec};
+    // return result;
 }
 
 
