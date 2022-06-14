@@ -1,10 +1,10 @@
 #include "matplotlibcpp.h"
 #include "../DE/DE.h"
 #include <stdio.h>
-#include<cmath>
-#include<Eigen/Dense>
+#include <cmath>
+#include <Eigen/Dense>
 #include <vector>
-#include<iostream>
+#include <iostream>
 
 namespace plt = matplotlibcpp;
 
