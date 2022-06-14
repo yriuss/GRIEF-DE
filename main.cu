@@ -991,7 +991,7 @@ void eval1norm(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_
 }
 
 
-void eval2norm(Eigen::MatrixXd individua, Eigen::MatrixXd & result, std::vector<float> &gene_fit_vec){
+void eval2norm(Eigen::MatrixXd individual, Eigen::MatrixXd &result, std::vector<float> &gene_fit_vec){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
