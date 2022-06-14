@@ -48,22 +48,43 @@
 
 namespace cv
 {
-namespace xfeatures2d
-{
+	namespace xfeatures2d
+	{
 
 
+		#if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
+			void evaluation(Eigen::MatrixXd individual, std::vector<double> &fit, std::vector<float> &gene_fit_vec){
+				// std::vector<double> m;
+				// std::vector<float> gene_fitness;
+				// return std::make_tuple(m, gene_fitness);
+			}
+		#elif CURRENT_TO_RAND || RAND_TO_BEST_MOD
+			std::vector<double> evaluation(Eigen::MatrixXd individual){
+				std::vector<double> m;
+				return m;
+			}
+		#elif BIN_CROSS_GENE
+			void evaluation(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec){
+				// float sum;
+				// std::vector<float> gene_fitness;
+				// return std::make_tuple(sum, gene_fitness);
+			}
+		#else
+			float evaluation(Eigen::MatrixXd individual){
+				return -1;
+			}
+		#endif
 
-
-#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-std::vector<double> evaluation(Eigen::MatrixXd individual){
-	std::vector<double> m;
-	return m;
-}
-#else
-float evaluation(Eigen::MatrixXd individual){
-	return -1;
-}
-#endif
+// #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
+// std::vector<double> evaluation(Eigen::MatrixXd individual){
+// 	std::vector<double> m;
+// 	return m;
+// }
+// #else
+// float evaluation(Eigen::MatrixXd individual){
+// 	return -1;
+// }
+// #endif
 
 Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int K,
 															   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm)
