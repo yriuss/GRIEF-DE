@@ -1331,6 +1331,8 @@ int main(int argc, char ** argv){
 //	for(int i = 0; i < 100; i++){
 //		save_individual(generate_individual(x), i);
 //	}
+		std::cout << "[ MAAAAAIIIINN ]" << std::endl;
+
 
 	char filename[100];
 	bool supervised = true;
