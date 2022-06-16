@@ -4,5 +4,5 @@ cd build
 cmake ..
 make -j$(nproc)
 # dataset > gen number > individuals number > experiments number > k value, cross value  
-./teste michigan 500 6 5 10 0.8
+./teste michigan 1000 10 5 10 0.8
 cd ..
