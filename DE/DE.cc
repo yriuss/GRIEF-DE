@@ -543,6 +543,7 @@ namespace DE{
 		}
 
 	}
+	
 	#endif
 
 	#if CURRENT_TO_RAND
@@ -1768,7 +1769,7 @@ namespace DE{
 
 
 			#else
-			
+
 				std::vector<int> _all_fit;
 
 				_all_fit.push_back(fitness[ind_idx]);

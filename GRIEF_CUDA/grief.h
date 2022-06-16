@@ -41,7 +41,7 @@ namespace cv{
 		{
 			public:
 				CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-							int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
+							int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_TO_BEST, int crossover_algorithm=BIN_G);
 				CV_WRAP virtual void getInd( );
 				CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 				CV_WRAP virtual void evolve(uint ng);
@@ -63,7 +63,7 @@ namespace cv{
 
 				// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
 				GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-														int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN);
+														int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_TO_BEST, int crossover_algorithm=BIN_G);
 														
 				int load(std::string fileName);
 				virtual void read( const FileNode& ) CV_OVERRIDE;
