@@ -12,9 +12,10 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <fstream>
-#include<math.h>
+#include <math.h>
 
 #define SAVE true
+#define MORE_OR_LESS_ONE true
 
 //namespace plt = matplotlibcpp;
 class Measurements{
@@ -26,11 +27,11 @@ class Measurements{
         void append_fit(std::vector<std::vector<int>> all_fit);
         void make_boxes();
 
-        /*#if NORE_OR_LESS_ONE*/
-        void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5, std::vector<std::vector<double>> F);
-        /*#else*/
-        void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F);
-        
+        #if MORE_OR_LESS_ONE
+            void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5);        
+        #else
+            void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F);
+        #endif
 
     private:
         std::string CURRENT_DIR = get_current_dir_name();

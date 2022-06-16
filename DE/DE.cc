@@ -1768,6 +1768,18 @@ namespace DE{
 
 
 			#else
+			
+				std::vector<int> _all_fit;
+
+				_all_fit.push_back(fitness[ind_idx]);
+				_all_fit.push_back(mutated_fit);
+				
+				this->all_fit.push_back(_all_fit);
+				
+				if(this->all_fit.size() == N_pop){
+					append_fit(this->all_fit);
+					this->all_fit.clear();
+				}
 
 				//std::cout << mutated_ind << std::endl;
 				if(problem_type == MINIMIZATION){

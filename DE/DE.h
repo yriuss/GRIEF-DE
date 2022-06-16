@@ -12,15 +12,14 @@
 #include "QS/quicksort.h"
 #include "../measurements/measurements.h"
 
-#define CURRENT_TO_RAND true
+#define CURRENT_TO_RAND false
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
-#define MORE_OR_LESS_ONE false
 #define CURRENT_MUT_OPPOSITE false
 
-#define BIN_CROSS_GENE false
+#define BIN_CROSS_GENE true
 
 #if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
 	typedef void (*EvalFunction)(Eigen::MatrixXd, std::vector<double> &, std::vector<float> &);

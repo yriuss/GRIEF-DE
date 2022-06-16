@@ -79,11 +79,11 @@ void Measurements::reset(){
 }
 
 #if MORE_OR_LESS_ONE
-	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5)
+	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5){
 #else
-	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F)
+	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F){
 #endif
-{
+
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
 		_mkdir(CURRENT_DIR+"/../results/");
 	
@@ -112,10 +112,10 @@ void Measurements::reset(){
 	std::ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "changes.txt"), f4(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "std_devs.txt");
 	std::ofstream f5(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits.txt");
 	
-#if ! MORE_OR_LESS_ONE
-	std::ofstream f6;
-	f6.open(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_F.txt", std::ios_base::app);
-#endif
+	#if ! MORE_OR_LESS_ONE
+		std::ofstream f6;
+		f6.open(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_F.txt", std::ios_base::app);
+	#endif
 
 	for(std::vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
     	f1 << *i << '\n';
@@ -160,18 +160,18 @@ void Measurements::reset(){
 	}
 	
 
-#if ! MORE_OR_LESS_ONE
-
-	f6 << "Gen " << gen << std::endl;
-	for(int i = 0; i < F.size(); i++){
-		f6 << "ind " << i << ": ";
-		for(int j = 0; j < F[i].size(); j++){
-			f6 << F[i][j] << " ";
+	#if ! MORE_OR_LESS_ONE
+				
+		f6 << "Gen " << gen << std::endl;
+		for(int i = 0; i < F.size(); i++){
+			f6 << "ind " << i << ": ";
+			for(int j = 0; j < F[i].size(); j++){
+				f6 << F[i][j] << " ";
+			}
+			f6 << "\n";
 		}
-		f6 << "\n";
-	}
-	gen++;
+		gen++;
 
-#endif	
+	#endif	
 	//plt::show();
 }

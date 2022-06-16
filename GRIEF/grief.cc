@@ -241,6 +241,7 @@ namespace cv
 				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;				
 
 				std_dev(pop(), SAVE);
+
 				
 				#if MORE_OR_LESS_ONE
 					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_more_cur, count_less_cur, count_more_mut, count_less_mut);
