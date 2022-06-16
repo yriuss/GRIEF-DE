@@ -213,6 +213,10 @@ namespace cv
 		}
 
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
+			
+			load("test_pairs.brief");
+			reset();
+			std::cout << "Exp is " << exp << std::endl;
 
 			for(int g = 0; g < ng; g++){
 				
@@ -221,16 +225,13 @@ namespace cv
 				set_change_counter(0);
 
 				for(int i = 0; i < N_pop; i++){
-
 					mutate(i);					
-					crossover(i);
-					if(is_infeasible()){
-						repair(i);
-					}
+					crossover(i);					
+					repair(i);					
 					selection(i);
 					check_duplicates();
-
 				}
+
 				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 				std::cout << "Best fitted: " << get_best_fit() << std::endl;
 
@@ -238,7 +239,19 @@ namespace cv
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
 				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;				
+
+				std_dev(pop(), SAVE);
+				
+				#if MORE_OR_LESS_ONE
+					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_more_cur, count_less_cur, count_more_mut, count_less_mut);
+				#else
+					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2, F);
+				#endif
 			}
+
+			change_percentage.clear();
+			bfit.clear();
+			exp++;
 		}
 
 		void GriefDescriptorExtractor::evolve(uint ng){

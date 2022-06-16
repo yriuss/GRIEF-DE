@@ -77,7 +77,7 @@ namespace cv
 				int bytes_;
 				bool use_orientation_;
 				PixelTestFn test_fn_;
-			
+				int exp = 1;							
 		};
 	}
 }

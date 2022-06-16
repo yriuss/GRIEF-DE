@@ -1321,10 +1321,6 @@ void save_individual(Eigen::MatrixXd x, int i)
 }
 
 
-
-
-
-
 int main(int argc, char ** argv){
 //	std::vector<int> x;
 //	x.push_back(512);
@@ -1347,8 +1343,8 @@ int main(int argc, char ** argv){
 	
 	dataset = argv[1];
 
-	int K = atoi(argv[4]);
-	double cr = atof(argv[5]);
+	int K = atoi(argv[5]);
+	double cr = atof(argv[6]);
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
@@ -1364,7 +1360,7 @@ int main(int argc, char ** argv){
 			numSeasons++;
 		}
 	}	
-	while (numSeasons < MAX_SEASONS && tmpIm.data != NULL);
+	while (numSeasons < MAX_SEASONS && tmpIm.data != NULL); 
 	
 	
 	if (numDisplacements > 0 && numDisplacements < numSeasons){
@@ -1389,9 +1385,7 @@ int main(int argc, char ** argv){
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	printf("Dataset: %ix%i images from %i seasons and %i places, annotated %i, loadTime %f\n",x,y,numSeasons,numLocations,numDisplacements, elapsed.count());
 
-	
-	
-	
+		
 	/*check the dataset consistency*/
 	start = std::chrono::high_resolution_clock::now();
 
@@ -1455,10 +1449,8 @@ int main(int argc, char ** argv){
 
 
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, atoi(argv[3]), K, cr);
-    for(int i = 0; i < atoi((argv[3])); i++){
-		
+    for(int i = 0; i < atoi((argv[4])); i++){
 		grief_descriptor->evolve(atoi((argv[2])));
-		//save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
 	}
 
     return 0;

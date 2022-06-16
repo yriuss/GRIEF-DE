@@ -1279,8 +1279,9 @@ int main(int argc, char ** argv){
 	
 	dataset = argv[1];
 
-	int K = atoi(argv[4]);
-		
+	int K = atoi(argv[5]);
+	double cr = atof(argv[6]);
+	
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
@@ -1367,6 +1368,7 @@ int main(int argc, char ** argv){
 	Eigen::MatrixXd individual(512,4);
 
 	load(individual, "test_pairs.brief");
+	
 	//UserData data = {.numSeasons=numSeasons, .numLocations=numLocations};
 	//int count = 0;
 	//for(int i=0; i< numSeasons;i++){
@@ -1377,11 +1379,10 @@ int main(int argc, char ** argv){
 	//		count++;
 	//	}
 	//}
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K);
-    for(int i = 0; i < atoi((argv[3])); i++){
-		// cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3norm, 8, K);
-		grief_descriptor->evolve(atoi((argv[2])));
-		// save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv(), grief_descriptor->get_change_percentage(atoi(argv[2])));
+
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, atoi(argv[3]), K, cr);
+    for(int i = 0; i < atoi((argv[4])); i++){
+		grief_descriptor->evolve(atoi(argv[2]));
 	}
     return 0;
 }

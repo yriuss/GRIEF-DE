@@ -17,8 +17,10 @@
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
- 
-#define BIN_CROSS_GENE true
+#define MORE_OR_LESS_ONE false
+#define CURRENT_MUT_OPPOSITE false
+
+#define BIN_CROSS_GENE false
 
 #if ( CURRENT_TO_RAND || RAND_TO_BEST_MOD ) && BIN_CROSS_GENE
 	typedef void (*EvalFunction)(Eigen::MatrixXd, std::vector<double> &, std::vector<float> &);
@@ -64,11 +66,17 @@ namespace DE {
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
 			int mutation_algorithm, int crossover_algorithm, int K);
-			void reset();
 			
+			#if OPPOSITION_LEARNING || CURRENT_MUT_OPPOSITE
+				Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx);
+			#endif
+
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
-			Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx);
 			Eigen::MatrixXd truncate_individual(std::vector<int> ind_shape, Eigen::MatrixXd ind);
+			Eigen::MatrixXd get_best_ind();
+			std::vector<Eigen::MatrixXd> pop();
+
+			void reset();
 			void F_repair(int ind_idx);
 			void generate_oppsite_population();
 			void apply_opposition();
@@ -91,7 +99,6 @@ namespace DE {
 			int get_best_idx();
 			void bincross_modified2(int ind_idx);
 			int get_max_elem();
-			std::vector<Eigen::MatrixXd> pop();
 			bool is_infeasible(int element);
 			bool is_infeasible();
 			// void select_and_change(EvalRankFunction evaluation);
@@ -101,39 +108,27 @@ namespace DE {
 			uint get_change_counter();
 			void set_change_counter(uint value);
 			void check_duplicates();
-			
-			Eigen::MatrixXd get_best_ind();
-
 			void read_individuals(int n_of_individuals);
 
-
-			#if BIN_CROSS_GENE
-				
+			#if BIN_CROSS_GENE				
 				float normalize(float x, float min, float max);
 				void  bincrossnorm(int ind_idx);
-
 			#endif
-
 
 			#if CURRENT_TO_RAND
 
 				#if SECOND_MUTATED_FIT
-
 					void uniform_repair_mutated2(int ind_idx);
 					void uniform_repair_crossed(int ind_idx);
 					void currenttorand_modified2(int ind_idx);
-
 				#endif
-
-					void currenttorand_modified(int ind_idx);
-
+				
+				void currenttorand_modified(int ind_idx);
+				
 			#else
 				#if RAND_TO_BEST_MOD
-
 					void randtobest_modified(int ind_idx);
-
-				#else
-					
+				#else					
 					void rand_1(int ind_idx);
 					void rand_2(int ind_idx);
 					void randtobest_1(int ind_idx);
@@ -141,22 +136,32 @@ namespace DE {
 					void best_2(int ind_idx);
 					void currenttobest_1(int ind_idx);
 					void currenttorand_1(int ind_idx);
-
 				#endif
 			#endif
 
-			int count_mut1 = 0;
-			int count_cross1 = 0;
-			int count_mut2 = 0;
-			int count_cross2 = 0;
+			int count_mut1     = 0;
+			int count_cross1   = 0;
+			int count_mut2     = 0;
+			int count_cross2   = 0;
+			int count_more_cur = 0;
+			int count_less_cur = 0; 
+			int count_more_mut = 0;
+			int count_less_mut = 0;
+
+		#if MORE_OR_LESS_ONE
+			void more_or_less_one(Eigen::MatrixXd &individual, Eigen::MatrixXd &ind_more, Eigen::MatrixXd &ind_less);
+		#endif
+
+		#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
+			std::vector<std::vector<double>> F;
+		#endif
 
 		private:
 
+			std::vector<std::vector<int>> all_fit;
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
-
 			
-
 			#if SECOND_MUTATED_FIT
 				Eigen::MatrixXd mutated_ind2;
 			#endif
@@ -181,26 +186,19 @@ namespace DE {
 			std::vector<int> sort_idxs(std::vector<double> v);
 
 			#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
-			
 				//std::vector<Eigen::MatrixXd> F;
 				float K = 10;
-				std::vector<std::vector<double>> F;
+				// std::vector<std::vector<double>> F;
 				float F_mut;
 				std::vector<float> fitness;
 				std::vector<float> fitness_aux;
-
 			#else
-
 				float F;
 				std::vector<float> fitness;
-
 			#endif
 
-
 			#if BIN_CROSS_GENE				
-
 				std::vector<std::vector<float>> gene_fitness;
-
 			#endif
 
 			uint change_counter = 0;
@@ -219,8 +217,7 @@ namespace DE {
 			int mutation_algorithm;
 			int crossover_algorithm;
 			int N_pop;
-			
-			
+						
 	};
 }
 

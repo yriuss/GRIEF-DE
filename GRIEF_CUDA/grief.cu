@@ -64,7 +64,7 @@ namespace cv
 		#elif BIN_CROSS_GENE
 			void evaluation(Eigen::MatrixXd individual, float &fit, std::vector<float> &gene_fit_vec)
 			{ }
-			
+
 		#else
 			float evaluation(Eigen::MatrixXd individual)
 			{
@@ -336,44 +336,46 @@ namespace cv
 
 		void GriefDescriptorExtractorImpl::evolve(uint ng)
 		{
+			
 			load("test_pairs.brief");
 			reset();
-			std::cout << "Exp is " << exp+1 << std::endl;
+			std::cout << "Exp is " << exp << std::endl;
+
 			for(int g = 0; g < ng; g++){
+
+				std::cout << "Generation: " << g+1 << std::endl;
 				auto start = std::chrono::high_resolution_clock::now();
 				set_change_counter(0);
-				for(int i = 0; i < N_pop; i++){
-					std::cout << " [ i " << i+1 << "  ] ";
-					std::cout << " [ mut  ] ";
-					mutate(i);
-					std::cout << " [ cros ] ";
-					crossover(i);
-					std::cout << " [ rep  ] ";
-					repair(i);
-					std::cout << " [ sel  ] ";
+
+				for(int i = 0; i < N_pop; i++){				
+					mutate(i);					
+					crossover(i);					
+					repair(i);					
 					selection(i);
-					//std::cout << i << std::endl;
-
-				}//exit(-1);
-				std::cout << " " << std::endl;
-
+					check_duplicates();
+				}
+				
 				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 				std::cout << get_best_fit() << std::endl;
 				//std::cout <<  get_best_ind() << std::endl;
+
 				bfit.emplace_back(get_best_fit());
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
 				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
-				
-				std::cout << " [ save ] " << std::endl;
+								
 				std_dev(pop(), SAVE);
-				save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2);
+				
+				#if MORE_OR_LESS_ONE
+					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_more_cur, count_less_cur, count_more_mut, count_less_mut);
+				#else
+					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2);
+				#endif
 			}
 			
 			change_percentage.clear();
-			bfit.clear();
-			exp++;
-			std::cout << "Exp is " << exp+1 << std::endl;
+			bfit.clear();		
+			exp++;			
 		}
 
 		void GriefDescriptorExtractor::evolve(uint ng)
@@ -494,7 +496,6 @@ namespace cv
 			descriptors.setTo(Scalar::all(0));
 			pixelTests64(sum, keypoints, descriptors, use_orientation_);
 		}
-
 
 		void GriefDescriptorExtractor::compute(InputArray image, std::vector<KeyPoint>& keypoints, cuda::GpuMat& descriptors)
 		{
