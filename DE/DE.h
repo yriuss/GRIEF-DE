@@ -16,7 +16,7 @@
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
-#define SECOND_MUTATED_FIT true
+#define SECOND_MUTATED_FIT false
 
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
@@ -59,7 +59,7 @@ namespace DE {
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
 			int mutation_algorithm, int crossover_algorithm, int K);
 			void reset();
-			
+			void reduce_mut();
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
 			Eigen::MatrixXd generate_oppsite_individual(std::vector<int> ind_shape, int ind_idx);
 			Eigen::MatrixXd truncate_individual(std::vector<int> ind_shape, Eigen::MatrixXd ind);
@@ -73,7 +73,6 @@ namespace DE {
 			void evaluate(int ind_idx);
 			void selection(int ind_idx);
 			void create_population();
-			void get_fitness();
 			void weibull_repair(int ind_idx);
 			void uniform_repair_mutated(int ind_idx);
 			void bincross_modified(int ind_idx);
@@ -81,6 +80,7 @@ namespace DE {
 			void aritcross_modified(int ind_idx);
 			void expcross(int ind_idx);
 			void aritcross(int ind_idx);
+			std::vector<std::vector<double>> get_F();
 			float get_best_fit();
 			int get_best_idx();
 			void bincross_modified2(int ind_idx);
@@ -131,6 +131,7 @@ namespace DE {
 
 #endif
 		private:
+			std::vector<std::vector<int>> all_fit;
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
 

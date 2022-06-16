@@ -65,28 +65,21 @@ void Measurements::make_boxes(){
 	
 }
 
-void Measurements::append_fit1(std::vector<int> all_fit){
-	all_fits_ind1.push_back(all_fit);
-}
-void Measurements::append_fit2(std::vector<int> all_fit){
-	all_fits_ind2.push_back(all_fit);
-}
-void Measurements::append_fit3(std::vector<int> all_fit){
-	all_fits_ind3.push_back(all_fit);
-}
-void Measurements::append_fit4(std::vector<int> all_fit){
-	all_fits_ind4.push_back(all_fit);
+void Measurements::append_fit(std::vector<std::vector<int>> all_fit){
+	all_fits_ind.push_back(all_fit);
 }
 
 void Measurements::reset(){
 	boxes.clear();
 	means.clear();
 	std_devs.clear();
+	all_fits_ind.clear();
+	gen = 1;
 }
 
-void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4){
+void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F){
 	
-
+	
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
 		_mkdir(CURRENT_DIR+"/../results/");
 	
@@ -112,10 +105,10 @@ void Measurements::save_data(std::vector<float> y, const std::string &dataset, c
 	boxes.clear();
 	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
 	std::ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "changes.txt"), f4(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "std_devs.txt");
-	std::ofstream f5(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits1.txt");
-	std::ofstream f6(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits2.txt");
-	std::ofstream f7(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits3.txt");
-	std::ofstream f8(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits4.txt");
+	std::ofstream f5(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits.txt");
+	std::ofstream f6;
+	f6.open(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_F.txt", std::ios_base::app);
+
 	for(std::vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
     	f1 << *i << '\n';
 	}
@@ -138,32 +131,33 @@ void Measurements::save_data(std::vector<float> y, const std::string &dataset, c
     	f4 << *i << '\n';
 	}
 
-	for(int i = 0; i < all_fits_ind1.size(); i++){
-		for(int j = 0; j < all_fits_ind1[i].size(); j++){
-			f5 << all_fits_ind1[i][j] << " ";
-		}
-		f5 << '\n';
-	}
+	
 
-	for(int i = 0; i < all_fits_ind2.size(); i++){
-		for(int j = 0; j < all_fits_ind2[i].size(); j++){
-			f6 << all_fits_ind2[i][j] << " ";
+	gen = 1;
+	for(int i = 0; i < all_fits_ind.size(); i++){
+		f5 << "Gen " << gen << std::endl;
+		for(int j = 0; j < all_fits_ind[i].size();j++){
+			f5 << "ind " << j + 1 << ": ";
+			for(int k = 0; k < all_fits_ind[i][j].size(); k++){
+				f5 << all_fits_ind[i][j][k] << " ";
+			}
+			f5 << '\n';
 		}
-		f6 << '\n';
+		gen++;
 	}
+	gen--;
 
-	for(int i = 0; i < all_fits_ind3.size(); i++){
-		for(int j = 0; j < all_fits_ind3[i].size(); j++){
-			f7 << all_fits_ind3[i][j] << " ";
+	f6 << "Gen " << gen << std::endl;
+	for(int i = 0; i < F.size(); i++){
+		f6 << "ind " << i << ": ";
+		for(int j = 0; j < F[i].size(); j++){
+			f6 << F[i][j] << " ";
 		}
-		f7 << '\n';
-	}
+		f6 << "\n";
 
-	for(int i = 0; i < all_fits_ind4.size(); i++){
-		for(int j = 0; j < all_fits_ind4[i].size(); j++){
-			f8 << all_fits_ind4[i][j] << " ";
-		}
-		f8 << '\n';
 	}
+	gen++;
+
+	
 	//plt::show();
 }

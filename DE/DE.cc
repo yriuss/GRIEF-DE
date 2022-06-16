@@ -3,7 +3,14 @@
 
 
 namespace DE{
-
+	void DE::reduce_mut(){
+		if(F_mut > 0)
+			F_mut -= 0.008;
+		std::cout << F_mut << std::endl;
+	}
+	std::vector<std::vector<double>> DE::get_F(){
+		return F;
+	}
 	std::vector<int> DE::sort_idxs(std::vector<double> v){
 		std::vector<int> index(v.size(), 0);
 		for (int i = 0 ; i != index.size() ; i++) {
@@ -368,8 +375,27 @@ namespace DE{
 		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 		std::uniform_real_distribution<float> r_dist(0,1);
 		
-		Eigen::MatrixXd ind1 = generate_individual(ind_shape), ind2 = generate_individual(ind_shape);
-
+		Eigen::MatrixXd ind1 = generate_individual(ind_shape), ind2 = generate_individual(ind_shape),ind3 = generate_individual(ind_shape), ind4 = generate_individual(ind_shape);
+		
+		int idx1 = -1;
+		int idx2 = -1;
+		int idx3 = -1;
+		
+		do {
+			idx1 = dist(rng);
+		}
+		while(idx1 == ind_idx);
+		
+		do {
+			idx2 = dist(rng);
+		}
+		while(idx2 == ind_idx || idx2 == idx1);
+		
+		do {
+			idx3 = dist(rng);
+		}
+		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
+		
 
 		Eigen::MatrixXd F(512,512);
 		F.setZero(512,512);
@@ -377,33 +403,15 @@ namespace DE{
 
 		std::vector<int> idxs = sort_idxs(this->F[ind_idx]);
 		for(int j = 0; j < ind_shape[0]; j++){
-			if(j < 512-K){
-				if(j < 512-K - 10 && j >= 512-K - 20){
-					if(r_dist(rng) < th){
-						F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-					}
-					else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}else{
-					if(j < 512-K - 20 && j >= 512-K - 30){
-						if(r_dist(rng) < (float)th/3){
-							F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
-						}else{
-							F(idxs[j],idxs[j]) = 0;
-						}
-					}else{
-						F(idxs[j],idxs[j]) = 0;
-					}
-				}
-				
+			if(j < 512-K){	
 			}
 			else
 				F(idxs[j],idxs[j]) = this->F[ind_idx][idxs[j]];
 		}
 		
 		//exit(-1);
-		mutated_ind = population[ind_idx] + F * (ind1 - ind2);
+		mutated_ind = population[ind_idx] + F * (ind1 - population[ind_idx]);
+		//mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
 #if SECOND_MUTATED_FIT
 
@@ -413,8 +421,26 @@ namespace DE{
 		std::mt19937 rng(rseed());
 		std::uniform_int_distribution<int> dist(0, population.size() - 1);
 		std::uniform_real_distribution<float> r_dist(0,1);
-		Eigen::MatrixXd ind1 = generate_individual(ind_shape), ind2 = generate_individual(ind_shape);
+		Eigen::MatrixXd ind1 = generate_individual(ind_shape), ind2 = generate_individual(ind_shape),ind3 = generate_individual(ind_shape), ind4 = generate_individual(ind_shape);
 
+		int idx1 = -1;
+		int idx2 = -1;
+		int idx3 = -1;
+		
+		do {
+			idx1 = dist(rng);
+		}
+		while(idx1 == ind_idx);
+		
+		do {
+			idx2 = dist(rng);
+		}
+		while(idx2 == ind_idx || idx2 == idx1);
+		
+		do {
+			idx3 = dist(rng);
+		}
+		while(idx3 == ind_idx || idx3 == idx1 || idx3 == idx2);
 		Eigen::MatrixXd F(512,512);
 		F.setZero(512,512);
 		float th = 1./3;
@@ -447,7 +473,10 @@ namespace DE{
 		}
 		
 		//exit(-1);
-		mutated_ind2 = population[ind_idx] + F * (ind1 - ind2);
+
+		mutated_ind2 = population[ind_idx] + F * ((ind1 - population[ind_idx]));
+		//mutated_ind2 = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
+		//aux = idx1;
 		//std::cout << mutated_ind2.cols() << " " << mutated_ind2.rows() << std::endl;
 	}
 #endif
@@ -869,7 +898,7 @@ namespace DE{
 			}
 		}
 	}
-
+#if SECOND_MUTATED_FIT
 	void DE::bincross_modified(int ind_idx){
 		std::random_device rseed;
 		std::mt19937 rng(rseed());
@@ -899,6 +928,37 @@ namespace DE{
 		//std::cout << crossed_ind.cols() << " " << crossed_ind.rows() << std::endl;
 		
 	}
+#else
+	void DE::bincross_modified(int ind_idx){
+		std::random_device rseed;
+		std::mt19937 rng(rseed());
+		std::uniform_real_distribution<float> r_dist(0,1);
+		std::uniform_int_distribution<int> dist(0, ind_shape[1] - 2);
+		crossed_ind.setZero(512,4);
+		//std::cout << "passei aqui" << std::endl;
+
+		for(int i = 0; i < population[ind_idx].rows(); i++){
+			float J = dist(rng);
+			if(r_dist(rng) <= cr || jr == J)
+			{
+				for(int j = 0; j < population[ind_idx].cols(); j++)
+				{
+					crossed_ind(i,j) = mutated_ind(i,j);
+					if(!infeasible)
+						infeasible = is_infeasible(crossed_ind(i,j));
+				}
+			}
+			else{
+				for(int j = 0; j < population[ind_idx].cols(); j++)
+				{
+					crossed_ind(i,j) = population[ind_idx](i,j);
+				}
+			}
+		}
+		//std::cout << crossed_ind.cols() << " " << crossed_ind.rows() << std::endl;
+		
+	}
+#endif
 #if SECOND_MUTATED_FIT
 	void DE::bincross_modified2(int ind_idx){
 		std::random_device rseed;
@@ -1041,7 +1101,7 @@ namespace DE{
 
 	void DE::crossover(int ind_idx){
 		//std::cout << "alsdjoasikl "<<crossover_algorithm << std::endl;
-		switch(4){
+		switch(3){
 			case 0:
 				bincross(ind_idx); break;
 			case 1:
@@ -1272,11 +1332,15 @@ namespace DE{
 	}
 
 	void DE::selection(int ind_idx){
+
 		//std::cout << mutated_ind.rows() << " "  << mutated_ind.cols() << std::endl << std::endl;
 		//std::cout << mutated_ind << std::endl << std::endl;
 #if CURRENT_TO_RAND
+#if SECOND_MUTATED_FIT
 		std::vector<double> F = eval(truncate_individual(ind_shape, mutated_ind));
-		
+#else
+		std::vector<double> F = eval(truncate_individual(ind_shape, crossed_ind));
+#endif	
 #if MEAN_WORST
 		std::vector<double> F1, F2;
 		F1 = F;
@@ -1305,11 +1369,37 @@ namespace DE{
 		mutated_fit /= 512;
 
 #if SECOND_MUTATED_FIT
-		currenttorand_modified2(ind_idx);
-		uniform_repair_mutated2(ind_idx);
-		std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
-		std::vector<double> F2 = eval(truncate_individual(ind_shape, mutated_ind2));
+		std::vector<int> all_fit;
+		all_fit.push_back(fitness[ind_idx]);
+		all_fit.push_back(mutated_fit);
+		all_fit.push_back(second_mutated_fit);
+		all_fit.push_back(cross_fit);
+		all_fit.push_back(cross_fit2);
+		this->all_fit.push_back(all_fit);
+		if(this->all_fit.size() == N_pop){
+			append_fit(this->all_fit);
+			this->all_fit.clear();
+		}
+#else
+		std::vector<int> all_fit;
+		all_fit.push_back(fitness[ind_idx]);
+		all_fit.push_back(mutated_fit);
+		this->all_fit.push_back(all_fit);
+		if(this->all_fit.size() == N_pop){
+			append_fit(this->all_fit);
+			this->all_fit.clear();
+		}
+#endif
 
+#if SECOND_MUTATED_FIT
+		currenttorand_modified2(ind_idx);
+		
+		uniform_repair_mutated2(ind_idx);
+		
+		std::vector<double> Fcross = eval(truncate_individual(ind_shape, crossed_ind));
+		
+		std::vector<double> F2 = eval(truncate_individual(ind_shape, mutated_ind2));
+		
 		bincross_modified2(ind_idx);
 		std::vector<double> Fcross2 = eval(truncate_individual(ind_shape, crossed_ind2));
 
@@ -1352,56 +1442,7 @@ namespace DE{
 /////////////////////
 
 		//std::cout << mutated_ind << std::endl;
-		switch(ind_idx){
-			case 0:
-				{
-				std::vector<int> all_fit;
-				all_fit.push_back(fitness[ind_idx]);
-				all_fit.push_back(mutated_fit);
-				all_fit.push_back(second_mutated_fit);
-				all_fit.push_back(cross_fit);
-				all_fit.push_back(cross_fit2);
-
-				append_fit1(all_fit);
-				break;
-				}
-			case 1:
-				{
-				std::vector<int> all_fit;
-				all_fit.push_back(fitness[ind_idx]);
-				all_fit.push_back(mutated_fit);
-				all_fit.push_back(second_mutated_fit);
-				all_fit.push_back(cross_fit);
-				all_fit.push_back(cross_fit2);
-
-				append_fit2(all_fit);
-				break;
-				}
-			case 2:
-				{
-				std::vector<int> all_fit;
-				all_fit.push_back(fitness[ind_idx]);
-				all_fit.push_back(mutated_fit);
-				all_fit.push_back(second_mutated_fit);
-				all_fit.push_back(cross_fit);
-				all_fit.push_back(cross_fit2);
-
-				append_fit3(all_fit);
-				break;
-				}
-			case 3:
-				{
-				std::vector<int> all_fit;
-				all_fit.push_back(fitness[ind_idx]);
-				all_fit.push_back(mutated_fit);
-				all_fit.push_back(second_mutated_fit);
-				all_fit.push_back(cross_fit);
-				all_fit.push_back(cross_fit2);
-
-				append_fit4(all_fit);
-				break;
-				}
-		}
+		
 		
 
 		if(problem_type == MINIMIZATION){
@@ -1441,6 +1482,8 @@ namespace DE{
 				fitness[ind_idx] = cross_fit2;
 			}
 		}
+
+
 #else
 		//std::cout << mutated_ind << std::endl;
 		if(problem_type == MINIMIZATION){
