@@ -79,11 +79,13 @@ void Measurements::reset(){
 }
 
 #if MORE_OR_LESS_ONE
-	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5){
+	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5)
+#elif CURRENT_MUT_OPPOSITE
+	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3)
 #else
-	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F){
+	void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F)
 #endif
-
+{
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
 		_mkdir(CURRENT_DIR+"/../results/");
 	
@@ -131,10 +133,13 @@ void Measurements::reset(){
   	{
 
 		#if MORE_OR_LESS_ONE
-			f3 << "mut 1" << " " << "cur more" << " " << "cur less" << " " << "mut more" << " " << "mut less" << "\n";
+			f3 << "mut_1" << " " << "cur_more" << " " << "cur_less" << " " << "mut_more" << " " << "mut_less" << "\n";
 			f3 << count1  << " " << count2     << " " << count3     << " " << count4     << " " << count5;
+		#elif CURRENT_MUT_OPPOSITE
+			f3 << "mut_1" << " " << "cur_opp" << " " << "mut_opp" << "\n";
+			f3 << count1  << " " << count2    << " " << count3   ;
 		#else
-			f3 << "mut 1" << " " << "mut 2" << " " << "cross 1" << " " << "cross 2" << "\n";
+			f3 << "mut_1" << " " << "mut_2" << " " << "cross_1" << " " << "cross_2" << "\n";
 			f3 << count1  << " " << count2  << " " << count3    << " " << count4;
 		#endif
 		
@@ -160,7 +165,7 @@ void Measurements::reset(){
 	}
 	
 
-	#if ! MORE_OR_LESS_ONE
+	#if ! ( MORE_OR_LESS_ONE || CURRENT_MUT_OPPOSITE )
 				
 		f6 << "Gen " << gen << std::endl;
 		for(int i = 0; i < F.size(); i++){

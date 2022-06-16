@@ -245,6 +245,8 @@ namespace cv
 				
 				#if MORE_OR_LESS_ONE
 					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_more_cur, count_less_cur, count_more_mut, count_less_mut);
+				#elif CURRENT_MUT_OPPOSITE
+					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_cur_opp, count_mut_opp);
 				#else
 					save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2, F);
 				#endif

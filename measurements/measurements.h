@@ -15,7 +15,8 @@
 #include <math.h>
 
 #define SAVE true
-#define MORE_OR_LESS_ONE true
+#define MORE_OR_LESS_ONE false
+#define CURRENT_MUT_OPPOSITE true
 
 //namespace plt = matplotlibcpp;
 class Measurements{
@@ -29,6 +30,8 @@ class Measurements{
 
         #if MORE_OR_LESS_ONE
             void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, int count5);        
+        #elif CURRENT_MUT_OPPOSITE
+            void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3);        
         #else
             void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F);
         #endif

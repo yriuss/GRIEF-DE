@@ -543,7 +543,7 @@ namespace DE{
 		}
 
 	}
-	
+
 	#endif
 
 	#if CURRENT_TO_RAND
@@ -1129,6 +1129,18 @@ namespace DE{
 					ind_more(i,j) = individual(i,j) + 1;
 					ind_less(i,j) = individual(i,j) - 1;
 				}
+			}
+		}
+
+	#endif
+
+	#if CURRENT_MUT_OPPOSITE
+
+		void DE::oppsite(Eigen::MatrixXd &individual)
+		{
+			for (int i = 0; i < ind_shape[0]; i++){
+				for (int j = 0; j < ind_shape[1]; j++)
+					individual(i,j) = L + U - individual(i,j);
 			}
 		}
 
@@ -1842,25 +1854,6 @@ namespace DE{
 			eval(truncate_individual(ind_shape, ind_more_cur), ind_more_cur_fit, gene_fit_vec_more_cur);
 			eval(truncate_individual(ind_shape, ind_less_cur), ind_less_cur_fit, gene_fit_vec_less_cur);
 
-
-			// int mutated_fit, ind_more_cur_fit, ind_less_cur_fit, ind_more_mut_fit, ind_less_mut_fit = 0;
-
-
-			// for(int j = 0; j < ind_shape[0]; j++){
-			// 	mutated_fit 	 += F[j];
-			// 	ind_more_cur_fit += Fmore_cur[j];
-			// 	ind_less_cur_fit += Fless_cur[j];
-			// 	ind_more_mut_fit += Fmore_mut[j];
-			// 	ind_less_mut_fit += Fless_mut[j];
-			// }
-
-			// mutated_fit 	 = 		mutated_fit / ind_shape[0];
-			// ind_more_cur_fit = ind_more_cur_fit / ind_shape[0];
-			// ind_less_cur_fit = ind_less_cur_fit / ind_shape[0];
-			// ind_more_mut_fit = ind_more_mut_fit / ind_shape[0];
-			// ind_less_mut_fit = ind_less_mut_fit / ind_shape[0];
-			
-
 			std::vector<int> _all_fit;
 
 			_all_fit.push_back(fitness[ind_idx]);
@@ -1963,6 +1956,92 @@ namespace DE{
 					fitness[ind_idx] = ind_less_mut_fit;
 					gene_fitness[ind_idx] = gene_fit_vec_less_mut;
 
+				}
+
+			#endif
+
+		#elif BIN_CROSS_GENE && CURRENT_MUT_OPPOSITE
+
+			float mutated_fit;
+			float ind_cur_opp_fit;
+			float ind_mut_opp_fit;
+
+			std::vector<float> gene_fit_vec;
+			std::vector<float> gene_fit_vec_cur_opp;
+			std::vector<float> gene_fit_vec_mut_opp;
+
+			Eigen::MatrixXd ind_cur_opp, ind_mut_opp;
+
+			ind_cur_opp = population[ind_idx];
+			ind_mut_opp = mutated_ind;
+
+			oppsite(ind_cur_opp);
+			oppsite(ind_mut_opp);
+
+			eval(truncate_individual(ind_shape, mutated_ind), mutated_fit    , gene_fit_vec        );
+			eval(truncate_individual(ind_shape, ind_cur_opp), ind_cur_opp_fit, gene_fit_vec_cur_opp);
+			eval(truncate_individual(ind_shape, ind_mut_opp), ind_mut_opp_fit, gene_fit_vec_mut_opp);
+
+			std::vector<int> _all_fit;
+
+			_all_fit.push_back(fitness[ind_idx]);
+			_all_fit.push_back(mutated_fit);
+			_all_fit.push_back(ind_cur_opp_fit);
+			_all_fit.push_back(ind_mut_opp_fit);
+
+			this->all_fit.push_back(_all_fit);
+
+			if(this->all_fit.size() == N_pop){
+				append_fit(this->all_fit);
+				this->all_fit.clear();
+			}
+
+			#if problem_type == MINIMIZATION
+
+				if( mutated_fit < fitness[ind_idx] && mutated_fit < ind_cur_opp_fit && mutated_fit < ind_cur_opp_fit)
+				{
+					count_mut1++;
+					population[ind_idx] = mutated_ind;
+					fitness[ind_idx] = mutated_fit;
+					gene_fitness[ind_idx] = gene_fit_vec;
+				}
+				else if( ind_cur_opp_fit < fitness[ind_idx] && ind_cur_opp_fit < mutated_fit && ind_cur_opp_fit < ind_mut_opp_fit)
+				{
+					count_cur_opp++;
+					population[ind_idx] = ind_cur_opp;
+					fitness[ind_idx] = ind_cur_opp_fit;
+					gene_fitness[ind_idx] = gene_fit_vec_cur_opp;
+				}
+				else if(ind_mut_opp_fit < fitness[ind_idx] && ind_mut_opp_fit < mutated_fit && ind_mut_opp_fit < ind_cur_opp_fit)
+				{
+					count_mut_opp++;
+					population[ind_idx] = ind_mut_opp;
+					fitness[ind_idx] = ind_mut_opp_fit;
+					gene_fitness[ind_idx] = gene_fit_vec_mut_opp;
+				}
+
+			#else
+
+				if( mutated_fit > fitness[ind_idx] && mutated_fit > ind_cur_opp_fit && mutated_fit > ind_cur_opp_fit)
+				{
+					ount_mut1++;
+					population[ind_idx] = mutated_ind;
+					fitness[ind_idx] = mutated_fit;
+					gene_fitness[ind_idx] = gene_fit_vec;
+				}
+				else if( ind_cur_opp_fit > fitness[ind_idx] && ind_cur_opp_fit > mutated_fit && ind_cur_opp_fit > ind_mut_opp_fit)
+				{
+					count_cur_opp++;
+					population[ind_idx] = ind_cur_opp;
+					fitness[ind_idx] = ind_cur_opp_fit;
+					gene_fitness[ind_idx] = gene_fit_vec_cur_opp;
+				}
+				else if(ind_mut_opp_fit > fitness[ind_idx] && ind_mut_opp_fit > mutated_fit && ind_mut_opp_fit > ind_cur_opp_fit)
+				{
+					count_mut_opp++;
+					population[ind_idx] = ind_mut_opp;
+					fitness[ind_idx] = ind_mut_opp_fit;
+					gene_fitness[ind_idx] = gene_fit_vec_mut_opp;
 				}
 
 			#endif

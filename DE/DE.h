@@ -17,7 +17,6 @@
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
 #define SECOND_MUTATED_FIT false
-#define CURRENT_MUT_OPPOSITE false
 
 #define BIN_CROSS_GENE true
 
@@ -146,9 +145,15 @@ namespace DE {
 			int count_less_cur = 0; 
 			int count_more_mut = 0;
 			int count_less_mut = 0;
+			int count_cur_opp  = 0;
+			int count_mut_opp  = 0;
 
 		#if MORE_OR_LESS_ONE
 			void more_or_less_one(Eigen::MatrixXd &individual, Eigen::MatrixXd &ind_more, Eigen::MatrixXd &ind_less);
+		#endif
+
+		#if CURRENT_MUT_OPPOSITE
+			void oppsite(Eigen::MatrixXd &individual);
 		#endif
 
 		#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
