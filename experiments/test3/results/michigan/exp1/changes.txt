@@ -1,0 +1,2 @@
+mut 1 cur more cur less mut more mut less
+36 4 47 57 42

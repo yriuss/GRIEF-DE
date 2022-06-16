@@ -1870,7 +1870,7 @@ namespace DE{
 				this->all_fit.clear();
 			}
 
-			#if problem_type == MINIMIZATION
+			if(problem_type == MINIMIZATION){
 				
 				if( mutated_fit < fitness[ind_idx] && mutated_fit < ind_more_cur_fit && mutated_fit < ind_less_cur_fit 
 					&& mutated_fit < ind_more_mut_fit && mutated_fit < ind_less_mut_fit ){
@@ -1914,7 +1914,7 @@ namespace DE{
 
 				}
 
-			#else
+			}else{
 			
 				if( mutated_fit > fitness[ind_idx] && mutated_fit > ind_more_cur_fit && mutated_fit > ind_less_cur_fit 
 					&& mutated_fit > ind_more_mut_fit && mutated_fit > ind_less_mut_fit ){
@@ -1957,8 +1957,7 @@ namespace DE{
 					gene_fitness[ind_idx] = gene_fit_vec_less_mut;
 
 				}
-
-			#endif
+			}
 
 		#elif BIN_CROSS_GENE && CURRENT_MUT_OPPOSITE
 
@@ -1996,7 +1995,7 @@ namespace DE{
 				this->all_fit.clear();
 			}
 
-			#if problem_type == MINIMIZATION
+			if(problem_type == MINIMIZATION){
 
 				if( mutated_fit < fitness[ind_idx] && mutated_fit < ind_cur_opp_fit && mutated_fit < ind_cur_opp_fit)
 				{
@@ -2020,7 +2019,7 @@ namespace DE{
 					gene_fitness[ind_idx] = gene_fit_vec_mut_opp;
 				}
 
-			#else
+			}else{
 
 				if( mutated_fit > fitness[ind_idx] && mutated_fit > ind_cur_opp_fit && mutated_fit > ind_cur_opp_fit)
 				{
@@ -2043,8 +2042,7 @@ namespace DE{
 					fitness[ind_idx] = ind_mut_opp_fit;
 					gene_fitness[ind_idx] = gene_fit_vec_mut_opp;
 				}
-
-			#endif
+			}
 
 		#else
 
