@@ -1,2 +1,0 @@
-mut 1 cur more cur less mut more mut less
-0 7 47 35 31

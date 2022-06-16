@@ -14,3 +14,4 @@ local_tests/*
 results/*
 local_backups/*
 download_exp_data.sh
+experiments/*
