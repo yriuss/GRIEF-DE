@@ -1368,28 +1368,7 @@ namespace DE{
 #endif
 		mutated_fit /= 512;
 
-#if SECOND_MUTATED_FIT
-		std::vector<int> all_fit;
-		all_fit.push_back(fitness[ind_idx]);
-		all_fit.push_back(mutated_fit);
-		all_fit.push_back(second_mutated_fit);
-		all_fit.push_back(cross_fit);
-		all_fit.push_back(cross_fit2);
-		this->all_fit.push_back(all_fit);
-		if(this->all_fit.size() == N_pop){
-			append_fit(this->all_fit);
-			this->all_fit.clear();
-		}
-#else
-		std::vector<int> all_fit;
-		all_fit.push_back(fitness[ind_idx]);
-		all_fit.push_back(mutated_fit);
-		this->all_fit.push_back(all_fit);
-		if(this->all_fit.size() == N_pop){
-			append_fit(this->all_fit);
-			this->all_fit.clear();
-		}
-#endif
+
 
 #if SECOND_MUTATED_FIT
 		currenttorand_modified2(ind_idx);
@@ -1504,7 +1483,28 @@ namespace DE{
 		}
 #endif
 
-		
+#if SECOND_MUTATED_FIT
+		std::vector<int> all_fit;
+		all_fit.push_back(fitness[ind_idx]);
+		all_fit.push_back(mutated_fit);
+		all_fit.push_back(second_mutated_fit);
+		all_fit.push_back(cross_fit);
+		all_fit.push_back(cross_fit2);
+		this->all_fit.push_back(all_fit);
+		if(this->all_fit.size() == N_pop){
+			append_fit(this->all_fit);
+			this->all_fit.clear();
+		}
+#else
+		std::vector<int> all_fit;
+		all_fit.push_back(fitness[ind_idx]);
+		all_fit.push_back(mutated_fit);
+		this->all_fit.push_back(all_fit);
+		if(this->all_fit.size() == N_pop){
+			append_fit(this->all_fit);
+			this->all_fit.clear();
+		}
+#endif		
 
 		
 
