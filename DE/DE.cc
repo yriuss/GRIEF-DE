@@ -1369,6 +1369,9 @@ namespace DE{
 		mutated_fit /= 512;
 
 #if SECOND_MUTATED_FIT
+		int second_mutated_fit = 0;
+		int cross_fit2 = 0;
+		int cross_fit = 0;
 		std::vector<int> all_fit;
 		all_fit.push_back(fitness[ind_idx]);
 		all_fit.push_back(mutated_fit);
@@ -1403,7 +1406,7 @@ namespace DE{
 		bincross_modified2(ind_idx);
 		std::vector<double> Fcross2 = eval(truncate_individual(ind_shape, crossed_ind2));
 
-		int second_mutated_fit = 0;
+		
 		
 		min = 0;
 		for(int j = 0; j < ind_shape[0]; j++){
@@ -1416,7 +1419,7 @@ namespace DE{
 		}
 		second_mutated_fit /= 512;
 
-		int cross_fit = 0;
+		
 		min = 0;
 		for(int j = 0; j < ind_shape[0]; j++){
 			if(min > Fcross[j])
@@ -1428,7 +1431,7 @@ namespace DE{
 		}
 		cross_fit /= 512;
 //////////////////
-		int cross_fit2 = 0;
+		
 		min = 0;
 		for(int j = 0; j < ind_shape[0]; j++){
 			if(min > Fcross2[j])

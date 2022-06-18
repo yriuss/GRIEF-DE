@@ -207,8 +207,7 @@ __global__ static void pixelTests64_kernel(cuda::PtrStepSz<int> sum, float* x, f
 	//cudaDeviceSynchronize();
 	//desc[0] = 1;
 	//printf("%d\n", desc[0]);
-	//if(blockIdx.x == 1599 && threadIdx.x == 56){
-		
+	//if(blockIdx.x == 1499 && threadIdx.x == 56){
 	descriptors(blockIdx.x,threadIdx.x) = ((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x][0], individual[8*threadIdx.x][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x][2], individual[8*threadIdx.x][3])) << 7)
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 1][0], individual[8*threadIdx.x + 1][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 1][2], individual[8*threadIdx.x + 1][3])) << 6)
 	+((smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 2][0], individual[8*threadIdx.x + 2][1]) < smoothedSum(sum, x[blockIdx.x], y[blockIdx.x], individual[8*threadIdx.x + 2][2], individual[8*threadIdx.x + 2][3])) << 5)
@@ -280,7 +279,7 @@ void GriefDescriptorExtractorImpl::pixelTests64(InputArray sum, const std::vecto
 	
 	
 	
-	
+	//std::cout << keypoints.size() << std::endl;
 	//cudaMemcpy(_sum, &aux, sizeof(KeyPoint)*keypoints.size(), cudaMemcpyHostToDevice);
 	pixelTests64_kernel<<<keypoints.size(),64>>>(_sum, _x, _y,descriptors, _use_orientation, gpu_individual);
 	//std::cout << keypoints.size();

@@ -49,7 +49,7 @@ public:
 class GriefDescriptorExtractorImpl : public GriefDescriptorExtractor, public DE::DE
 {
 public:
-	enum { PATCH_SIZE = 100, KERNEL_SIZE = 9 };
+	enum { PATCH_SIZE = 48, KERNEL_SIZE = 9 };
 
 	// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
 	GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
