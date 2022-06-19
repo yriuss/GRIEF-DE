@@ -10,3 +10,4 @@ lib/*
 Makefile
 results/
 results_8ab/
+download_exp_data.sh
