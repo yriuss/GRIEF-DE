@@ -336,7 +336,7 @@ namespace cv
 					mutate(i);
 					crossover(i);
 					repair(i);
-					compute(i);
+					process(i);
 				}
 
 				set_change_counter(0);
