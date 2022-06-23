@@ -1679,15 +1679,17 @@ namespace DE{
 						all_individuals.push_back(this->population[i]);
 						all_fitness.push_back(this->fitness[i]);
 					}
-					std::cout << ">>> tempF ok " << std::endl;
+					std::cout << ">>> population ok " << std::endl;
 
 					for (int i = 0; i < N_pop * qtd; i++)
 						indexes.push_back(i);
-					std::cout << ">>> tempF ok " << std::endl;
+
+					std::cout << ">>> indexes ok" << std::endl;
 					
 
 					QS::quicksort qs;
 					qs.sort( all_fitness, indexes, 0, (N_pop * qtd) - 1 );
+					std::cout << ">>> sort ok" << std::endl;
 
 					/* 
 					 * [ indexes ] 
