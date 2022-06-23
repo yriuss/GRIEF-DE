@@ -51,16 +51,17 @@ namespace cv
 {
 	namespace xfeatures2d
 	{
-
-		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-		std::vector<double> evaluation(Eigen::MatrixXd individual){
-			std::vector<double> m;
-			return m;
-		}
+		#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
+			std::vector<double> evaluation(Eigen::MatrixXd individual)
+			{
+				std::vector<double> m;
+				return m;
+			}
 		#else
-		float evaluation(Eigen::MatrixXd individual){
-			return -1;
-		}
+			float evaluation(Eigen::MatrixXd individual)
+			{
+				return -1;
+			}
 		#endif
 
 		Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int K,
@@ -69,23 +70,30 @@ namespace cv
 			return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, K, cr, jr, F, mutation_algorithm, crossover_algorithm);
 		}
 
-		std::vector<float> GriefDescriptorExtractorImpl::gbfit(){
+		std::vector<float> GriefDescriptorExtractorImpl::gbfit()
+		{
 			return bfit;
 		}
 
-		std::vector<float> GriefDescriptorExtractor::gbfit(){
+		std::vector<float> GriefDescriptorExtractor::gbfit()
+		{
 			return std::vector<float>{0,0};
 		}
 		
-		Eigen::MatrixXd GriefDescriptorExtractorImpl::get_best_indv(){
+		Eigen::MatrixXd GriefDescriptorExtractorImpl::get_best_indv()
+		{
 			return get_best_ind();
 		}
 
-		Eigen::MatrixXd GriefDescriptorExtractor::get_best_indv(){
+		Eigen::MatrixXd GriefDescriptorExtractor::get_best_indv()
+		{
 			return Eigen::MatrixXd(1,1);
 		}
+
 #include <unistd.h>
-		int GriefDescriptorExtractorImpl::load(std::string fileName) {
+		
+		int GriefDescriptorExtractorImpl::load(std::string fileName) 
+		{
 			std::string CURRENT_DIR = get_current_dir_name();
 			using namespace std;
 			ifstream file(CURRENT_DIR +"/../GRIEF_CUDA/" + fileName);
@@ -113,11 +121,13 @@ namespace cv
 			return successful;
 		}
 
-		float GriefDescriptorExtractorImpl::get_b_fit(){
+		float GriefDescriptorExtractorImpl::get_b_fit()
+		{
 			return get_best_fit();
 		}
 
-		float GriefDescriptorExtractor::get_b_fit(){
+		float GriefDescriptorExtractor::get_b_fit()
+		{
 			return 1;
 		}
 
@@ -193,43 +203,61 @@ namespace cv
 			}
 		}
 
-		std::vector<float> GriefDescriptorExtractorImpl::get_change_percentage(uint ng){
+		std::vector<float> GriefDescriptorExtractorImpl::get_change_percentage(uint ng)
+		{
 			return change_percentage;
 		}
 
-		std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng){
+		std::vector<float> GriefDescriptorExtractor::get_change_percentage(uint ng)
+		{
 			return std::vector<float>{};
 		}
+		
 		void GriefDescriptorExtractorImpl::evolve(uint ng){
 
-			for(int g = 0; g < ng; g++){
+			load("test_pairs.brief");
+			reset();
+			std::cout << "Exp is " << exp+1 << std::endl;
+
+			for(int g = 0; g < ng; g++)
+			{
 				auto start = std::chrono::high_resolution_clock::now();
-				set_change_counter(0);
-				for(int i = 0; i < N_pop; i++){
+
+				allocate_mem_temp_data();
+				
+				for(int i = 0; i < N_pop; i++)
+				{
 					mutate(i);
 					crossover(i);
-					if(is_infeasible()){
-						repair(i);
-					}
-					selection(i);
-					//std::cout << i << std::endl;
+					repair(i);
+					process(i);
+				}
 
-				}//exit(-1);
+				set_change_counter(0);
+				selection();
+				deallocate_mem_temp_data();
+				check_duplicates();
+
 				change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 				std::cout <<  get_best_fit() << std::endl;
-
+				//std::cout <<  get_best_ind() << std::endl;
 				bfit.emplace_back(get_best_fit());
 				auto finish = std::chrono::high_resolution_clock::now();
 				std::chrono::duration<double, std::milli> elapsed = finish - start;
 				std::cout << "Gen " << g+1 << ": Elapsed time: " << elapsed.count() << " ms." << std::endl;
-
-
+				
+				std_dev(pop(), SAVE);
+				reduce_mut();
+				save_data(gbfit(), "michigan", "exp" + std::to_string(exp), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2, get_F());
 			}
+			
+			change_percentage.clear();
+			bfit.clear();
+			exp++;
 		}
 
-		void GriefDescriptorExtractor::evolve(uint ng){
-			
-		}
+		void GriefDescriptorExtractor::evolve(uint ng)
+		{ }
 
 		GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
 																	int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm) :
@@ -298,18 +326,17 @@ namespace cv
 			fs << "descriptorSize" << bytes_;
 		}
 
-		void GriefDescriptorExtractorImpl::getInd(){
+		void GriefDescriptorExtractorImpl::getInd()
+		{
 			for(int i = 0; i < 512; i++){
 				for(int j=0; j < 4; j++)
 					std::cout << individual[i][j] << " ";
 				std::cout << std::endl;
 			}
-
 		}
 
-		void GriefDescriptorExtractor::getInd(){
-			
-		}
+		void GriefDescriptorExtractor::getInd()
+		{ }
 
 		void GriefDescriptorExtractorImpl::compute(InputArray image, std::vector<KeyPoint>& keypoints, OutputArray descriptors)
 		{
@@ -334,7 +361,8 @@ namespace cv
 			test_fn_(sum, keypoints, descriptors, use_orientation_, individual);
 		}
 
-		void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual){
+		void GriefDescriptorExtractorImpl::setInd(Eigen::MatrixXd new_individual)
+		{
 			// load("test_pairs.brief");
 			// std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
 			for(int i = 0; i < bytes_*8; i++){
@@ -345,8 +373,7 @@ namespace cv
 			//std::cout << individual[0][0] << individual[0][1] << individual[0][2] << individual[0][3]  << std::endl;
 		}
 
-		void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual){
-		
-		}
+		void GriefDescriptorExtractor::setInd(Eigen::MatrixXd new_individual)
+		{ }
 	} //namespace xfeatures2d
 } // namespace cv

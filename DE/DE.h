@@ -20,44 +20,48 @@
 
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
+	typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
 #else
-typedef float(*EvalFunction)(Eigen::MatrixXd);
+	typedef float(*EvalFunction)(Eigen::MatrixXd);
 #endif
 
 
-namespace DE {
+namespace DE 
+{
 
+	/* DEFINITION OF PROBLEM TYPE */
+	#define MAXIMIZATION true
+	#define MINIMIZATION false
+	#define DEBUG 1
 
+	/* DEFINITION OF SELECTION OPERATIONS */
+	#define SELECT_JUST_BESTS true
 
-/* DEFINITION OF PROBLEM TYPE */
-#define MAXIMIZATION false
-#define MINIMIZATION true
-#define DEBUG 1
+	/* DEFINITION OF MUTATION ALGORITHM */
+	#define            RAND_1 0 
+	#define            RAND_2 1
+	#define      RAND_TO_BEST 2
+	#define            BEST_1 3
+	#define            BEST_2 4
+	#define CURRENT_TO_BEST_1 5
+	#define CURRENT_TO_RAND_1 6
 
-/* DEFINITION OF MUTATION ALGORITHM */
-#define            RAND_1 0 
-#define            RAND_2 1
-#define      RAND_TO_BEST 2
-#define            BEST_1 3
-#define            BEST_2 4
-#define CURRENT_TO_BEST_1 5
-#define CURRENT_TO_RAND_1 6
+	/* DEFINITION OF CROSSOVER ALGORITHM */
+	#define BIN  3
+	#define EXP  1
+	#define ARIT 2
 
-/* DEFINITION OF CROSSOVER ALGORITHM */
-#define BIN 3
-#define EXP 1
-#define ARIT 2
-
-#define OPPOSITION_LEARNING false
-#define ROUND_ON_MUTATION  true
+	#define OPPOSITION_LEARNING false
+	#define ROUND_ON_MUTATION   true
 	
 	class DE: public Measurements{
 
 		public:
+
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
 			int mutation_algorithm, int crossover_algorithm, int K);
+
 			void reset();
 			void reduce_mut();
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
@@ -71,7 +75,7 @@ namespace DE {
 			void repair(int ind_idx);
 			void evolve(uint ng);
 			void evaluate(int ind_idx);
-			void selection(int ind_idx);
+			void selection();
 			void create_population();
 			void weibull_repair(int ind_idx);
 			void uniform_repair_mutated(int ind_idx);
@@ -95,42 +99,46 @@ namespace DE {
 			uint get_change_counter();
 			void set_change_counter(uint value);
 			void check_duplicates();
-			
 			Eigen::MatrixXd get_best_ind();
-
 			void read_individuals(int n_of_individuals);
+			
+			void process(int ind_idx);
+			void allocate_mem_temp_data();
+			void deallocate_mem_temp_data();
+
 			int count_mut1 = 0;
 			int count_cross1 = 0;
 			int count_mut2 = 0;
 			int count_cross2 = 0;
-#if SECOND_MUTATED_FIT
-			Eigen::MatrixXd mutated_ind2;
-			
-#endif
-#if RAND_TO_BEST_MOD
-			void randtobest_modified(int ind_idx);
-#endif
-#if CURRENT_TO_RAND
-#if SECOND_MUTATED_FIT
-			void uniform_repair_mutated2(int ind_idx);
-			void uniform_repair_crossed(int ind_idx);
 
-			void currenttorand_modified2(int ind_idx);
-#endif
-			void currenttorand_modified(int ind_idx);
-#else
+			#if SECOND_MUTATED_FIT
+				Eigen::MatrixXd mutated_ind2;			
+			#endif
 
-			
-			void rand_1(int ind_idx);
-			void rand_2(int ind_idx);
-			void randtobest_1(int ind_idx);
-			void best_1(int ind_idx);
-			void best_2(int ind_idx);
-			void currenttobest_1(int ind_idx);
-			void currenttorand_1(int ind_idx);
+			#if RAND_TO_BEST_MOD
+				void randtobest_modified(int ind_idx);
+			#endif
 
-#endif
+			#if CURRENT_TO_RAND
+				#if SECOND_MUTATED_FIT
+					void uniform_repair_mutated2(int ind_idx);
+					void uniform_repair_crossed(int ind_idx);
+					void currenttorand_modified2(int ind_idx);	
+				#endif
+
+				void currenttorand_modified(int ind_idx);
+			#else			
+				void rand_1(int ind_idx);
+				void rand_2(int ind_idx);
+				void randtobest_1(int ind_idx);
+				void best_1(int ind_idx);
+				void best_2(int ind_idx);
+				void currenttobest_1(int ind_idx);
+				void currenttorand_1(int ind_idx);
+			#endif
+
 		private:
+
 			std::vector<std::vector<int>> all_fit;
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
@@ -145,37 +153,54 @@ namespace DE {
 			//std::vector<float> best_fitness;
 			std::vector<int> ind_shape;
 			float cr;
+
 			std::vector<int> sort_idxs(std::vector<double> v);
-#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-			
-			//std::vector<Eigen::MatrixXd> F;
-			float K = 10;
-			std::vector<std::vector<double>> F;
-			float F_mut;
-			std::vector<float> fitness;
-			std::vector<float> fitness_aux;
-#else
 
-			float F;
-			std::vector<float> fitness;
+			std::vector<Eigen::MatrixXd> temp_population; 
+			std::vector<Eigen::MatrixXd> temp_mutated_ind2; 
+			std::vector<Eigen::MatrixXd> temp_cross_ind; 
+			std::vector<Eigen::MatrixXd> temp_cross_ind2; 
+			std::vector<float> temp_fitness;
+			std::vector<float> temp_fitness_mutated_ind2;
+			std::vector<float> temp_fitness_crossed_ind;
+			std::vector<float> temp_fitness_crossed_ind2;
 
-#endif
+			std::vector<float> temp_fitness_aux;
+			std::vector<float> temp_opposite_fitness;
+
+			#if CURRENT_TO_RAND || RAND_TO_BEST_MOD
+				//std::vector<Eigen::MatrixXd> F;
+				float K = 10;
+				std::vector<std::vector<double>> F;
+				std::vector<std::vector<double>> temp_Fcross;
+				std::vector<std::vector<double>> temp_Fcross2;
+				std::vector<std::vector<double>> temp_F;
+				std::vector<std::vector<double>> temp_F2;
+				
+				float F_mut;
+				std::vector<float> fitness;
+				std::vector<float> fitness_aux;
+			#else
+				float F;
+				std::vector<float> fitness;
+			#endif
+
 			uint change_counter = 0;
 			// float jr;
 			bool problem_type;
 			bool infeasible = false;
-#if SECOND_MUTATED_FIT
-			bool infeasible2 = false;
-			bool infeasible3 = false;
-#endif
+
+			#if SECOND_MUTATED_FIT
+				bool infeasible2 = false;
+				bool infeasible3 = false;
+			#endif
+
 			int U;
 			int aux;
 			int L;
 			int mutation_algorithm;
 			int crossover_algorithm;
-			int N_pop;
-			
-			
+			int N_pop;			
 	};
 }
 

@@ -11,3 +11,8 @@ Makefile
 results/
 results_8ab/
 download_exp_data.sh
+experiments/
+local_tests/
+local_backups/
+indvs/
+best_indvs/

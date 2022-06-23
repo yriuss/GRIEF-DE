@@ -34,7 +34,7 @@ char season[1000][1000];
 
 int* offsetX;
 
-typedef struct{
+typedef struct{ 
 	int id;
 	int value;
 }TRating;
@@ -289,6 +289,7 @@ float eval(Eigen::MatrixXd individual){
 	std::cout << "error is " << (float)100*matchingFailures/matchingTests << std::endl;	
 	return matchingFailures/matchingTests;
 }
+
 float eval1(Eigen::MatrixXd individual){
 	
 	auto start = std::chrono::high_resolution_clock::now();

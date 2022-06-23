@@ -18,9 +18,9 @@ namespace cv
 	namespace xfeatures2d
 	{
 		#if CURRENT_TO_RAND||RAND_TO_BEST_MOD
-		std::vector<double> evaluation(Eigen::MatrixXd individual);
+			std::vector<double> evaluation(Eigen::MatrixXd individual);
 		#else
-		float evaluation(Eigen::MatrixXd individual);
+			float evaluation(Eigen::MatrixXd individual);
 		#endif
 
 		class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
@@ -63,6 +63,7 @@ namespace cv
 				virtual void setInd(Eigen::MatrixXd new_individual) CV_OVERRIDE;
 				virtual float get_b_fit() CV_OVERRIDE;
 				virtual Eigen::MatrixXd get_best_indv() CV_OVERRIDE;
+		
 			protected:
 				std::vector<float> bfit;
 				std::vector<float> change_percentage;
@@ -71,6 +72,8 @@ namespace cv
 				int individual[512][4];
 				int bytes_;
 				bool use_orientation_;
+				int exp = 0;
+
 				PixelTestFn test_fn_;
 			
 		};
