@@ -1760,7 +1760,7 @@ namespace DE{
 						}
 					}
 
-					int qtd = 3;
+					int qtd = 2;
 					std::vector<std::vector<double>> all_Fs;
 					std::vector<Eigen::MatrixXd> all_individuals;
 					std::vector<float> all_fitness;
