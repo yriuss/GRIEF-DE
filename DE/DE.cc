@@ -1628,7 +1628,7 @@ namespace DE{
 					}
 					
 
-					int qtd = 4;
+					int qtd = 5;
 					std::vector<std::vector<double>> all_Fs;
 					std::vector<Eigen::MatrixXd> all_individuals;
 					std::vector<float> all_fitness;
@@ -1666,6 +1666,13 @@ namespace DE{
 						all_Fs.push_back(this->temp_Fcross2[i]);
 						all_individuals.push_back(this->temp_cross_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind2[i]);
+					}
+
+					for (int i = 0; i < N_pop; i++)
+					{
+						all_Fs.push_back(this->F[i]);
+						all_individuals.push_back(this->population[i]);
+						all_fitness.push_back(this->fitness[i]);
 					}
 
 					for (int i = 0; i < N_pop * qtd; i++)
@@ -1753,7 +1760,7 @@ namespace DE{
 						}
 					}
 
-					int qtd = 2;
+					int qtd = 3;
 					std::vector<std::vector<double>> all_Fs;
 					std::vector<Eigen::MatrixXd> all_individuals;
 					std::vector<float> all_fitness;
@@ -1774,6 +1781,12 @@ namespace DE{
 					for (int i = 0; i < N_pop * qtd; i++)
 						indexes.push_back(i);
 					
+					for (int i = 0; i < N_pop; i++)
+					{
+						all_Fs.push_back(this->F[i]);
+						all_individuals.push_back(this->population[i]);
+						all_fitness.push_back(this->fitness[i]);
+					}
 
 					QS::quicksort qs;
 					qs.sort( all_fitness, indexes, 0, (N_pop * qtd) - 1 );
@@ -1842,6 +1855,12 @@ namespace DE{
 
 				for (int i = 0; i < N_pop * qtd; i++)
 					indexes.push_back(i);
+				
+				for (int i = 0; i < N_pop; i++)
+				{
+					all_individuals.push_back(this->population[i]);
+					all_fitness.push_back(this->fitness[i]);
+				}
 				
 				QS::quicksort qs;
 				qs.sort( all_fitness, indexes, 0, (N_pop * qtd) - 1 );

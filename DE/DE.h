@@ -148,6 +148,8 @@ namespace DE
 			std::vector<Eigen::MatrixXd> population;
 			std::vector<Eigen::MatrixXd> opposite_population;
 			
+			std::vector<Eigen::MatrixXd> reshaped_population;
+
 			std::vector<float> opposite_fitness;
 			// std::vector<float> ;
 			//std::vector<float> best_fitness;
