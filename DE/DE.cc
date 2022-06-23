@@ -1602,7 +1602,7 @@ namespace DE{
 			#if CURRENT_TO_RAND
 				#if SECOND_MUTATED_FIT
 
-					std::count << ">>> selection " << std::endl;
+					std::cout << ">>> selection " << std::endl;
 					for (int i = 0; i < N_pop; i++)
 					{
 						float cross_fit 		 = this->temp_fitness_crossed_ind[i]; 
@@ -1646,7 +1646,7 @@ namespace DE{
 						all_individuals.push_back(this->temp_population[i]);
 						all_fitness.push_back(this->temp_fitness[i]);						
 					}
-					std::count << ">>> tempF ok " << std::endl;
+					std::cout << ">>> tempF ok " << std::endl;
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1654,7 +1654,7 @@ namespace DE{
 						all_individuals.push_back(this->temp_mutated_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_mutated_ind2[i]);
 					} 
-					std::count << ">>> tempF2 ok " << std::endl;
+					std::cout << ">>> tempF2 ok " << std::endl;
 
 
 					for (int i = 0; i < N_pop; i++)
@@ -1663,7 +1663,7 @@ namespace DE{
 						all_individuals.push_back(this->temp_cross_ind[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind[i]);
 					}
-					std::count << ">>> tempFcross ok " << std::endl;
+					std::cout << ">>> tempFcross ok " << std::endl;
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1671,7 +1671,7 @@ namespace DE{
 						all_individuals.push_back(this->temp_cross_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind2[i]);
 					}
-					std::count << ">>> tempFcross2 ok " << std::endl;
+					std::cout << ">>> tempFcross2 ok " << std::endl;
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1679,11 +1679,11 @@ namespace DE{
 						all_individuals.push_back(this->population[i]);
 						all_fitness.push_back(this->fitness[i]);
 					}
-					std::count << ">>> tempF ok " << std::endl;
+					std::cout << ">>> tempF ok " << std::endl;
 
 					for (int i = 0; i < N_pop * qtd; i++)
 						indexes.push_back(i);
-					std::count << ">>> tempF ok " << std::endl;
+					std::cout << ">>> tempF ok " << std::endl;
 					
 
 					QS::quicksort qs;
