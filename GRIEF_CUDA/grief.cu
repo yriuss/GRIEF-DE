@@ -329,7 +329,7 @@ namespace cv
 			{
 				auto start = std::chrono::high_resolution_clock::now();
 
-				allocate_mem_temp_data()
+				allocate_mem_temp_data();
 				
 				for(int i = 0; i < N_pop; i++)
 				{
