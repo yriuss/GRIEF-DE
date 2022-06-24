@@ -1671,10 +1671,13 @@ namespace DE{
 					std::vector<float> all_fitness;
 					std::vector<int> indexes;
 
-					// all_Fs.reserve(N_pop * qtd);
-					// all_individuals.reserve(N_pop * qtd);
-					// all_fitness.reserve(N_pop * qtd);
-					// indexes.reserve(N_pop * qtd);
+					all_Fs.reserve(N_pop * qtd);
+					all_individuals.reserve(N_pop * qtd);
+					all_fitness.reserve(N_pop * qtd);
+					indexes.reserve(N_pop * qtd);
+
+					std::cout << "alocated" << std::endl;
+
 
 					for (int i = 0; i < N_pop; i++)
 					{
