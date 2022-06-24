@@ -1762,7 +1762,7 @@ namespace DE{
 					 *
 					 */
 
-					#if problem_type == MINIMIZATION
+					if (problem_type == MINIMIZATION){
 
 						// for(int i = 0; i < N_pop; i++)
 						int i = 0;
@@ -1771,7 +1771,7 @@ namespace DE{
 						{
 							this->F[i]          = all_Fs[indexes[j]];
 							this->population[i] = all_individuals[indexes[j]];
-							this->fitness[i]    = all_fitness[i];
+							this->fitness[i]    = all_fitness[j];
 							
 							if (indexes[j] >= 0 && indexes[j] < N_pop)							
 								count_mut1++;
@@ -1789,7 +1789,7 @@ namespace DE{
 							j++;
 						}
 						
-					#else
+					}else{
 						std::cout << "pop chcggg" << std::endl;
 						int i = 0;
 						int j = indexes.size() - 1;
@@ -1817,7 +1817,7 @@ namespace DE{
 						std::cout << "pop chcggg" << std::endl;
 
 	
-					#endif
+					}
 
 					all_Fs.clear();
 					all_individuals.clear();
