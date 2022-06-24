@@ -1736,6 +1736,10 @@ namespace DE{
 								all_fitness[j]   = all_fitness[j+1];
 								all_fitness[j+1] = temp;
 								swp = 1;
+
+								int aux    = indexes[j];
+								indexes[j] = indexes[j+1];
+								indexes[j+1] = aux;
 							}
 						}
 
