@@ -1648,7 +1648,6 @@ namespace DE{
 						float current_fitness  	 = this->fitness[i];
 
 						std::vector<int> all_fit;
-						// all_fit.reserve(5);
 						all_fit.push_back(current_fitness);
 						all_fit.push_back(mutated_fit);
 						all_fit.push_back(second_mutated_fit);
@@ -1663,21 +1662,17 @@ namespace DE{
 							this->all_fit.clear();
 						}
 					}
-					std::cout << "all fit" << std::endl;
 					
-					// int qtd = 5;
+					int qtd = 5;
 					std::vector<std::vector<double>> all_Fs;
 					std::vector<Eigen::MatrixXd> all_individuals;
 					std::vector<float> all_fitness;
 					std::vector<int> indexes;
 
-					// all_Fs.reserve(N_pop * qtd);
-					// all_individuals.reserve(N_pop * qtd);
-					// all_fitness.reserve(N_pop * qtd);
-					// indexes.reserve(N_pop * qtd);
-
-					std::cout << "alocated" << std::endl;
-
+					all_Fs.reserve(N_pop * qtd);
+					all_individuals.reserve(N_pop * qtd);
+					all_fitness.reserve(N_pop * qtd);
+					indexes.reserve(N_pop * qtd);
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1685,43 +1680,38 @@ namespace DE{
 						all_individuals.push_back(this->temp_population[i]);
 						all_fitness.push_back(this->temp_fitness[i]);						
 					}
-					std::cout << "TempF" << std::endl;
+
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->temp_F2[i]);
 						all_individuals.push_back(this->temp_mutated_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_mutated_ind2[i]);
 					} 
-					std::cout << "TempF2" << std::endl;
+
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->temp_Fcross[i]);
 						all_individuals.push_back(this->temp_cross_ind[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind[i]);
 					}
-					std::cout << "TempFcross" << std::endl;
+
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->temp_Fcross2[i]);
 						all_individuals.push_back(this->temp_cross_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind2[i]);
 					}
-					std::cout << "TempFcross2" << std::endl;
+
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->F[i]);
 						all_individuals.push_back(this->population[i]);
 						all_fitness.push_back(this->fitness[i]);
 					}
-					std::cout << "F" << std::endl;
 
 					for (int i = 0; i < all_fitness.size(); i++)
 						indexes.push_back(i);		
-					
-					std::cout << "indexes" << std::endl;
-					
-					std::cout << "sort" << std::endl;
-					std::cout << "jdaksjdkasdasdjkasdhn" << std::endl;
+			
 					
 					// sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
 
@@ -1747,11 +1737,7 @@ namespace DE{
 							break;
 					}
 
-					std::cout << "sort ok" << std::endl;
-					std::cout << "sort ok" << std::endl;
-					std::cout << "sort ok" << std::endl;
-					std::cout << "sort ok" << std::endl;
-		
+					
 					/* 
 					 * [ indexes ] 
 					 *  
@@ -1790,7 +1776,7 @@ namespace DE{
 						}
 						
 					}else{
-						std::cout << "pop chcggg" << std::endl;
+					
 						int i = 0;
 						int j = indexes.size() - 1;
 						while(i < N_pop)
@@ -1814,9 +1800,6 @@ namespace DE{
 							i++;
 							j--;
 						}
-						std::cout << "pop chcggg" << std::endl;
-
-	
 					}
 
 					all_Fs.clear();
