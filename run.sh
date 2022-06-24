@@ -6,3 +6,4 @@ make -j$(nproc)
 # dataset > gen number > experiments number > k value, cross value  
 ./teste michigan 2000 5 10 0.8
 cd ..
+date
