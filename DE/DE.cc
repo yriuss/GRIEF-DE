@@ -1685,38 +1685,40 @@ namespace DE{
 						all_individuals.push_back(this->temp_population[i]);
 						all_fitness.push_back(this->temp_fitness[i]);						
 					}
-
+					std::cout << "TempF" << std::endl;
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->temp_F2[i]);
 						all_individuals.push_back(this->temp_mutated_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_mutated_ind2[i]);
 					} 
-
+					std::cout << "TempF2" << std::endl;
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->temp_Fcross[i]);
 						all_individuals.push_back(this->temp_cross_ind[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind[i]);
 					}
-
+					std::cout << "TempFcross" << std::endl;
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->temp_Fcross2[i]);
 						all_individuals.push_back(this->temp_cross_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind2[i]);
 					}
-
+					std::cout << "TempFcross2" << std::endl;
 					for (int i = 0; i < N_pop; i++)
 					{
 						all_Fs.push_back(this->F[i]);
 						all_individuals.push_back(this->population[i]);
 						all_fitness.push_back(this->fitness[i]);
 					}
+					std::cout << "F" << std::endl;
 
 					for (int i = 0; i < all_fitness.size(); i++)
 						indexes.push_back(i);		
-
+					std::cout << "indexes" << std::endl;
+					
 					sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
 				
 					/* 
