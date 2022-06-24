@@ -1665,16 +1665,16 @@ namespace DE{
 					}
 					std::cout << "all fit" << std::endl;
 					
-					int qtd = 5;
+					// int qtd = 5;
 					std::vector<std::vector<double>> all_Fs;
 					std::vector<Eigen::MatrixXd> all_individuals;
 					std::vector<float> all_fitness;
 					std::vector<int> indexes;
 
-					all_Fs.reserve(N_pop * qtd);
-					all_individuals.reserve(N_pop * qtd);
-					all_fitness.reserve(N_pop * qtd);
-					indexes.reserve(N_pop * qtd);
+					// all_Fs.reserve(N_pop * qtd);
+					// all_individuals.reserve(N_pop * qtd);
+					// all_fitness.reserve(N_pop * qtd);
+					// indexes.reserve(N_pop * qtd);
 
 					std::cout << "alocated" << std::endl;
 
@@ -1725,10 +1725,10 @@ namespace DE{
 					
 					// sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
 
-					for (int i = 0; i < all_fitness.size() - 1; i++)
+					for (int i = 0; i < (all_fitness.size() - 1); i++)
 					{
 						int swp = 0;
-						for (int j = 0; j < (all_fitness.size() - i - 1); j++)
+						for (int j = 0; j < ((all_fitness.size() - i) - 1); j++)
 						{
 							if (all_fitness[j] > all_fitness[j + 1])
 							{
