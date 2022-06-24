@@ -1748,6 +1748,9 @@ namespace DE{
 					}
 
 					std::cout << "sort ok" << std::endl;
+					std::cout << "sort ok" << std::endl;
+					std::cout << "sort ok" << std::endl;
+					std::cout << "sort ok" << std::endl;
 		
 					/* 
 					 * [ indexes ] 
