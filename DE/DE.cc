@@ -1725,7 +1725,7 @@ namespace DE{
 					
 					sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
 					std::cout << "sort ok" << std::endl;
-
+		
 					/* 
 					 * [ indexes ] 
 					 *  
@@ -1764,7 +1764,7 @@ namespace DE{
 						}
 						
 					#else
-	
+						std::cout << "pop chcggg" << std::endl;
 						int i = 0;
 						int j = indexes.size() - 1;
 						while(i < N_pop)
