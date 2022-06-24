@@ -1788,6 +1788,8 @@ namespace DE{
 							i++;
 							j--;
 						}
+						std::cout << "pop chcggg" << std::endl;
+
 	
 					#endif
 
