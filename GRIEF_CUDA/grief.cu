@@ -340,6 +340,7 @@ namespace cv
 				}
 
 				set_change_counter(0);
+				std::cout << "sel" << std::endl;
 				selection();
 				deallocate_mem_temp_data();
 				check_duplicates();
