@@ -1717,10 +1717,15 @@ namespace DE{
 
 					for (int i = 0; i < all_fitness.size(); i++)
 						indexes.push_back(i);		
+					
 					std::cout << "indexes" << std::endl;
 					
+					std::cout << "sort" << std::endl;
+					std::cout << "jdaksjdkasdasdjkasdhn" << std::endl;
+					
 					sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
-				
+					std::cout << "sort ok" << std::endl;
+
 					/* 
 					 * [ indexes ] 
 					 *  
