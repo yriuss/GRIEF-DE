@@ -1728,7 +1728,7 @@ namespace DE{
 					for (int i = 0; i < all_fitness.size() - 1; i++)
 					{
 						int swp = 0;
-						for (j = 0; j < (all_fitness.size() - i - 1); j++)
+						for (int j = 0; j < (all_fitness.size() - i - 1); j++)
 						{
 							if (all_fitness[j] > all_fitness[j + 1])
 							{
