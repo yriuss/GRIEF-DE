@@ -1648,6 +1648,7 @@ namespace DE{
 						float current_fitness  	 = this->fitness[i];
 
 						std::vector<int> all_fit;
+						// all_fit.reserve(5);
 						all_fit.push_back(current_fitness);
 						all_fit.push_back(mutated_fit);
 						all_fit.push_back(second_mutated_fit);
@@ -1662,6 +1663,7 @@ namespace DE{
 							this->all_fit.clear();
 						}
 					}
+					std::cout << "all fit" << std::endl;
 					
 					int qtd = 5;
 					std::vector<std::vector<double>> all_Fs;
