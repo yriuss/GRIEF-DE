@@ -1723,7 +1723,26 @@ namespace DE{
 					std::cout << "sort" << std::endl;
 					std::cout << "jdaksjdkasdasdjkasdhn" << std::endl;
 					
-					sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
+					// sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
+
+					for (int i = 0; i < all_fitness.size() - 1; i++)
+					{
+						int swp = 0;
+						for (j = 0; j < (all_fitness.size() - i - 1); j++)
+						{
+							if (all_fitness[j] > all_fitness[j + 1])
+							{
+								int temp         = all_fitness[j];
+								all_fitness[j]   = all_fitness[j+1];
+								all_fitness[j+1] = temp;
+								swp = 1;
+							}
+						}
+
+						if (swp == 0)
+							break;
+					}
+
 					std::cout << "sort ok" << std::endl;
 		
 					/* 
