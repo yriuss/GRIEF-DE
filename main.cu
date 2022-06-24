@@ -987,7 +987,7 @@ int main(int argc, char ** argv){
 		for(int j = 0; j < 600; j++)
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 10, K, cr);
     for(int i = 0; i < atoi((argv[3])); i++){
 		grief_descriptor->evolve(atoi((argv[2])));
 		//save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
