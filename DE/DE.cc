@@ -1593,6 +1593,43 @@ namespace DE{
 			this->temp_Fcross2.clear();
 		#endif
 	}
+	
+	void DE::sort(std::vector<float> &all_fitness, std::vector<int> &indexes, int low, int high)
+	{
+		int i = low;
+		int j = high;
+		float pivot = all_fitness[(i + j) / 2];
+		float temp;
+		int aux;
+
+		while (i <= j)
+		{
+			while (all_fitness[i] < pivot)
+				i++;
+
+			while (all_fitness[j] > pivot)
+				j--;
+
+			if (i <= j)
+			{
+				temp = all_fitness[i];
+				all_fitness[i] = all_fitness[j];
+				all_fitness[j] = temp;
+		        
+                aux = indexes[i];
+				indexes[i] = indexes[j];
+				indexes[j] = aux;
+				i++;
+				j--;
+			}
+		}
+		
+		if (j > low)
+			sort(all_fitness, indexes, low, j);
+
+		if (i < high)
+			sort(all_fitness, indexes, i, high);
+	}
 
 	void DE::selection()
 	{
@@ -1602,7 +1639,6 @@ namespace DE{
 			#if CURRENT_TO_RAND
 				#if SECOND_MUTATED_FIT
 
-					std::cout << ">>> selection " << std::endl;
 					for (int i = 0; i < N_pop; i++)
 					{
 						float cross_fit 		 = this->temp_fitness_crossed_ind[i]; 
@@ -1627,13 +1663,11 @@ namespace DE{
 						}
 					}
 					
-
 					int qtd = 5;
 					std::vector<std::vector<double>> all_Fs;
 					std::vector<Eigen::MatrixXd> all_individuals;
 					std::vector<float> all_fitness;
 					std::vector<int> indexes;
-
 
 					all_Fs.reserve(N_pop * qtd);
 					all_individuals.reserve(N_pop * qtd);
@@ -1646,7 +1680,6 @@ namespace DE{
 						all_individuals.push_back(this->temp_population[i]);
 						all_fitness.push_back(this->temp_fitness[i]);						
 					}
-					std::cout << ">>> tempF ok " << std::endl;
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1654,8 +1687,6 @@ namespace DE{
 						all_individuals.push_back(this->temp_mutated_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_mutated_ind2[i]);
 					} 
-					std::cout << ">>> tempF2 ok " << std::endl;
-
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1663,7 +1694,6 @@ namespace DE{
 						all_individuals.push_back(this->temp_cross_ind[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind[i]);
 					}
-					std::cout << ">>> tempFcross ok " << std::endl;
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1671,7 +1701,6 @@ namespace DE{
 						all_individuals.push_back(this->temp_cross_ind2[i]);
 						all_fitness.push_back(this->temp_fitness_crossed_ind2[i]);
 					}
-					std::cout << ">>> tempFcross2 ok " << std::endl;
 
 					for (int i = 0; i < N_pop; i++)
 					{
@@ -1679,18 +1708,12 @@ namespace DE{
 						all_individuals.push_back(this->population[i]);
 						all_fitness.push_back(this->fitness[i]);
 					}
-					std::cout << ">>> population ok " << std::endl;
 
-					for (int i = 0; i < N_pop * qtd; i++)
-						indexes.push_back(i);
+					for (int i = 0; i < all_fitness.size(); i++)
+						indexes.push_back(i);		
 
-					std::cout << ">>> indexes ok" << std::endl;
-					
-
-					QS::quicksort qs;
-					qs.sort( all_fitness, indexes, 0, (N_pop * qtd) - 1 );
-					std::cout << ">>> sort ok" << std::endl;
-
+					sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
+				
 					/* 
 					 * [ indexes ] 
 					 *  
@@ -1703,44 +1726,55 @@ namespace DE{
 
 					#if problem_type == MINIMIZATION
 
-						for(int i = 0; i < N_pop; i++)
+						// for(int i = 0; i < N_pop; i++)
+						int i = 0;
+						int j = indexes.size() - 1;
+						while(i < N_pop)
 						{
-							this->F[i]          = all_Fs[indexes[i]];
-							this->population[i] = all_individuals[indexes[i]];
+							this->F[i]          = all_Fs[indexes[j]];
+							this->population[i] = all_individuals[indexes[j]];
 							this->fitness[i]    = all_fitness[i];
 							
-							if (indexes[i] >= 0 && indexes[i] < N_pop)							
+							if (indexes[j] >= 0 && indexes[j] < N_pop)							
 								count_mut1++;
 							
-							else if (indexes[i] >= N_pop   && indexes[i] < N_pop*2)							
+							else if (indexes[j] >= N_pop   && indexes[j] < N_pop*2)							
 								count_mut2++;
 							
-							else if (indexes[i] >= N_pop*2 && indexes[i] < N_pop*3)							
+							else if (indexes[j] >= N_pop*2 && indexes[j] < N_pop*3)							
 								count_cross1++;
 							
-							else if (indexes[i] >= N_pop*3 && indexes[i] < N_pop*4)							
+							else if (indexes[j] >= N_pop*3 && indexes[j] < N_pop*4)							
 								count_cross2++;
+							
+							i++;
+							j++;
 						}
 						
 					#else
 	
-						for(int i = N_pop - 1; i >= 0; i--)
+						int i = 0;
+						int j = indexes.size() - 1;
+						while(i < N_pop)
 						{
-							this->F[i]          = all_Fs[indexes[i]];
-							this->population[i] = all_individuals[indexes[i]];
-							this->fitness[i]    = all_fitness[i];
+							this->F[i]          = all_Fs[indexes[j]];
+							this->population[i] = all_individuals[indexes[j]];
+							this->fitness[i]    = all_fitness[j];
 
-							if (indexes[i] >= 0 && indexes[i] < N_pop)							
+							if (indexes[j] >= 0 && indexes[j] < N_pop)							
 								count_mut1++;
 							
-							else if (indexes[i] >= N_pop && indexes[i] < N_pop*2)							
+							else if (indexes[j] >= N_pop && indexes[j] < N_pop*2)							
 								count_mut2++;
 							
-							else if (indexes[i] >= N_pop*2 && indexes[i] < N_pop*3)							
+							else if (indexes[j] >= N_pop*2 && indexes[j] < N_pop*3)							
 								count_cross1++;
 							
-							else if (indexes[i] >= N_pop*3 && indexes[i] < N_pop*4)							
+							else if (indexes[j] >= N_pop*3 && indexes[j] < N_pop*4)							
 								count_cross2++;							
+							
+							i++;
+							j--;
 						}
 	
 					#endif
@@ -1797,8 +1831,7 @@ namespace DE{
 						all_fitness.push_back(this->fitness[i]);
 					}
 
-					QS::quicksort qs;
-					qs.sort( all_fitness, indexes, 0, (N_pop * qtd) - 1 );
+					sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
 
 					#if problem_type == MINIMIZATION
 
@@ -1830,7 +1863,6 @@ namespace DE{
 				#endif
 			
 			#else
-
 				
 				for (int i = 0; i < N_pop; i++)
 				{
@@ -1871,8 +1903,7 @@ namespace DE{
 					all_fitness.push_back(this->fitness[i]);
 				}
 				
-				QS::quicksort qs;
-				qs.sort( all_fitness, indexes, 0, (N_pop * qtd) - 1 );
+				sort( all_fitness, indexes, 0, all_fitness.size() - 1 );
 
 				#if problem_type == MINIMIZATION
 

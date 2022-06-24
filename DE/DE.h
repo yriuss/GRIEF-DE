@@ -106,6 +106,8 @@ namespace DE
 			void allocate_mem_temp_data();
 			void deallocate_mem_temp_data();
 
+			void sort(std::vector<float> &all_fitness, std::vector<int> &indexes, int low, int high);
+
 			int count_mut1 = 0;
 			int count_cross1 = 0;
 			int count_mut2 = 0;
