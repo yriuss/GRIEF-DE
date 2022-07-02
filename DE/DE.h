@@ -16,8 +16,8 @@
 #define READ_BEST_IND false
 #define RAND_TO_BEST_MOD false
 #define MEAN_WORST false
-#define SECOND_MUTATED_FIT true
-
+#define SECOND_MUTATED_FIT false
+#define PLUS_BEST true
 
 #if CURRENT_TO_RAND||RAND_TO_BEST_MOD
 typedef std::vector<double>(*EvalFunction)(Eigen::MatrixXd);
@@ -57,7 +57,8 @@ namespace DE {
 		public:
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
-			int mutation_algorithm, int crossover_algorithm, int K);
+			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts);
+			int worsts;
 			void reset();
 			void reduce_mut();
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
@@ -72,6 +73,7 @@ namespace DE {
 			void evolve(uint ng);
 			void evaluate(int ind_idx);
 			void selection(int ind_idx);
+			void extra_selection(int ind_idx);
 			void create_population();
 			void weibull_repair(int ind_idx);
 			void uniform_repair_mutated(int ind_idx);
@@ -82,6 +84,8 @@ namespace DE {
 			void aritcross(int ind_idx);
 			std::vector<std::vector<double>> get_F();
 			float get_best_fit();
+			void bincross_best();
+			void currenttorand_modified(Eigen::MatrixXd ind);
 			int get_best_idx();
 			void bincross_modified2(int ind_idx);
 			int get_max_elem();
@@ -130,11 +134,14 @@ namespace DE {
 			void currenttorand_1(int ind_idx);
 
 #endif
+		int mut_counter, crossed_counter;
 		private:
+			int selection_type = 0;
 			std::vector<std::vector<int>> all_fit;
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
-
+			Eigen::MatrixXd best_ind;
+			Eigen::MatrixXd crossed_best;
 			Eigen::MatrixXd crossed_ind;
 			Eigen::MatrixXd crossed_ind2;
 			std::vector<Eigen::MatrixXd> population;

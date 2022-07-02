@@ -92,7 +92,23 @@ FILE *displacements;
 
 
 
-
+Eigen::MatrixXd generate_individual(std::vector<int> ind_shape){
+		
+	std::random_device rseed;
+	std::mt19937 rng(rseed());
+	std::uniform_int_distribution<int> dist(-24,24);
+	std::uniform_real_distribution<float> distr(-24,24);
+	Eigen::MatrixXd individual(ind_shape[0], ind_shape[1]);
+	//std::cout << distr(rng) << std::endl;
+	for(int i = 0; i < ind_shape[0]; i++){
+		for(int j = 0; j < ind_shape[1]; j++){
+			individual(i,j) = distr(rng);
+		}
+	}
+	//std::cout << individual << std::endl;
+	//std::cout << (float)(individual[0][0]) << std::endl;
+	return individual;
+}
 
 
 void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
@@ -669,10 +685,10 @@ Eigen::MatrixXd eval2(Eigen::MatrixXd individual){
 
 
 std::vector<double> eval3(Eigen::MatrixXd individual){
-	
+	//std::cout << individual << std::endl;
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
-	Ptr<cv::cuda::ORB> detector = cv::cuda::ORB::create(1600);
+	Ptr<cv::ORB> detector = cv::ORB::create(1600);
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
 	
 	descriptor->setInd(individual);
@@ -694,7 +710,6 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 	
 	for (int location = 0;location<numLocations;location++){
 		
-		
 		// detecting keypoints and generating descriptors
 		Mat cpu_descriptors[numSeasons];
 		cuda::GpuMat descriptors[numSeasons];
@@ -704,8 +719,7 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 		
 		for (int i = 0;i<numSeasons;i++){
 			//sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",argv[1],i,location);
-			detector->detect(gpu_dataset_imgs[i][location], keypoints[i]);
-			
+			detector->detect(dataset_imgs[i][location], keypoints[i]);
 			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
 			//Mat a;
 			//descriptors[i].download(a);
@@ -727,7 +741,6 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 			for (int jk = ik+1;jk<numSeasons;jk++){
 				matches.clear();
 				/*if not empty*/
-				
 				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
 				
 
@@ -864,21 +877,6 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 
 
 
-Eigen::MatrixXd generate_individual(std::vector<int> ind_shape){
-	std::random_device rseed;
-	std::mt19937 rng(rseed());
-	std::uniform_int_distribution<int> dist(-24,24);
-	std::uniform_real_distribution<float> distr(0,1);
-	Eigen::MatrixXd individual(ind_shape[0], ind_shape[1]);
-	//std::cout << distr(rng) << std::endl;
-	for(int i = 0; i < ind_shape[0]; i++){
-		for(int j = 0; j < ind_shape[1]; j++){
-			individual(i,j) = dist(rng);
-		}
-	}
-	return individual;
-}
-
 void save_individual(Eigen::MatrixXd x, int i)
 {
 	int x1[512];
@@ -933,6 +931,9 @@ int main(int argc, char ** argv){
 
 	int K = atoi(argv[4]);
 	double cr = atof(argv[5]);
+	int cross_alg = atoi(argv[7]), mut_alg = atoi(argv[6]);
+	int sel_type = atoi(argv[8]);
+	int worsts = atoi(argv[9]);
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
@@ -1022,28 +1023,22 @@ int main(int argc, char ** argv){
 	Eigen::MatrixXd individual(512,4);
 
 	//load(individual, "test_pairs.brief");
-	//UserData data = {.numSeasons=numSeasons, .numLocations=numLocations};
-	//int count = 0;
-	//for(int i=0; i< numSeasons;i++){
-	//	for(int j =0; j<numLocations; j++){
-	//		dataset_imgs[i][j] = dataset_imgs[i][j];
-	//		offsetX[count] = offsetX[count];
-	//		offsetY[count] = offsetY[count];
-	//		count++;
-	//	}
-	//}
-	//load(individual, "test_pairs.txt");
 
 	//eval3(individual);
 	//std::cout << individual << std::endl;
-
-	//eval3(individual);
+	
 
 	for(int i = 0; i < 600; i++)
 		for(int j = 0; j < 600; j++)
 			gpu_dataset_imgs[i][j].upload(dataset_imgs[i][j]);
 	
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr);
+	//individual = generate_individual(std::vector<int>{512,4});
+
+	//std::cout << individual << std::endl;
+
+	//eval3(individual);
+	//
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr, 0.3, 0.8, mut_alg, cross_alg, sel_type, worsts);
     for(int i = 0; i < atoi((argv[3])); i++){
 		grief_descriptor->evolve(atoi((argv[2])));
 		//save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
