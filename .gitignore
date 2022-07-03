@@ -10,3 +10,5 @@ lib/*
 Makefile
 results/
 results_8ab/
+local_tests/
+experimets/*
