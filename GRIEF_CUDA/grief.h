@@ -31,7 +31,7 @@ class CV_EXPORTS_W GriefDescriptorExtractor : public Feature2D
 {
 public:
 	CV_WRAP static Ptr<GriefDescriptorExtractor> create( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-				int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN, int sel_type = 0, int worsts = 0);
+				int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN, int sel_type = 0, int worsts = 0, bool cr_reduction = false);
 	CV_WRAP virtual void getInd( );
 	CV_WRAP virtual void setInd(Eigen::MatrixXd new_individual);
 	CV_WRAP virtual void evolve(uint ng);
@@ -53,7 +53,7 @@ public:
 
 	// bytes is a length of descriptor in bytes. It can be equal 16, 32 or 64 bytes.
 	GriefDescriptorExtractorImpl( int bytes = 32, bool use_orientation = false, EvalFunction evaluation = evaluation, 
-											  int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN, int sel_type = 0, int worsts = 0);
+											  int N_pop = 0, int K=10, float cr = 0.8, float jr = 0.3, float F = 0.8, int mutation_algorithm=RAND_1, int crossover_algorithm=BIN, int sel_type = 0, int worsts = 0, bool cr_reduction = false);
 											  
 	int load(std::string fileName);
 	virtual void read( const FileNode& ) CV_OVERRIDE;

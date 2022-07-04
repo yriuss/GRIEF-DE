@@ -156,9 +156,13 @@ namespace DE{
 		}
 #endif
 	}
-
+	void DE::reduce_cr(){
+		cr -= 0.68/2000;
+		std::cout << cr << std::endl;
+	}
 	DE::DE( int N_pop, std::vector<int> ind_shape, float cr, float jr, EvalFunction evaluation, float F, 
-			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts): mutated_ind(ind_shape[0], ind_shape[1] ){
+			bool problem_type, std::vector<int> bounds, int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts, bool cr_reduction): mutated_ind(ind_shape[0], ind_shape[1] ){
+		this->cr_reduction = cr_reduction;
 		count_cross1 = 0;
 		count_mut1 = 0;
 		this->worsts = worsts;
@@ -256,6 +260,8 @@ namespace DE{
 #endif
 
 			this->cr = cr;
+			if(cr_reduction)
+				this->cr=0.98;
 			this->jr = jr;
 			this->F_mut = F;
 			this->problem_type = problem_type;

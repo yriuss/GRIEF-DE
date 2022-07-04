@@ -57,8 +57,10 @@ namespace DE {
 		public:
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
-			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts);
+			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts, bool cr_reduction);
+			bool cr_reduction=false;
 			int worsts;
+			void reduce_cr();
 			void reset();
 			void reduce_mut();
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
