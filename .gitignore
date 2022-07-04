@@ -12,3 +12,4 @@ results/
 results_8ab/
 local_tests/
 experiments/*
+download_exp_data.sh
