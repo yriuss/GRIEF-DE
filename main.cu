@@ -934,6 +934,7 @@ int main(int argc, char ** argv){
 	int cross_alg = atoi(argv[7]), mut_alg = atoi(argv[6]);
 	int sel_type = atoi(argv[8]);
 	int worsts = atoi(argv[9]);
+	bool cr_reduction = atoi(argv[10]);
 	/*load dataset parameters, check dataset consistency*/
 	/*check the number of seasons and check for existance of the displacement files*/
 	auto start = std::chrono::high_resolution_clock::now();
@@ -1038,7 +1039,7 @@ int main(int argc, char ** argv){
 
 	//eval3(individual);
 	//
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr, 0.3, 0.8, mut_alg, cross_alg, sel_type, worsts);
+	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr, 0.3, 0.8, mut_alg, cross_alg, sel_type, worsts, cr_reduction);
     for(int i = 0; i < atoi((argv[3])); i++){
 		grief_descriptor->evolve(atoi((argv[2])));
 		//save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
