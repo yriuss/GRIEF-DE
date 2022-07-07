@@ -5,7 +5,7 @@ cmake ..
 make -j$(nproc)
 
 # Teste 5
-./teste michigan 2000 5 10 0.8 1 4 1 0 0
+./teste michigan 2000 5 10 0.8 0 3 1 0 0
 
 cd ..
 date
