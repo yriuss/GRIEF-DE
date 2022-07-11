@@ -14,3 +14,4 @@ local_tests/
 experiments/*
 download_exp_data.sh
 *.zip
+params_tests
