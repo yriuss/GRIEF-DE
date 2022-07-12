@@ -339,7 +339,7 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		
 		std_dev(pop(), SAVE);
 		reduce_mut();
-		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2, get_F());
+		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), get_counter(0), count_mut2, get_counter(1), count_cross2, get_F());
 	}
 	
 	change_percentage.clear();
