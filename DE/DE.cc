@@ -1391,6 +1391,7 @@ namespace DE{
 		std::mt19937 rng(rseed());
 		std::uniform_real_distribution<float> dist(0,24);
 		// int n=0;
+		repair_counter++;
 		for(int i = 0; i < mutated_ind.rows(); i++){
 			for(int j = 0; j < mutated_ind.cols(); j++){
 				//std::cout << U << " " << L << std::endl;

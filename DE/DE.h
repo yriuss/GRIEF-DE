@@ -60,6 +60,7 @@ namespace DE {
 			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts, bool cr_reduction);
 			bool cr_reduction=false;
 			int worsts;
+			int repair_counter =0;
 			int get_counter(int counter);
 			int distance(Eigen::MatrixXd m1, Eigen::MatrixXd m2);
 			void reduce_cr();

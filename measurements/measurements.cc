@@ -77,7 +77,7 @@ void Measurements::reset(){
 	gen = 1;
 }
 
-void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F){
+void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F, int repair_counter){
 	
 	
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
@@ -122,8 +122,8 @@ void Measurements::save_data(std::vector<float> y, const std::string &dataset, c
 
 	if (f3.is_open())
   	{
-		  f3 << "mut 1" << " " << "mut 2" << " " << "cross 1" << " " << "cross 2" << "\n";
-    	f3 << count1 << " " << count2 << " " << count3 << " " << count4;
+		  f3 << "mut 1" << " " << "mut 2" << " " << "cross 1" << " " << "cross 2" << " repair_counter" << "\n";
+    	f3 << count1 << " " << count2 << " " << count3 << " " << count4 << " " << repair_counter;
   	}
 
 
