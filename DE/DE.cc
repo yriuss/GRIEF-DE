@@ -29,6 +29,8 @@ namespace DE{
 	}
 
 	void DE::reset(){
+		repair_counter = 0;
+		
 		mut_counter = 0;
 		crossed_counter = 0;
 		this->Measurements::reset();
