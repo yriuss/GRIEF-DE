@@ -1842,7 +1842,7 @@ namespace DE{
 		}
 		
 		//exit(-1);
-		best_ind = ind + F/4 * (ind1 - ind2);
+		best_ind = ind + F/N_pop * (ind1 - ind2);
 		//mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
 
