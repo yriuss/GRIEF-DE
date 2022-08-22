@@ -23,7 +23,7 @@ public:
     void reset();
     void append_fit(std::vector<std::vector<int>> all_fit);
     void make_boxes();
-    void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F);
+    void save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F, int repair_counter);
 private:
     std::string CURRENT_DIR = get_current_dir_name();
     std::vector<Eigen::MatrixXd> means;

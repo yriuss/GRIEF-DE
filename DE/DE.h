@@ -55,10 +55,19 @@ namespace DE {
 	class DE: public Measurements{
 
 		public:
+			void change_cross(int g, int ng);
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
-			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts);
+			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts, bool cr_reduction);
+			bool cr_reduction=false;
 			int worsts;
+			float cross_changer = 0;
+			std::vector<int> worst_idxs;
+			std::vector<int> not_worst_idxs;
+			int repair_counter =0;
+			int get_counter(int counter);
+			int distance(Eigen::MatrixXd m1, Eigen::MatrixXd m2);
+			void reduce_cr();
 			void reset();
 			void reduce_mut();
 			Eigen::MatrixXd generate_individual(std::vector<int> ind_shape);
@@ -70,6 +79,7 @@ namespace DE {
 			void crossover(int ind_idx);
 			void mutate(int ind_idx);
 			void repair(int ind_idx);
+			void dir_repair(int ind_idx);
 			void evolve(uint ng);
 			void evaluate(int ind_idx);
 			void selection(int ind_idx);
@@ -135,14 +145,17 @@ namespace DE {
 
 #endif
 		int mut_counter, crossed_counter;
+		Eigen::MatrixXd extra_dir_repair(Eigen::MatrixXd mutated_ind);
+		Eigen::MatrixXd crossed_ind;
 		private:
 			int selection_type = 0;
+			
 			std::vector<std::vector<int>> all_fit;
 			EvalFunction eval;
 			Eigen::MatrixXd mutated_ind;
 			Eigen::MatrixXd best_ind;
 			Eigen::MatrixXd crossed_best;
-			Eigen::MatrixXd crossed_ind;
+			
 			Eigen::MatrixXd crossed_ind2;
 			std::vector<Eigen::MatrixXd> population;
 			std::vector<Eigen::MatrixXd> opposite_population;

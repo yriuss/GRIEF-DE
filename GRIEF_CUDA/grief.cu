@@ -66,9 +66,9 @@ float evaluation(Eigen::MatrixXd individual){
 #endif
 
 Ptr<GriefDescriptorExtractor> GriefDescriptorExtractor::create(int bytes, bool use_orientation, EvalFunction evaluation, int N_pop, int K,
-															   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm, int sel_type, int worsts)
+															   float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm, int sel_type, int worsts, bool cr_reduction)
 {
-	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, K, cr, jr, F, mutation_algorithm, crossover_algorithm, sel_type, worsts);
+	return makePtr<GriefDescriptorExtractorImpl>(bytes, use_orientation, evaluation, N_pop, K, cr, jr, F, mutation_algorithm, crossover_algorithm, sel_type, worsts, cr_reduction);
 }
 #include <unistd.h>
 int GriefDescriptorExtractorImpl::load(std::string fileName) {
@@ -318,16 +318,19 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		auto start = std::chrono::high_resolution_clock::now();
 		set_change_counter(0);
 		for(int i = 0; i < N_pop; i++){
-			mutate(i);
 			
+			mutate(i);
 			repair(i);
 			crossover(i);
+			crossed_ind = extra_dir_repair(crossed_ind);
 			selection(i);
 			//std::cout << i << std::endl;
 
 		}//exit(-1);
+		change_cross(g, ng);
 		extra_selection(1);
-
+		//if(cr_reduction)
+		//	reduce_cr();
 		change_percentage.push_back((float)100*get_change_counter()/(N_pop));
 		std::cout <<  get_best_fit() << std::endl;
 		//std::cout <<  get_best_ind() << std::endl;
@@ -338,7 +341,7 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 		
 		std_dev(pop(), SAVE);
 		reduce_mut();
-		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), count_mut1, count_mut2, count_cross1, count_cross2, get_F());
+		save_data(gbfit(), "michigan", "exp" + std::to_string(exp+1), get_best_indv(), get_counter(0), count_mut2, get_counter(1), count_cross2, get_F(), repair_counter);
 	}
 	
 	change_percentage.clear();
@@ -365,9 +368,9 @@ std::vector<float> GriefDescriptorExtractor::gbfit(){
 //}
 
 GriefDescriptorExtractorImpl::GriefDescriptorExtractorImpl( int bytes, bool use_orientation, EvalFunction evaluation, 
-															int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm, int sel_type, int worsts) :
+															int N_pop, int K, float cr, float jr, float F, int mutation_algorithm, int crossover_algorithm, int sel_type, int worsts, bool cr_reduction) :
 	bytes_(bytes), 
-	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm, K, sel_type, worsts)
+	DE(N_pop, std::vector<int>{bytes*8, 4}, cr, jr, evaluation, F, MAXIMIZATION, std::vector<int>{-24, 24}, mutation_algorithm, crossover_algorithm, K, sel_type, worsts, cr_reduction)
 {
 	this->N_pop = N_pop;
 	this->jr = jr;

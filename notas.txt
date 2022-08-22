@@ -1,0 +1,7 @@
+teste1_erro ./teste michigan 2000 10 10 0.8 1 3 0 1 0
+teste2 ./teste michigan 2000 10 10 0.8 1 3 0 1 0
+teste3 ./teste michigan 2000 10 10 0.8 1 4 0 1 0 
+teste4 ./teste michigan 2000 10 10 0.8 0 4 0 1 0 
+./teste michigan 2000 10 10 0.8 0 4 0 1 1
+./teste michigan 2000 10 10 0.8 1 3 0 1 0
+

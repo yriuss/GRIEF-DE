@@ -5,79 +5,79 @@ import re
 from operator import add
 from numpy import empty
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp1/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp1/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE_NOSEL1 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp2/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp2/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE_NOSEL2 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp3/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp3/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE_NOSEL3 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp4/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp4/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE_NOSEL4 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp5/convergence.txt') as f:
-    lines = f.readlines()
-
-y_GRIEF_DE_NOSEL5 = [int(x) for x in lines]
+#with open('/home/adriel/GRIEF-DE/results/test4/exp5/convergence.txt') as f:
+#    lines = f.readlines()
+#
+#y_GRIEF_DE_NOSEL5 = [int(x) for x in lines]
 
 grief_data = list( map(add, y_GRIEF_DE_NOSEL1, y_GRIEF_DE_NOSEL2))
 grief_data = list( map(add, grief_data, y_GRIEF_DE_NOSEL3))
-grief_data = list( map(add, grief_data, y_GRIEF_DE_NOSEL4))
-grief_data = list( map(add, grief_data, y_GRIEF_DE_NOSEL5))
+#grief_data = list( map(add, grief_data, y_GRIEF_DE_NOSEL4))
+#grief_data = list( map(add, grief_data, y_GRIEF_DE_NOSEL5))
 
-y_GRIEF_DE_NOSEL =[x / 5 for x in grief_data]
+y_GRIEF_DE_NOSEL =[x / 3 for x in grief_data]
 
 
 #########################################
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp1/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp1/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE1 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp2/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp2/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE2 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp3/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp3/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE3 = [int(x) for x in lines]
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp4/convergence.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp4/convergence.txt') as f:
     lines = f.readlines()
 
 y_GRIEF_DE4 = [int(x) for x in lines]
 
-#with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp5/convergence.txt') as f:
+#with open('/home/adriel/GRIEF-DE/results/test4/exp5/convergence.txt') as f:
 #    lines = f.readlines()
 #
 #y_GRIEF_DE5 = [int(x) for x in lines]
 
-grief_data = list( map(add, y_GRIEF_DE3, y_GRIEF_DE2))
+grief_data = list( map(add, y_GRIEF_DE1, y_GRIEF_DE2))
 grief_data = list( map(add, grief_data, y_GRIEF_DE3))
-grief_data = list( map(add, grief_data, y_GRIEF_DE4))
+#grief_data = list( map(add, grief_data, y_GRIEF_DE4))
 #grief_data = list( map(add, grief_data, y_GRIEF_DE5))
 
-y_GRIEF_DE =[x / 4 for x in grief_data]
+y_GRIEF_DE =[x / 3 for x in grief_data]
 
 ##########################################
 
 
 
 
-#with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp1/all_fits.txt') as f:
+#with open('/home/adriel/GRIEF-DE/results/test4/exp1/all_fits.txt') as f:
 #    lines = f.readlines()
 #
 #count = 0
@@ -98,7 +98,7 @@ y_GRIEF_DE =[x / 4 for x in grief_data]
 #    result.append(max(data[:i+1]))
 #
 #
-#with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp1/all_fits.txt') as f:
+#with open('/home/adriel/GRIEF-DE/results/test4/exp1/all_fits.txt') as f:
 #    lines = f.readlines()
 #
 #count = 0
@@ -118,7 +118,7 @@ y_GRIEF_DE =[x / 4 for x in grief_data]
 #for i in range(0,len(data),2):
 #    result.append(max(data[:i+1]))
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp2/all_fits.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp2/all_fits.txt') as f:
     lines = f.readlines()
 
 count = 0
@@ -138,7 +138,7 @@ result2 = []
 for i in range(0,len(data),2):
     result2.append(max(data[:i+1]))
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp3/all_fits.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp3/all_fits.txt') as f:
     lines = f.readlines()
 
 count = 0
@@ -158,7 +158,7 @@ result3 = []
 for i in range(0,len(data),2):
     result3.append(max(data[:i+1]))
 
-with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp4/all_fits.txt') as f:
+with open('/home/adriel/GRIEF-DE/results/test4/exp4/all_fits.txt') as f:
     lines = f.readlines()
 
 count = 0
@@ -174,11 +174,11 @@ data= [int(x) for x in data]
 
 
 
-result4 = []
-for i in range(0,len(data),2):
-    result4.append(max(data[:i+1]))
-
-#with open('/home/adriel/teste/GRIEF-DE (copy)/results/michigan/exp5/all_fits.txt') as f:
+#result4 = []
+#for i in range(0,len(data),2):
+#    result4.append(max(data[:i+1]))
+#
+#with open('/home/adriel/GRIEF-DE/results/test4/exp5/all_fits.txt') as f:
 #    lines = f.readlines()
 #
 #count = 0
@@ -194,9 +194,9 @@ for i in range(0,len(data),2):
 #
 #
 #
-#result5 = []
-#for i in range(0,len(data),2):
-#    result5.append(max(data[:i+1]))
+result5 = []
+for i in range(0,len(data),2):
+    result5.append(max(data[:i+1]))
 
 
 
@@ -206,7 +206,7 @@ for i in range(0,len(data),2):
 #grief_data = list( map(add, grief_data, result3))
 #grief_data = list( map(add, grief_data, result4))
 #grief_data = list( map(add, grief_data, result5))
-
+#
 #y_GRIEF_DE_ =[x / 4 for x in grief_data]
 
 #y_GRIEF_DE_ = y_GRIEF_DE_[:2000]
@@ -412,6 +412,6 @@ plt.title("Comparação do GRIEF e GRIEF-DE")
 plt.plot(grief_data, label='GRIEF')
 #plt.plot(y_GRIEF_DE_NOSEL, label = 'GRIEF-DE sem sel')
 #plt.plot(y_GRIEF_DE_, label = 'GRIEF-DE sem sel (30 piores genes)')
-plt.plot(y_GRIEF_DE_NOSEL, label = 'GRIEF-DE sem sel (10 piores genes)')
+plt.plot(y_GRIEF_DE_NOSEL, label = 'GRIEF-DE')
 plt.legend()
 plt.show()
