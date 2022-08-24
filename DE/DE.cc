@@ -1192,7 +1192,7 @@ namespace DE{
 			{
 				if(r_dist(rng) <= cr || j == J)
 				{
-					crossed_ind(i,j) = (0.8 - cross_changer)*mutated_ind(i,j) + (0.2+cross_changer) * population[N_pop](i,j);
+					crossed_ind(i,j) = (0.2+cross_changer)*mutated_ind(i,j) + (0.8 - cross_changer) * population[N_pop](i,j);
 					if(!infeasible)
 						infeasible = is_infeasible(mutated_ind(i,j));
 				}
