@@ -1,6 +1,6 @@
 #include "measurements.h"
-#include "matplotlibcpp.h"
-namespace plt = matplotlibcpp;
+//#include "matplotlibcpp.h"
+//namespace plt = matplotlibcpp;
 
 bool dir_exist(const std::string &s)
 {
@@ -89,19 +89,19 @@ void Measurements::save_data(std::vector<float> y, const std::string &dataset, c
 	if(!dir_exist(CURRENT_DIR+"/../results/"  + dataset + "/" + exp))
 		_mkdir(CURRENT_DIR+"/../results/" + dataset+ "/" + exp);
 	
-	plt::plot(y);
-	plt::title("Convergence " + dataset);
-	plt::xlabel("Gerações");
-	plt::ylabel("Fitness");
-	plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "convergence.png");
-	plt::cla();
+	//plt::plot(y);
+	//plt::title("Convergence " + dataset);
+	//plt::xlabel("Gerações");
+	//plt::ylabel("Fitness");
+	//plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "convergence.png");
+	//plt::cla();
 
-	plt::plot(std_devs);
-	plt::title("Convergence " + dataset);
-	plt::xlabel("Gerações");
-	plt::ylabel("std dev");
-	plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "behavior.png");
-	plt::cla();
+	//plt::plot(std_devs);
+	//plt::title("Convergence " + dataset);
+	//plt::xlabel("Gerações");
+	//plt::ylabel("std dev");
+	//plt::save(CURRENT_DIR+"/../results/" + dataset + "/" + exp + "/" + "behavior.png");
+	//plt::cla();
 	boxes.clear();
 	std::ofstream f1(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "convergence.txt"), f2(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "best_individual.txt");
 	std::ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "changes.txt"), f4(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "std_devs.txt");
