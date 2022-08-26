@@ -111,14 +111,14 @@ Eigen::MatrixXd generate_individual(std::vector<int> ind_shape){
 }
 
 
-void distinctiveMatch(const cuda::GpuMat& descriptors1, const cuda::GpuMat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
+void distinctiveMatch(const Mat& descriptors1, const Mat& descriptors2, vector<DMatch>& matches, bool crossCheck=false)
 {
-	//Ptr<DescriptorMatcher> descriptorMatcher;
+	Ptr<DescriptorMatcher> descriptorMatcher;
 	vector<vector<DMatch> > allMatches1to2, allMatches2to1;
 
-	Ptr<cuda::DescriptorMatcher> descriptorMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
+	//Ptr<cuda::DescriptorMatcher> descriptorMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(cv::NORM_HAMMING);
 
-	//descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
+	descriptorMatcher = new BFMatcher(cv::NORM_HAMMING, false);
 	
 	descriptorMatcher->knnMatch(descriptors1, descriptors2, allMatches1to2, 2);
 	if (!crossCheck)
@@ -689,9 +689,9 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
 	Ptr<cv::ORB> detector = cv::ORB::create(1600);
-	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64);
+	cv::Ptr<cv::xfeatures2d::BriefDescriptorExtractor> descriptor = cv::xfeatures2d::BriefDescriptorExtractor::create(64);
 	
-	descriptor->setInd(individual);
+	//descriptor->setInd(individual);
 	for (int i = 0;i<1024;i++){
 		griefRating[i].value=0;
 		griefRating[i].id=i;
@@ -720,12 +720,12 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 		for (int i = 0;i<numSeasons;i++){
 			//sprintf(fileInfo,"%s/season_%02i/spgrid_regions_%09i.txt",argv[1],i,location);
 			detector->detect(dataset_imgs[i][location], keypoints[i]);
-			descriptor->compute(dataset_imgs[i][location], keypoints[i], descriptors[i]);
+			descriptor->compute(dataset_imgs[i][location], keypoints[i], cpu_descriptors[i]);
 			//Mat a;
 			//descriptors[i].download(a);
 			//std::cout << "a" << std::endl;
 			//exit(-1);
-			descriptors[i].download(cpu_descriptors[i]);
+			//descriptors[i].download(cpu_descriptors[i]);
 			// /std::cout << descriptors[0] << std::endl;
 			//std::cout << cpu_descriptors[i];
 			//printf("%d", cpu_descriptors[i].at<uchar>(1599, 56));
@@ -741,7 +741,7 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 			for (int jk = ik+1;jk<numSeasons;jk++){
 				matches.clear();
 				/*if not empty*/
-				if (descriptors[ik].rows*descriptors[jk].rows > 0) distinctiveMatch(descriptors[ik], descriptors[jk], matches, CROSSCHECK);
+				if (cpu_descriptors[ik].rows*cpu_descriptors[jk].rows > 0) distinctiveMatch(cpu_descriptors[ik], cpu_descriptors[jk], matches, CROSSCHECK);
 				
 
 				/*are there any tentative correspondences ?*/
