@@ -685,7 +685,6 @@ Eigen::MatrixXd eval2(Eigen::MatrixXd individual){
 
 
 std::vector<double> eval3(Eigen::MatrixXd individual){
-	std::cout << "foi aqui mesmo!" << std::endl;
 	//std::cout << individual << std::endl;
 	auto start = std::chrono::high_resolution_clock::now();
 	//Ptr<cv::xfeatures2d::StarDetector>detector = cv::xfeatures2d::StarDetector::create(45,0,10,8,5);
@@ -1042,9 +1041,9 @@ int main(int argc, char ** argv){
 	//std::cout << individual << std::endl;
 
 	//eval3(individual);
-	//
+	
 	cv::Ptr<cv::xfeatures2d::GriefDescriptorExtractor> grief_descriptor = cv::xfeatures2d::GriefDescriptorExtractor::create(64, false, eval3, 4, K, cr, 0.3, 0.8, mut_alg, cross_alg, sel_type, worsts, cr_reduction);
-    for(int i = 0; i < atoi((argv[3])); i++){
+	for(int i = 0; i < atoi((argv[3])); i++){
 		grief_descriptor->evolve(atoi((argv[2])));
 		//save_data(grief_descriptor->gbfit(), ""+ dataset, "exp" + std::to_string(i+1), grief_descriptor->get_best_indv());
 	}

@@ -1531,7 +1531,7 @@ namespace DE{
 #if SECOND_MUTATED_FIT
 		std::vector<double> F = eval(truncate_individual(ind_shape, mutated_ind));
 #else
-		std::vector<double> F = eval(truncate_individual(ind_shape, crossed_ind));
+		//std::vector<double> F = eval(truncate_individual(ind_shape, crossed_ind));
 		
 		std::vector<double> F_mut;
 		F_mut = eval(truncate_individual(ind_shape, mutated_ind));
@@ -1544,8 +1544,8 @@ namespace DE{
 		int crossed_fit = 0, mutated_fit = 0;
 		int min = 0, min_mut = 0;
 		for(int j = 0; j < ind_shape[0]; j++){
-			if(min > F[j])
-				min = F[j];
+			//if(min > F[j])
+			//	min = F[j];
 			if(min_mut > F_mut[j])
 				min_mut = F_mut[j];
 		}
@@ -1561,11 +1561,11 @@ namespace DE{
 #else
 
 		for(int j = 0; j < ind_shape[0]; j++){
-			crossed_fit+= F[j];
+			//crossed_fit+= F[j];
 			mutated_fit+= F_mut[j];
 		}
 		for(int j = 0; j < ind_shape[0]; j++){
-			F[j] = F[j] / min;
+			//F[j] = F[j] / min;
 			F_mut[j] = F_mut[j] / min_mut;
 		}
 
@@ -1591,7 +1591,7 @@ namespace DE{
 		std::vector<int> all_fit;
 		all_fit.push_back(fitness[ind_idx]);
 		all_fit.push_back(mutated_fit);
-		all_fit.push_back(crossed_fit);
+		//all_fit.push_back(crossed_fit);
 		this->all_fit.push_back(all_fit);
 #if PLUS_BEST
 #else
@@ -1699,25 +1699,25 @@ namespace DE{
 		//std::cout << mutated_ind << std::endl;
 		
 		if(!selection_type){
-			if(mutated_fit > crossed_fit){
+			if(1){
 				this->F[ind_idx] = F_mut;
 				mut_counter++;
 				population[ind_idx] = mutated_ind;
 				this->fitness[ind_idx] = mutated_fit;
 			}else{
-				this->F[ind_idx] = F;
+				//this->F[ind_idx] = F;
 				crossed_counter++;
 				population[ind_idx] = crossed_ind;
 				this->fitness[ind_idx] = crossed_fit;
 			}
 		}else{
-			if(mutated_fit > crossed_fit){
+			if(1){
 				this->F[ind_idx] = F_mut;
 				mut_counter++;
 				population[ind_idx] = mutated_ind;
 				this->fitness[ind_idx] = mutated_fit;
 			}else{
-				this->F[ind_idx] = F;
+				//this->F[ind_idx] = F;
 				crossed_counter++;
 				population[ind_idx] = crossed_ind;
 				this->fitness[ind_idx] = crossed_fit;
@@ -1794,13 +1794,13 @@ namespace DE{
 		crossed_best.setZero(512,4);
 		//std::cout << "passei aqui" << std::endl;
 
-		for(int i = 0; i < best_ind.rows(); i++){
+		for(auto & i : worst_idxs){
 			float J = dist(rng);
 			if(r_dist(rng) <= cr || jr == J)
 			{
 				for(int j = 0; j < best_ind.cols(); j++)
 				{
-					crossed_best(i,j) = 0.7*best_ind(i,j) + 0.3 * population[get_best_idx()](i,j);
+					crossed_best(i,j) = (0.8 - cross_changer)*best_ind(i,j) + (0.2+cross_changer) * population[get_best_idx()](i,j);;
 					if(!infeasible)
 						infeasible = is_infeasible(crossed_best(i,j));
 				}
@@ -1810,6 +1810,12 @@ namespace DE{
 				{
 					crossed_best(i,j) = population[get_best_idx()](i,j);
 				}
+			}
+		}
+		for(auto & i : not_worst_idxs){
+			for(int j = 0; j < best_ind.cols(); j++)
+			{
+				crossed_best(i,j) = best_ind(i,j);
 			}
 		}
 		//std::cout << crossed_ind.cols() << " " << crossed_ind.rows() << std::endl;
@@ -1834,7 +1840,7 @@ namespace DE{
 		float th = 1./3;
 
 		std::vector<int> idxs = sort_idxs(this->F[get_best_idx()]);
-		
+		Eigen::MatrixXd aux = ind;
 		for(int i = 0; i < K; i++){
 			worst_idxs[i] = idxs[511 - i];
 		}
@@ -1842,15 +1848,17 @@ namespace DE{
 			not_worst_idxs[i] = idxs[i];
 		}
 		for(int j = 0; j < ind_shape[0]; j++){
-			if(j < 512-(K - 5)){	
+			if(j < 512-K){
 			}
-			else
+			else{
 				F(idxs[j],idxs[j]) = this->F[get_best_idx()][idxs[j]];
+				for(int i = 0; i < 4; i++){
+					aux(idxs[j], i) = 0;
+				}
+			}
 		}
 		
-		//exit(-1);
-		
-		best_ind = ind + F/N_pop * (ind1 - ind2);
+		best_ind = aux + F/N_pop * (ind1 - ind2);
 		
 		//mutated_ind = population[ind_idx] + F * ((population[idx1] - population[ind_idx]) + (population[idx2] - population[idx3]));
 	}
@@ -1880,12 +1888,12 @@ namespace DE{
 	}
 
 	void DE::extra_selection(int ind_idx){
-		//std::cout << "FOI AQUI!" << std::endl;
-		if(fitness[N_pop] < fitness[get_best_idx()]){
-			population[N_pop] = population[get_best_idx()];
-			fitness[N_pop] = fitness[get_best_idx()];
-			best_ind = population[get_best_idx()];
-		}
+		
+		//if(fitness[N_pop] < fitness[get_best_idx()]){
+		//	population[N_pop] = population[get_best_idx()];
+		//	fitness[N_pop] = fitness[get_best_idx()];
+		//	best_ind = population[get_best_idx()];
+		//}
 		//std::cout << get_best_idx() << std::endl;
 		//std::cout << "best ind is" << population[N_pop] << std::endl;
 		currenttorand_modified(truncate_individual(ind_shape, population[N_pop]));
@@ -1947,7 +1955,8 @@ namespace DE{
 			}else{
 				this->F[N_pop] = this->F[N_pop];
 				change_counter++;
-				fitness[N_pop] = fitness[N_pop];
+				fitness[N_pop] = fitness[get_best_idx()];
+				population[N_pop] = population[get_best_idx()];
 				best_ind = population[N_pop];
 			}
 		}
