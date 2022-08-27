@@ -321,8 +321,8 @@ void GriefDescriptorExtractorImpl::evolve(uint ng){
 			
 			mutate(i);
 			repair(i);
-			crossover(i);
-			crossed_ind = extra_dir_repair(crossed_ind);
+			//crossover(i);
+			//crossed_ind = extra_dir_repair(crossed_ind);
 			selection(i);
 			//std::cout << i << std::endl;
 
