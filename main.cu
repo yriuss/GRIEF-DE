@@ -872,7 +872,9 @@ std::vector<double> eval3(Eigen::MatrixXd individual){
 	std::chrono::duration<double, std::milli> elapsed = finish - start;
 	std::cout << "elapsed time: " << elapsed.count() << std::endl;
 	//std::cout << "-";
-    return result;
+    result.push_back((double)matchingFailures/matchingTests*100.0);
+	return result;
+
 }
 
 

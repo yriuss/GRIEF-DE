@@ -77,7 +77,7 @@ void Measurements::reset(){
 	gen = 1;
 }
 
-void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F, int repair_counter){
+void Measurements::save_data(std::vector<float> y, const std::string &dataset, const std::string &exp, Eigen::MatrixXd best_individual, int count1, int count2, int count3, int count4, std::vector<std::vector<double>> F, int repair_counter, double actual_error){
 	
 	
 	if(!dir_exist(CURRENT_DIR+"/../results/"))
@@ -107,8 +107,11 @@ void Measurements::save_data(std::vector<float> y, const std::string &dataset, c
 	std::ofstream f3(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "changes.txt"), f4(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "std_devs.txt");
 	std::ofstream f5(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_fits.txt");
 	std::ofstream f6;
+	std::ofstream f7;
 	f6.open(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "all_F.txt", std::ios_base::app);
 
+	f7.open(CURRENT_DIR +"/../results/" + dataset+ "/" + exp + "/" + "teste.txt", std::ios_base::app);
+	
 	for(std::vector<float>::const_iterator i = y.begin(); i != y.end(); ++i) {
     	f1 << *i << '\n';
 	}
@@ -158,6 +161,7 @@ void Measurements::save_data(std::vector<float> y, const std::string &dataset, c
 	}
 	gen++;
 
+	f7 << actual_error << "\n";
 	
 	//plt::show();
 }

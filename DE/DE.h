@@ -56,6 +56,7 @@ namespace DE {
 
 		public:
 			void change_cross(int g, int ng);
+			double actual_error = 0;
 			DE(int N_pop, std::vector<int> ind_shape, float cr, float jr,
 			EvalFunction evaluation, float F, bool problem_type, std::vector<int> bounds, 
 			int mutation_algorithm, int crossover_algorithm, int K, int sel_type, int worsts, bool cr_reduction);

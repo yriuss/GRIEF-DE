@@ -59,7 +59,12 @@ namespace DE{
 				std::vector<double> F1;
 #endif
 				#if ROUND_ON_MUTATION
-					this->F.emplace_back(eval(population[i]));
+					
+					std::vector<double> vaux = eval(population[i]), vaux2;
+					for(int i = 0; i < vaux.size() - 1; i++)
+						vaux2.push_back(vaux[i]);
+					this->F.emplace_back(vaux2);
+					actual_error = vaux[vaux.size()-1];
 				#else
 					this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 				#endif
@@ -109,8 +114,13 @@ namespace DE{
 #if PLUS_BEST
 			population.push_back(generate_individual(ind_shape));
 			
-			this->F.push_back(eval(population[population.size() - 1]));
-			std::cout << this->F.size() << std::endl;
+
+			std::vector<double> vaux = eval(population[population.size() - 1]), vaux2;
+			for(int i = 0; i < vaux.size() - 1; i++)
+				vaux2.push_back(vaux[i]);
+			this->F.push_back(vaux2);
+			actual_error = vaux[vaux.size()-1];
+
 			float fitness = 0;
 			int min = 0;
 			for(int j = 0; j < ind_shape[0]; j++){
@@ -195,7 +205,14 @@ namespace DE{
 				std::vector<double> F1;
 #endif
 				#if ROUND_ON_MUTATION
-					this->F.emplace_back(eval(population[i]));
+					std::vector<double> vaux = eval(population[i]), vaux2;
+					
+					for(int i = 0; i < vaux.size() - 1; i++)
+						vaux2.push_back(vaux[i]);
+					
+					this->F.emplace_back(vaux2);
+					actual_error = vaux[vaux.size()-1];
+					
 				#else
 					this->F.emplace_back(eval(truncate_individual(ind_shape, population[i])));
 				#endif
@@ -211,8 +228,9 @@ namespace DE{
 					if(min > this->F[i][j])
 						min = this->F[i][j];
 				}
-
+				
 				this->fitness_aux.emplace_back(this->F[i][0]);
+				
 
 #if MEAN_WORST
 				for(int j = ind_shape[0] - K; j < ind_shape[0]; j++){
@@ -232,7 +250,6 @@ namespace DE{
 				fitness /= 512;
 #endif
 				
-				
 				std::vector<int> idxs = sort_idxs(this->F[i]);		
 				
 				
@@ -242,9 +259,15 @@ namespace DE{
 
 #if PLUS_BEST
 			population.push_back(generate_individual(ind_shape));
-			
-			this->F.push_back(eval(population[population.size() - 1]));
-			std::cout << this->F.size() << std::endl;
+						
+
+			std::vector<double> vaux = eval(population[population.size() - 1]), vaux2;
+			for(int i = 0; i < vaux.size() - 1; i++)
+				vaux2.push_back(vaux[i]);
+			this->F.push_back(vaux2);
+			actual_error = vaux[vaux.size()-1];
+
+
 			float fitness = 0;
 			int min = 0;
 			for(int j = 0; j < ind_shape[0]; j++){
@@ -1533,8 +1556,12 @@ namespace DE{
 #else
 		//std::vector<double> F = eval(truncate_individual(ind_shape, crossed_ind));
 		
-		std::vector<double> F_mut;
-		F_mut = eval(truncate_individual(ind_shape, mutated_ind));
+
+		std::vector<double> vaux = eval(truncate_individual(ind_shape, mutated_ind)), vaux2;
+		for(int i = 0; i < vaux.size() - 1; i++)
+			vaux2.push_back(vaux[i]);
+		std::vector<double> F_mut = vaux2;
+		
 #endif
 #if MEAN_WORST
 		std::vector<double> F1, F2;
@@ -1697,7 +1724,8 @@ namespace DE{
 
 #else
 		//std::cout << mutated_ind << std::endl;
-		
+		if(fitness[get_best_idx()] < mutated_fit)
+			actual_error = vaux[vaux.size()-1];
 		if(!selection_type){
 			if(1){
 				this->F[ind_idx] = F_mut;
@@ -1808,7 +1836,7 @@ namespace DE{
 			else{
 				for(int j = 0; j < best_ind.cols(); j++)
 				{
-					crossed_best(i,j) = population[get_best_idx()](i,j);
+					crossed_best(i,j) = best_ind(i,j);
 				}
 			}
 		}
@@ -1897,12 +1925,18 @@ namespace DE{
 		//std::cout << get_best_idx() << std::endl;
 		//std::cout << "best ind is" << population[N_pop] << std::endl;
 		currenttorand_modified(truncate_individual(ind_shape, population[N_pop]));
-		
-		best_ind = extra_dir_repair(best_ind);
+		best_ind = population[N_pop];
+		//best_ind = extra_dir_repair(best_ind);
 		bincross_best();
-		crossed_best = extra_dir_repair(crossed_best);
-		std::vector<double> F = eval(truncate_individual(ind_shape, crossed_best));
+		//crossed_best = extra_dir_repair(crossed_best);
 		
+		std::vector<double> vaux = eval(truncate_individual(ind_shape, crossed_best)), vaux2;
+		for(int i = 0; i < vaux.size() - 1; i++)
+			vaux2.push_back(vaux[i]);
+		std::vector<double> F = vaux2;
+		
+
+
 		int crossed_fit = 0;
 		int min = 0;
 		for(int j = 0; j < ind_shape[0]; j++){
@@ -1934,9 +1968,10 @@ namespace DE{
 			if(crossed_fit < fitness[N_pop]){
 				this->F[N_pop] = F;
 				change_counter++;
-				population[N_pop] = crossed_best;
+				population[N_pop] = best_ind;
 				fitness[N_pop] = crossed_fit;
-				best_ind = crossed_best;
+				actual_error = vaux[vaux.size()-1];
+				//best_ind = crossed_best;
 			}else{
 				this->F[N_pop] = this->F[N_pop];
 				change_counter++;
@@ -1949,9 +1984,10 @@ namespace DE{
 			if(crossed_fit > fitness[N_pop]){
 				this->F[N_pop] = F;
 				change_counter++;
-				population[N_pop] = crossed_best;
+				population[N_pop] = best_ind;
 				fitness[N_pop] = crossed_fit;
 				best_ind = crossed_best;
+				actual_error = vaux[vaux.size()-1];
 			}else{
 				this->F[N_pop] = this->F[N_pop];
 				change_counter++;
