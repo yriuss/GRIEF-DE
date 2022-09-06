@@ -1928,7 +1928,7 @@ namespace DE{
 		best_ind = population[N_pop];
 		//best_ind = extra_dir_repair(best_ind);
 		bincross_best();
-		//crossed_best = extra_dir_repair(crossed_best);
+		crossed_best = extra_dir_repair(crossed_best);
 		
 		std::vector<double> vaux = eval(truncate_individual(ind_shape, crossed_best)), vaux2;
 		for(int i = 0; i < vaux.size() - 1; i++)
