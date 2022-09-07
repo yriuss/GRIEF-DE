@@ -1925,7 +1925,7 @@ namespace DE{
 		//std::cout << get_best_idx() << std::endl;
 		//std::cout << "best ind is" << population[N_pop] << std::endl;
 		currenttorand_modified(truncate_individual(ind_shape, population[N_pop]));
-		best_ind = population[N_pop];
+		//best_ind = population[N_pop];
 		//best_ind = extra_dir_repair(best_ind);
 		bincross_best();
 		crossed_best = extra_dir_repair(crossed_best);
