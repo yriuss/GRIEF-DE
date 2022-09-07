@@ -1822,6 +1822,15 @@ namespace DE{
 		crossed_best.setZero(512,4);
 		//std::cout << "passei aqui" << std::endl;
 
+
+		std::vector<int> idxs = sort_idxs(this->F[N_pop]);
+		for(int i = 0; i < K; i++){
+			worst_idxs[i] = idxs[511 - i];
+		}
+		for(int i = 0; i < 512-K; i++){
+			not_worst_idxs[i] = idxs[i];
+		}
+
 		for(auto & i : worst_idxs){
 			float J = dist(rng);
 			if(r_dist(rng) <= cr || jr == J)
@@ -1924,8 +1933,8 @@ namespace DE{
 		//}
 		//std::cout << get_best_idx() << std::endl;
 		//std::cout << "best ind is" << population[N_pop] << std::endl;
-		currenttorand_modified(truncate_individual(ind_shape, population[N_pop]));
-		//best_ind = population[N_pop];
+		//currenttorand_modified(truncate_individual(ind_shape, population[N_pop]));
+		best_ind = population[N_pop];
 		//best_ind = extra_dir_repair(best_ind);
 		bincross_best();
 		crossed_best = extra_dir_repair(crossed_best);
