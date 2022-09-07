@@ -1824,10 +1824,10 @@ namespace DE{
 
 
 		std::vector<int> idxs = sort_idxs(this->F[N_pop]);
-		for(int i = 0; i < K; i++){
+		for(int i = 0; i < 10; i++){
 			worst_idxs[i] = idxs[511 - i];
 		}
-		for(int i = 0; i < 512-K; i++){
+		for(int i = 0; i < 512-10; i++){
 			not_worst_idxs[i] = idxs[i];
 		}
 
